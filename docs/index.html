@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#6db33f">
+    <meta name="google-site-verification" content="H3WqYhJB11X-HJmTnglgQXSVz0U596ggKbsekXN_Rl4"/>
+
+    <meta property="og:title" content="Fresh Cloud"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:description" content="We help teams build modern software."/>
+    <meta property="og:url" content="https://www.freshcloud.com"/>
+
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:domain" content="www.freshcloud.com"/>
+    <meta name="twitter:title" content="Fresh Cloud"/>
+    <meta name="twitter:description" content="We help teams build modern software."/>
+    <meta name="twitter:url" content="https://www.freshcloud.com"/>
+
+    <title>Fresh Cloud</title>
+    <link rel="stylesheet" href="style/reset.css">
+    <link rel="stylesheet" href="style/site.css">
+    <link rel="icon" type="image/png" href="images/favicon.png" sizes="64x64">
+    <script type="text/javascript">
+        var _paq = window._paq = window._paq || [];
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function() {
+            var u="https://freshcloud.matomo.cloud/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '1']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.type='text/javascript'; g.async=true; g.src='//cdn.matomo.cloud/freshcloud.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+        <h1>Fresh Cloud</h1>
+    </div>
+</header>
+
+<section class="callout orange">
+    <div class="container">
+        <h2>A modern application platform.</h2>
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <h3>Key Takeaways</h3>
+
+        <p class="takeaways">
+            Complete the <a href="#instructions">instructions below</a> to build your own modern application platform,
+            a Heroku-like environment built on Kubernetes which will deploy your code from a Git repository to a
+            production-grade Kubernetes cluster.
+
+        <h2>Introduction</h2>
+
+        <p>
+            This article was first introduced as a lecture at the University of Colorado in the Spring of 2021.
+            The lecture was intended to give students a behind the scenes look at how a modern application platform
+            works.
+
+        <p>
+            Given that developer productivity and operator efficiency continues to remain top of mind for both startup
+            and enterprise companies alike, we thought that we would share the lecture as an article.
+            The open source projects included in the article are all part of the <a href="https://www.cncf.io">Cloud
+            Native Computing Foundation</a>.
+
+        <h2>History</h2>
+
+        <p>
+            Over the past few years, we have observed companies move away from multi-tenant platforms in favor of public
+            cloud providers that host Kubernetes as a service.
+            An obvious driver being freedom of choice around associated components contributing to their infrastructure.
+            Another driver, public cloud providers all agreed on a single container orchestration engine - Kubernetes.
+            In the telecommunications industry, we would call stand-alone Kubernetes <em>basic dial tone</em>.
+            Just enough to establish basic phone service.
+            And similar to voicemail and the ability to make emergency calls, cloud providers have improved upon basic
+            dial tone - resulting in numerous tools and applications that are easy to integrate, intended to
+            significantly increase developer productivity and operator efficiency.
+
+        <p>
+            We have also seen a trend toward maintaining a Kubernetes cluster per team or even per application,
+            depending on the size of the application.
+            The movement is possible largely because building a self-service platform has become increasingly easy
+            over the past several years due to the explosion of open source within the platform engineering community.
+            This is commonly referred to as DevOps or DevSecOps.
+
+        <p>
+            The steps below will walk you through building a modern application platform, recently referred to as a
+            secure software supply chain.
+
+        <h2>Project Structure</h2>
+
+        <p>
+            We’ll need a few things before deploying our application - mainly our dial tone or Kubernetes cluster and
+            a few additional components to complete the infrastructure.
+
+        <p>
+            The <a href="https://github.com/continuumcollective/freshcloud">GitHub repository</a> contains a <a
+            href="https://github.com/continuumcollective/freshcloud/tree/main/bin">bin</a> directory with scripts that
+            deploy and configure all the infrastructure components.
+            We’ll also be using Google’s Cloud Platform (GCP).
+            If you haven’t used GCP in the past <a href="https://cloud.google.com/free">sign up for a free account</a>.
+
+        <p>
+            Below are the main components and the associated software that we will be using.
+
+        <ul>
+            <li>Kubernetes cluster: <strong><a href="https://cloud.google.com">Google Cloud Platform</a></strong></li>
+            <li>Ingress controller: <strong><a href="https://projectcontour.io">Contour</a></strong></li>
+            <li>Certificate management: <strong><a href="https://cert-manager.io">Cert-Manager</a></strong></li>
+            <li>Image registry and scanning: <strong><a href="https://goharbor.io">Harbor</a></strong></li>
+            <li>Image building and buildpack support: <strong><a href="https://github.com/pivotal/kpack">KPack</a></strong></li>
+            <li>Continuous integration and delivery pipeline: <strong><a href="https://concourse-ci.org">Concourse</a></strong></li>
+        </ul>
+
+        <p>
+            Let’s get started.
+
+    </div>
+</section>
+
+<section class="callout yellow">
+    <div class="container">
+        <blockquote>Building software will always be hard. There is inherently no silver bullet. - Fred Brooks</blockquote>
+    </div>
+</section>
+
+<section id="instructions">
+    <div class="container">
+
+        <h2>Prerequisites</h2>
+
+        <p>
+            Before we begin let's make sure we have the prerequisites in order.
+            Feel free to skip any of these steps if you already have the prerequisite completed.
+
+        <h3>Google Cloud</h3>
+
+        <p>
+            Make sure you have a
+            <a href="https://cloud.google.com/billing/docs/how-to/manage-billing-account">billing account created</a>
+            for your Google Cloud account.
+            Install the <a href="https://cloud.google.com/sdk/docs/install">Google Cloud SDK</a>then use the steps below
+            to log in to Google Cloud and set up a project.
+
+        <pre>
+<code class="shell">gcloud auth login</code>
+<code class="shell">gcloud projects create {your_project_name}</code>
+<code class="shell">gcloud config set project {your_project_name}</code>
+<code class="shell">gcloud services enable cloudbilling.googleapis.com</code>
+<code class="shell">gcloud alpha billing accounts list</code>
+<code class="shell">gcloud alpha billing projects link {your_project_name} --billing-account 0X0X0X-0X0X0X-0X0X0X</code>
+<code class="shell">gcloud services enable container.googleapis.com</code>
+        </pre>
+
+        <h3>Local software</h3>
+
+        <p>
+            Install <a href="https://kubernetes.io/docs/tasks/tools/">kubectl</a>,
+            <a href="https://helm.sh">the Helm CLI</a>,<a href="https://www.docker.com/get-started">Docker</a>,
+            and <a href="https://github.com/mikefarah/yq">yq</a> to your local machine.
+            Make sure that Docker is running before you start the exercises.
+
+        <p>
+            Finally, clone our repository to get download the scripts we'll need to create our modern application
+            platform.
+
+        <pre>
+<code class="shell">git clone git@github.com:continuumcollective/freshcloud.git</code>
+        </pre>
+
+        <h2>Platform configuration</h2>
+
+        <p>
+            First we’ll need a few configuration settings for our platform environment.
+            The scripts in this project use values from <em>.env_development.sh</em> file in the project root directory.
+            Let's fill that out first.
+
+        <p>
+            Create and then edit <em>.env_development.sh</em> and enter the below values.
+
+        <pre>
+<code class="shell">touch .env_development.sh</code>
+<code class="shell">vi .env_development.sh</code>
+        <code># Deployment defaults
+export DOMAIN='yourdomain.com'		    # Enter the DNS subdomain
+export EMAIL_ADDRESS='nobody@gmail.com'     # E-Mail for CERT registration confirmation
+export PASSWD='my-pass'                     # Password that will be used throughout the project
+
+# GCP cluster info
+export GCP_PROJECT_NAME='your-gcp-project'  # GCP project name
+export K8S_CLUSTER_NAME='cluster-name'      # Cluster name
+export REGION='us-central1'                 # GCP region
+export ZONE='us-central1-c'                 # Availability zone</code>
+    </pre>
+
+        <h2>Kubernetes cluster</h2>
+
+        <p>
+            Kubernetes has become the de facto container orchestration engine for deploying and managing distributed
+            systems.
+            Most public cloud providers now include support for running Kubernetes clusters.
+            And as mentioned above, we’ll be using Google Cloud Platform (GCP) for our Kubernetes cluster.
+
+        <p>
+            Create a Kubernetes cluster by running the script below from the <em>bin</em> directory.
+
+        <pre>
+<code class="shell">bash 00-create-cluster.sh gcp</code>
+        </pre>
+
+        <p>
+            Upon success you will see the below output.
+
+        <pre><code>
+NAME                    NUM_NODES  STATUS
+{your_cluster_name}     5          RUNNING
+    </code></pre>
+
+
+        <h2>Ingress controller</h2>
+
+        <p>
+            By default when an application or service is deployed to Kubernetes the application is only accessible
+            inside the cluster and is only able to interact with other internal services.
+            This is called <a href="https://en.wikipedia.org/wiki/East-west_traffic">east-west traffic</a>.
+
+        <p>
+            Our IaaS has created a load-balancer to make our application available outside the cluster.
+            The load-balancer will front traffic to <a href="https://projectcontour.io">Contour</a>, our
+            <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">ingress controller</a>, allowing
+            us to expose our service or application externally.
+            This is called <a href="https://en.wikipedia.org/wiki/North-south_traffic">north-south traffic</a>.
+
+        <p>
+            Once deployed, Contour will programmatically update <a href="https://www.envoyproxy.io">Envoy proxies</a> to
+            control application routing based on annotations in our deployment manifests.
+            We'll configure a wild-card DNS entry for our (sub)domain to point to the load-balancer.
+            This will allow for dynamic application deployments.
+
+        <p>
+            From the <em>bin</em> directory, run the below install script for Contour.
+
+        <pre>
+<code class="shell">bash 01-install-contour.sh</code>
+        </pre>
+
+        <p>
+            Upon success, the script will output the hostname and public IP address of our load-balancer which we’ll use
+            to access all our external services.
+
+        <pre><code>
+Waiting to get the load-balancer IP.
+Create a DNS for *.yourdomain.com to xxx.xxx.xxx.xxx
+    </code></pre>
+
+        <p>
+            Next set a wild-card DNS record to point to your load-balancer's IP address by creating an A record entry
+            with your DNS provider.
+            We use DNS Made Easy for managing our DNS records.
+            Use the following command to make sure your DNS is configured correctly before proceeding.
+
+        <pre>
+<code class="shell">nslookup xxx.yourdomain.com</code>
+        </pre>
+
+        <h2>Certificate management</h2>
+
+        <p>
+            Our basic dial tone does not have support for managing SSL certificates, so we’ll need a new component to
+            manage the lifecycle of SSL certificates for our cluster.
+            We’ll also need to choose a Certificate Authority (CA) to issue certificates.
+
+        <p>
+            For our use case, we’ll configure <a href="https://cert-manager.io/">cert-manager</a>, our certificate
+            management software, to use <a href="https://letsencrypt.org">Let's Encrypt</a>, our certificate authority
+            of choice.
+
+        <p>
+            To accomplish this, we’ll give cert-manager a secret destination.
+            Cert Manager will then request a cert from Let's Encrypt.
+            Let's Encrypt will provide us with short lived SSL certs that will be consumed by the Ingress controller and
+            stored as Kubernetes secrets.
+
+        <pre>
+<code class="shell">bash 02-install-cert-manager.sh</code>
+        </pre>
+
+        <p>Upon success, you will see the below output.
+
+        <pre><code>
+All pods are running.
+clusterissuer.cert-manager.io/letsencrypt-staging created
+clusterissuer.cert-manager.io/letsencrypt-prod created
+    </code></pre>
+
+        <p>
+            One of the benefits of using cert-manager is that cert-manager will automatically replace each SSL
+            certificate before the certificate expires.
+
+        <h2>Image registry</h2>
+
+        <p>
+            We’ll use <a href="https://goharbor.io">Harbor</a> for our
+            <a href="https://docs.docker.com/registry/introduction/">image registry</a>.
+            We’ll also use <a href="https://www.docker.com">Docker</a> to create the images which we’ll upload to our
+            registry.
+            Harbor will scan each of the Docker images we build for security vulnerabilities, issues, and errors.
+
+        <p>
+            Harbor will create two projects for each of the corresponding images below.
+
+        <ul>
+            <li>concourse-images (public) - images used by the pipeline.</li>
+            <li>kpack (public) - image(s) used to build the application image and the application image, once created.</li>
+        </ul>
+
+        <p>
+            Run our next script from the <em>bin</em> directory to create the registry.
+
+        <pre>
+<code class="shell">bash 03-install-harbor.sh</code>
+        </pre>
+
+        <p>
+            Upon success, you will see the output below.
+
+        <pre><code>
+All pods are running.
+Sleeping while Harbor auth is set up.
+Creating: concourse-images in Harbor.
+Creating: kpack in Harbor.
+url: https://registry.yourdomain.com
+username: admin
+password: {PASSWORD}
+    </code></pre>
+
+        <p>
+            Navigate to the provided URL and log in to Harbor using the provided credentials.
+
+        <h2>Continuous integration and delivery</h2>
+
+        <p>
+            We’ll be using a popular too named <a href="https://concourse-ci.org">Concourse</a> for continuous delivery.
+            Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
+
+        <pre>
+<code class="shell">bash 04-install-concourse.sh</code>
+        </pre>
+
+        <p>
+            Navigate to the provided URL and log in to Concourse using <em>admin</em> as the username and the password
+            that you configured in your environment file.
+        </p>
+
+        <img src="images/early-concourse.png" alt="harbor">
+
+        <h2>Build service</h2>
+
+        <p>
+            We’re almost done with all the components for our modern application platform.
+            One last component: <a href="https://github.com/pivotal/kpack">kpack</a>, which gives us an implementation
+            of a <a href="https://buildpacks.io">Cloud Native Buildpack</a>.
+            Installing kpack in our cluster will create the builder objects used by Kubernetes to create application
+            containers.
+
+        <p>
+            First install the <em>kpack-cli</em> binary on your local machine.
+
+        <pre>
+<code class="shell">wget https://github.com/vmware-tanzu/kpack-cli/releases/download/v0.2.0/kp-darwin-0.2.0 -O /usr/local/bin/kp</code>
+<code class="shell">chmod 755 /usr/local/bin/kp</code>
+        </pre>
+
+        <p>
+            Next deploy the kpack build service.
+            This step will take slightly longer than previous steps as we’ll be building the images locally with Docker.
+
+        <pre>
+<code class="shell">bash 05-install-kpack.sh</code>
+        </pre>
+
+        <p>
+            Upon success, you will see the below output.
+
+        <pre><code>
+All pods are running.
+clusterstack.kpack.io/base created
+clusterstore.kpack.io/default created
+    </code></pre>
+
+        <p>
+            Harbor should now look similar to the image below.
+        </p>
+
+        <img src="images/harbor.png" alt="harbor">
+
+        <p>
+            We’ve now configured each of the components that contribute to our pipeline.
+            Let’s deploy our application!
+
+        <h2>Application deployment</h2>
+
+        <p>
+            Let’s deploy our application.
+            We created a light-weight command line interface (CLI) called <em>freshctl</em> to manage your applications.
+
+        <p>
+            Run <em>freshctl</em> from the <em>bin</em> directory to test the CLI.
+
+        <pre>
+<code class="shell">./freshctl endpoints</code>
+        </pre>
+
+        <p>
+            The freshctl CLI takes a file or an application configuration as an argument.
+            You'll see an example application called <em>kotlin-ktor-starter</em> in the <em>apps</em> directory.
+            There are only three variables needed to configure our application.
+
+        <ul>
+            <li>The application name</li>
+            <li>The application's GitHub repository</li>
+            <li>The branch to deploy</li>
+        </ul>
+
+        <p>
+            Download the Concourse <em>fly</em> CLI tool from our Concourse installation, substituting your Concourse
+            URL for the URL below.
+
+        <pre>
+<code class="shell">wget ‘https://ci.yourdomain.com/api/v1/cli?arch=amd64&platform=darwin’ -O /usr/local/bin/fly</code>
+<code class="shell">chmod 755 /usr/local/bin/fly</code>
+        </pre>
+
+        <p>
+            Let’s review the steps the freshclt CLI performs to deploy our application.
+
+        <ul>
+            <li>Create the application namespace
+            <li>Create the builder object in the namespace</li>
+            <li>Write the pipeline and params yaml</li>
+            <li>Install the pipeline to Concourse</li>
+            <li>Start a build</li>
+            <li>Upload the application image to Harbor</li>
+            <li>Create an application deployment:
+                <ul>
+                    <li>Create TLS Certificate</li>
+                    <li>Create k8s Service</li>
+                    <li>Create k8s Ingress</li>
+                    <li>Deploy application container</li>
+                </ul>
+            </li>
+        </ul>
+
+        <p>
+            OK, let’s deploy the kotlin-ktor-starter app with freshctl's <em>add</em> command.
+
+        <pre>
+<code class="shell">./freshctl add apps/kotlin-ktor-starter.app</code>
+        </pre>
+
+        <p>
+            View the build logs by running the below command.
+
+        <pre>
+<code class="shell">kp build logs kotlin-ktor-starter-image -n kotlin-ktor-starter</code>
+        </pre>
+
+        <p>
+            Upon success, run the below command and see the application URL.
+
+        <pre>
+<code class="shell">./freshctl apps</code>
+
+<code>kotlin-ktor-starter        kotlin-ktor-starter.yourdomain.com</code>
+        </pre>
+
+        <h2>Summary</h2>
+
+        <p>
+            That’s a wrap! We hope you enjoyed the article.
+
+    </div>
+</section>
+
+<section>
+    <div class="container">
+        <h2>Interested in more content like this content?</h2>
+        <p>Take a look at our weekend workshop <a href="https://www.cloudnativeweekend.org" target="_blank">Cloud Native
+            Weekend</a>.</p>
+    </div>
+</section>
+
+<section class="callout">
+    <div class="container">
+        <img src="images/cc-logo-white.svg" alt="Continuum Collective">
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>
+            &copy;<script>document.write(new Date().getFullYear());</script>
+            Continuum Collective, Inc. All rights reserved.
+        </p>
+    </div>
+</footer>
+</body>
+</html>
