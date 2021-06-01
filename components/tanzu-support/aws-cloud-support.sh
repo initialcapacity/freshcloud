@@ -21,6 +21,10 @@ EOF
   tanzu management-cluster create --file ../../mgmt-cluster.yaml
 }
 
+function tanzu_aws_delete_k8s_mgmt_cluster() {
+  tanzu management-cluster delete tanzu-mgmt
+}
+
 function tanzu_aws_create_k8s_cluster() {
 
   cat > ../../freshcloud-cluster.yaml <<EOF
@@ -54,7 +58,11 @@ if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
 fi
 
 if [ "$1" == 'mgmt' ]; then
-  tanzu_aws_create_k8s_mgmt_cluster
+  if [ "$2" == 'delete' ]; then
+    tanzu_aws_delete_k8s_mgmt_cluster
+  else
+    tanzu_aws_create_k8s_mgmt_cluster
+  fi
   exit 0
 fi
 
