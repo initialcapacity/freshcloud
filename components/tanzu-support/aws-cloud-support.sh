@@ -11,7 +11,7 @@ function tanzu_aws_create_k8s_mgmt_cluster() {
 
 function tanzu_aws_create_k8s_cluster() {
 
-cat << EOF | tanzu cluster create -f -
+  cat > ../../freshcloud-cluster.yaml << EOF
 CLUSTER_NAME: freshcloud
 CLUSTER_PLAN: dev
 NAMESPACE: default
@@ -22,18 +22,12 @@ CONTROL_PLANE_MACHINE_COUNT: 1
 WORKER_MACHINE_COUNT: 3
 AWS_REGION: us-east-2
 AWS_NODE_AZ: "us-east-2a"
-AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+AWS_ACCESS_KEY_ID: <encoded:$(echo -ne $AWS_ACCESS_KEY_ID | base64)>
+AWS_SECRET_ACCESS_KEY: <encoded:$(echo -ne $AWS_SECRET_ACCESS_KEY | base64)>
 AWS_SSH_KEY_NAME: default
-BASTION_HOST_ENABLED: false
-ENABLE_AUTOSCALER: false
-AUTOSCALER_MAX_NODES_TOTAL: "10"
-AUTOSCALER_SCALE_DOWN_DELAY_AFTER_ADD: "10m"
-AUTOSCALER_SCALE_DOWN_DELAY_AFTER_DELETE: "10s"
-AUTOSCALER_SCALE_DOWN_DELAY_AFTER_FAILURE: "3m"
-AUTOSCALER_SCALE_DOWN_UNNEEDED_TIME: "10m"
-AUTOSCALER_MAX_NODE_PROVISION_TIME: "15m"
+BASTION_HOST_ENABLED: true
 EOF
+  tanzu cluster create -f ../../freshcloud-cluster.yaml
 }
 
 function tanzu_aws_delete_k8s_cluster() {
