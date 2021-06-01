@@ -2,6 +2,8 @@
 #
 # Create a k8s cluster in GCP.
 
+source ../../.env_development.sh
+
 if [ -z "${GCP_PROJECT_NAME}" ]; then
     echo "Please setup .env_development.sh"
     exit 1
