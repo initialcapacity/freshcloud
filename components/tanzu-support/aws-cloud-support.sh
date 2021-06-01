@@ -50,6 +50,7 @@ if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
   printf "Please set the following environment variables:\n"
   printf "\tAWS_ACCESS_KEY_ID\n"
   printf "\tAWS_SECRET_ACCESS_KEY\n"
+  exit 1
 fi
 
 if [ "$1" == 'mgmt' ]; then
