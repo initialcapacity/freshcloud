@@ -3,6 +3,7 @@
 # Create a k8s cluster in TKG for AWS
 # See https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.3/vmware-tanzu-kubernetes-grid-13/GUID-tanzu-k8s-clusters-aws.html
 
+# shellcheck disable=SC1091
 source ../../.env_development.sh
 
 function tanzu_aws_create_k8s_mgmt_cluster() {
@@ -51,9 +52,9 @@ function tanzu_aws_delete_k8s_cluster() {
 }
 
 if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
-  printf "Please set the following environment variables:\n"
-  printf "\tAWS_ACCESS_KEY_ID\n"
-  printf "\tAWS_SECRET_ACCESS_KEY\n"
+  printf "Please set the following environment variables in .env_development.sh under root directory:\n"
+  printf "AWS_ACCESS_KEY_ID\n"
+  printf "AWS_SECRET_ACCESS_KEY\n"
   exit 1
 fi
 
