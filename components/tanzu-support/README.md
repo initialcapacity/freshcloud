@@ -22,6 +22,9 @@
 # AWS cluster Info
   export K8S_CLUSTER_NAME='cluster-name'
   export REGION='us-west-2'
+  export NODE_AZ='us-west-2a'
+  export AWS_ACCESS_KEY_ID='xxx'
+  export AWS_SECRET_ACCESS_KEY='xxx'
 ```
 
 ### Install tanzu cli
