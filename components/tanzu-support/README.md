@@ -25,6 +25,7 @@
   export NODE_AZ='us-west-2a'
   export AWS_ACCESS_KEY_ID='xxx'
   export AWS_SECRET_ACCESS_KEY='xxx'
+  export AWS_SESSION_TOKEN='xxx'       # Optional, if using temporary security credentials
 ```
 
 ### Install tanzu cli
