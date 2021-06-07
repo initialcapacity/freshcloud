@@ -29,7 +29,7 @@ function tanzu_aws_delete_k8s_mgmt_cluster() {
 
 function tanzu_aws_create_k8s_cluster() {
   local temp_dir=${1:-/tmp}
-  cat > "$temp_dir/freshcloud-cluster.yaml" <<EOF
+  cat > "$temp_dir/cluster.yaml" <<EOF
 CLUSTER_NAME: freshcloud
 CLUSTER_PLAN: dev
 NAMESPACE: default
@@ -45,7 +45,7 @@ AWS_SECRET_ACCESS_KEY: <encoded:$(echo -ne "$AWS_SECRET_ACCESS_KEY" | base64)>
 AWS_SSH_KEY_NAME: default
 BASTION_HOST_ENABLED: true
 EOF
-  tanzu cluster create -f "$temp_dir/freshcloud-cluster.yaml"
+  tanzu cluster create -f "$temp_dir/cluster.yaml"
 }
 
 function tanzu_aws_delete_k8s_cluster() {
