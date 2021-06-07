@@ -32,12 +32,22 @@
 Follow these [instructions](https://docs.vmware.com/en/VMware-Tanzu-Kubernetes-Grid/1.3/vmware-tanzu-kubernetes-grid-13/GUID-install-cli.html) to download and install the tanzu cli bundle.
 
 
+### Create a management cluster
+```console
+  $ bash tanzu-aws-support.sh mgmt
+```
+
 ### Create a cluster
 ```console
-  $ bash aws-cloud-support.sh
+  $ bash tanzu-aws-support.sh
 ```
 
 ### Delete existing cluster
 ```console
-  $ bash aws-cloud-support.sh delete
+  $ bash tanzu-aws-support.sh delete
+```
+
+### Delete existing management cluster
+```console
+  $ bash tanzu-aws-support.sh mgmt delete
 ```
