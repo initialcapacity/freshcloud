@@ -30,6 +30,7 @@ SERVICE_CIDR: 100.64.0.0/13
 CLUSTER_CIDR: 100.96.0.0/11
 EOF
   tanzu management-cluster create --file "$temp_dir/mgmt-cluster.yaml"
+  printf "Management cluster file saved to: %s\n" "$temp_dir/mgmt-cluster.yaml"
 }
 
 function tanzu_aws_delete_k8s_mgmt_cluster() {
@@ -55,6 +56,7 @@ AWS_SSH_KEY_NAME: default
 BASTION_HOST_ENABLED: true
 EOF
   tanzu cluster create -f "$temp_dir/cluster.yaml"
+  printf "Workload cluster file saved to: %s\n" "$temp_dir/cluster.yaml"
 }
 
 function tanzu_aws_delete_k8s_cluster() {
