@@ -18,7 +18,16 @@ CONTROL_PLANE_MACHINE_TYPE: t3.large
 NODE_MACHINE_TYPE: m5.large
 AWS_REGION: us-east-2
 AWS_NODE_AZ: "us-east-2a"
+AWS_ACCESS_KEY_ID: <encoded:$(echo -ne "$AWS_ACCESS_KEY_ID" | base64)>
+AWS_SECRET_ACCESS_KEY: <encoded:$(echo -ne "$AWS_SECRET_ACCESS_KEY" | base64)>
 AWS_SSH_KEY_NAME: default
+BASTION_HOST_ENABLED: true
+AWS_PRIVATE_NODE_CIDR: 10.0.0.0/24
+AWS_PUBLIC_NODE_CIDR: 10.0.1.0/24
+AWS_VPC_CIDR: 10.0.0.0/16
+AWS_SSH_KEY_NAME: default
+SERVICE_CIDR: 100.64.0.0/13
+CLUSTER_CIDR: 100.96.0.0/11
 EOF
   tanzu management-cluster create --file "$temp_dir/mgmt-cluster.yaml"
 }
