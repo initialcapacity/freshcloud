@@ -87,5 +87,5 @@ fi
 if [ "$1" == 'delete' ]; then
     tanzu_aws_delete_k8s_cluster "$2"
 else
-  tanzu_aws_create_k8s_cluster "$temp_dir" "$2"
+  tanzu_aws_create_k8s_cluster "$temp_dir" "$1"
 fi
