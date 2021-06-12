@@ -118,7 +118,7 @@ function write_pipeline_params() {
   echo "Writing pipeline params yaml"
 
   # Vars we need to add to our kubeconfig
-  SERVER=$(kubectl cluster-info|grep 'Kubernetes master' | awk '{print $NF}')
+  SERVER=$(kubectl cluster-info|grep 'Kubernetes' | awk '{print $NF}')
   NAME=$(kubectl get secrets -n ${APP_NAME} |grep ${APP_NAME}-service-account-token|awk '{print $1}')
   CA=$(kubectl get secret/${NAME} -n ${APP_NAME} -o jsonpath='{.data.ca\.crt}')
   TOKEN=$(kubectl get secret/${NAME} -n ${APP_NAME} -o jsonpath='{.data.token}' | base64 --decode)
