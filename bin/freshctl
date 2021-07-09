@@ -92,7 +92,7 @@ metadata:
   namespace: ${APP_NAME}
   name: ${APP_NAME}-image-role
 rules:
-- apiGroups: ["kpack.io", "", "extensions", "apps"]
+- apiGroups: ["kpack.io", "", "networking.k8s.io", "apps"]
   resources: ["images", "builds", "pods", "pods/log", "services", "ingresses", "deployments"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
@@ -189,7 +189,7 @@ app_manifest: |
     sessionAffinity: None
     type: ClusterIP
   ---
-  apiVersion: extensions/v1beta1
+  apiVersion: networking.k8s.io/v1
   kind: Ingress
   metadata:
     name: ${APP_NAME}
@@ -208,8 +208,10 @@ app_manifest: |
       http:
         paths:
         - backend:
-            serviceName: ${APP_NAME}
-            servicePort: 80
+            service:
+              name: ${APP_NAME}
+              port:
+                number: 80
           pathType: ImplementationSpecific
     tls:
     - hosts:
