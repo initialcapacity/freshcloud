@@ -270,6 +270,17 @@ cat <<EOF >> build/${APP_NAME}-pipeline.yml
 jobs:
   - name: vulnerability-scan
     plan:
+    - task: sleep
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: ubuntu
+            tag: bionic
+        run:
+          path: /bin/sleep
+          args: [15s]
     - in_parallel:
       - get: ${APP_NAME}-build-service
         trigger: true
