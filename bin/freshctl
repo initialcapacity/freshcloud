@@ -240,6 +240,11 @@ resource_types:
     tag: "1.0"
 
 resources:
+  - name: ${APP_NAME}-image
+    type: registry-image
+    source:
+      repository: registry.${DOMAIN}/kpack/${APP_NAME}
+
   - name: ${APP_NAME}-source-code
     type: git
     source:
@@ -263,6 +268,32 @@ cat <<EOF >> build/${APP_NAME}-pipeline.yml
         kubeconfig: ((kubeconfig))
 
 jobs:
+  - name: vulnerability-scan
+    plan:
+    - in_parallel:
+      - get: ${APP_NAME}-build-service
+        trigger: true
+        passed: [build-${APP_NAME}-image]
+      - get: ${APP_NAME}-image
+    - task: trivy-fs
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: aquasec/trivy
+        inputs:
+        - name: ${APP_NAME}-image
+        caches:
+        - path: trivy-cache
+        run:
+          path: sh
+          args:
+          - -cex
+          - |
+            trivy --cache-dir trivy-cache fs --severity HIGH,CRITICAL --vuln-type library,os --ignore-unfixed --exit-code 1 ${APP_NAME}-image/rootfs
+
+
   - name: build-${APP_NAME}-image
     plan:
       - get: ${APP_NAME}-source-code
@@ -275,9 +306,11 @@ jobs:
 
   - name: deploy-${APP_NAME}
     plan:
-      - get: ${APP_NAME}-build-service
-        trigger: true
       - get: ${APP_NAME}-source-code
+      - get: ${APP_NAME}-build-service
+        passed:
+        - vulnerability-scan
+        trigger: true
       - task: deploy-kubernetes
         config:
           platform: linux
@@ -352,6 +385,10 @@ function add_app() {
 
 function delete_app() {
 
+  if [ ! -e $1 ]; then
+      echo "$1 doesn't seem to exist."
+      exit 1
+  fi
   source $1
 
   fly -t ${K8S_CLUSTER_NAME} dp -p build-${APP_NAME}
