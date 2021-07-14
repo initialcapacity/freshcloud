@@ -236,6 +236,10 @@ pre code {
         padding-bottom: 1rem;
     }
 
+    h1 {
+        font-size: 3rem;
+    }
+
     section {
         padding-bottom: 2rem;
     }
