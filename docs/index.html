@@ -23,17 +23,18 @@
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/site.css">
     <link rel="icon" type="image/png" href="images/favicon.png" sizes="64x64">
-    <script type="text/javascript">
-        var _paq = window._paq = window._paq || [];
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="https://freshcloud.matomo.cloud/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '1']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.type='text/javascript'; g.async=true; g.src='//cdn.matomo.cloud/freshcloud.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN2D22QSS7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-VN2D22QSS7');
     </script>
 </head>
 
@@ -106,7 +107,7 @@
 
         <p>
             The <a href="https://github.com/initialcapacity/freshcloud">GitHub repository</a> contains a <a
-            href="https://github.com/initialcapacity/freshcloud/tree/main/bin">bin</a> directory with scripts that
+                href="https://github.com/initialcapacity/freshcloud/tree/main/bin">bin</a> directory with scripts that
             deploy and configure all the infrastructure components.
             We’ll also be using Google’s Cloud Platform (GCP).
             If you haven’t used GCP in the past <a href="https://cloud.google.com/free">sign up for a free account</a>.
@@ -119,8 +120,10 @@
             <li>Ingress controller: <strong><a href="https://projectcontour.io">Contour</a></strong></li>
             <li>Certificate management: <strong><a href="https://cert-manager.io">Cert-Manager</a></strong></li>
             <li>Image registry and scanning: <strong><a href="https://goharbor.io">Harbor</a></strong></li>
-            <li>Image building and buildpack support: <strong><a href="https://github.com/pivotal/kpack">KPack</a></strong></li>
-            <li>Continuous integration and delivery pipeline: <strong><a href="https://concourse-ci.org">Concourse</a></strong></li>
+            <li>Image building and buildpack support: <strong><a
+                    href="https://github.com/pivotal/kpack">KPack</a></strong></li>
+            <li>Continuous integration and delivery pipeline: <strong><a
+                    href="https://concourse-ci.org">Concourse</a></strong></li>
         </ul>
 
         <p>
@@ -131,7 +134,8 @@
 
 <section class="callout yellow">
     <div class="container">
-        <blockquote>Building software will always be hard. There is inherently no silver bullet. - Fred Brooks</blockquote>
+        <blockquote>Building software will always be hard. There is inherently no silver bullet. - Fred Brooks
+        </blockquote>
     </div>
 </section>
 
@@ -322,7 +326,8 @@ clusterissuer.cert-manager.io/letsencrypt-prod created
 
         <ul>
             <li>concourse-images (public) - images used by the pipeline.</li>
-            <li>kpack (public) - image(s) used to build the application image and the application image, once created.</li>
+            <li>kpack (public) - image(s) used to build the application image and the application image, once created.
+</li>
         </ul>
 
         <p>
@@ -351,8 +356,8 @@ password: {PASSWORD}
         <h2>Continuous integration and delivery</h2>
 
         <p>
-            We’ll be using a popular tool named <a href="https://concourse-ci.org">Concourse</a> for continuous delivery.
-            Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
+            We’ll be using a popular tool named <a href="https://concourse-ci.org">Concourse</a> for continuous
+            delivery. Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
 
         <pre>
 <code class="shell">bash 04-install-concourse.sh</code>
@@ -492,16 +497,6 @@ clusterstore.kpack.io/default created
 
     </div>
 </section>
-
-<!--
-<section>
-    <div class="container">
-        <h2>Interested in more content like this content?</h2>
-        <p>Take a look at our weekend workshop <a href="https://www.cloudnativeweekend.org" target="_blank">Cloud Native
-            Weekend</a>.</p>
-    </div>
-</section>
--->
 
 <section class="callout">
     <div class="container">
