@@ -347,6 +347,7 @@ jobs:
               IMG=\$(kubectl get image ${APP_NAME}-image -n ${APP_NAME} -o jsonpath="{.status.latestImage}")
               sed -i "s|CURRENT_APP_IMAGE|\$IMG|" ${APP_NAME}-deployment.yml
               kubectl apply -f ${APP_NAME}-deployment.yml
+              echo "https://${APP_NAME}.${DOMAIN}"
           platform: linux
         params:
           KUBECONFIG: ((kubeconfig))
