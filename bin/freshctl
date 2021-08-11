@@ -17,7 +17,7 @@ function create_secret_kpack() {
 
 function create_service_account_kpack() {
 
-  echo "Creating a service account for kpack ${DEPLOY_KEY}-registry-credentials"
+  echo "Creating a service account for kpack-${DEPLOY_KEY}-registry-credentials"
   cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: ServiceAccount
@@ -339,7 +339,7 @@ jobs:
           run:
             path: sh
             args:
-            - -exc
+            - -ec
             - |
               echo "\$KUBECONFIG" > config.yml
               export KUBECONFIG=config.yml
