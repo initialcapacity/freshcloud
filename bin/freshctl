@@ -17,7 +17,7 @@ function create_secret_kpack() {
 
 function create_service_account_kpack() {
 
-  echo "Creating a service account for kpack ${DEPLOY_KEY}-registry-credentials"
+  echo "Creating a service account for kpack-${DEPLOY_KEY}-registry-credentials"
   cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: ServiceAccount
@@ -92,7 +92,7 @@ metadata:
   namespace: ${APP_NAME}
   name: ${APP_NAME}-image-role
 rules:
-- apiGroups: ["kpack.io", "", "extensions", "apps"]
+- apiGroups: ["kpack.io", "", "networking.k8s.io", "apps"]
   resources: ["images", "builds", "pods", "pods/log", "services", "ingresses", "deployments"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
@@ -118,7 +118,7 @@ function write_pipeline_params() {
   echo "Writing pipeline params yaml"
 
   # Vars we need to add to our kubeconfig
-  SERVER=$(kubectl cluster-info|grep 'Kubernetes' | awk '{print $NF}')
+  SERVER=$(kubectl cluster-info|head -1|awk '{print $NF}')
   NAME=$(kubectl get secrets -n ${APP_NAME} |grep ${APP_NAME}-service-account-token|awk '{print $1}')
   CA=$(kubectl get secret/${NAME} -n ${APP_NAME} -o jsonpath='{.data.ca\.crt}')
   TOKEN=$(kubectl get secret/${NAME} -n ${APP_NAME} -o jsonpath='{.data.token}' | base64 --decode)
@@ -132,14 +132,14 @@ kubeconfig: |
   apiVersion: v1
   kind: Config
   clusters:
-  - name: default-cluster
+  - name: ${K8S_CLUSTER_NAME}
     cluster:
       certificate-authority-data: ${CA}
       server: ${SERVER}
   contexts:
   - name: default-context
     context:
-      cluster: default-cluster
+      cluster: ${K8S_CLUSTER_NAME}
       namespace: default
       user: default-user
   current-context: default-context
@@ -189,7 +189,7 @@ app_manifest: |
     sessionAffinity: None
     type: ClusterIP
   ---
-  apiVersion: extensions/v1beta1
+  apiVersion: networking.k8s.io/v1
   kind: Ingress
   metadata:
     name: ${APP_NAME}
@@ -208,8 +208,10 @@ app_manifest: |
       http:
         paths:
         - backend:
-            serviceName: ${APP_NAME}
-            servicePort: 80
+            service:
+              name: ${APP_NAME}
+              port:
+                number: 80
           pathType: ImplementationSpecific
     tls:
     - hosts:
@@ -238,6 +240,11 @@ resource_types:
     tag: "1.0"
 
 resources:
+  - name: ${APP_NAME}-image
+    type: registry-image
+    source:
+      repository: registry.${DOMAIN}/kpack/${APP_NAME}
+
   - name: ${APP_NAME}-source-code
     type: git
     source:
@@ -261,6 +268,43 @@ cat <<EOF >> build/${APP_NAME}-pipeline.yml
         kubeconfig: ((kubeconfig))
 
 jobs:
+  - name: vulnerability-scan
+    plan:
+    - task: sleep
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: ubuntu
+            tag: bionic
+        run:
+          path: /bin/sleep
+          args: [15s]
+    - in_parallel:
+      - get: ${APP_NAME}-build-service
+        trigger: true
+        passed: [build-${APP_NAME}-image]
+      - get: ${APP_NAME}-image
+    - task: trivy-fs
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: aquasec/trivy
+        inputs:
+        - name: ${APP_NAME}-image
+        caches:
+        - path: trivy-cache
+        run:
+          path: sh
+          args:
+          - -cex
+          - |
+            trivy --cache-dir trivy-cache fs --severity HIGH,CRITICAL --vuln-type library,os --ignore-unfixed --exit-code 1 ${APP_NAME}-image/rootfs
+
+
   - name: build-${APP_NAME}-image
     plan:
       - get: ${APP_NAME}-source-code
@@ -273,9 +317,11 @@ jobs:
 
   - name: deploy-${APP_NAME}
     plan:
-      - get: ${APP_NAME}-build-service
-        trigger: true
       - get: ${APP_NAME}-source-code
+      - get: ${APP_NAME}-build-service
+        passed:
+        - vulnerability-scan
+        trigger: true
       - task: deploy-kubernetes
         config:
           platform: linux
@@ -293,7 +339,7 @@ jobs:
           run:
             path: sh
             args:
-            - -exc
+            - -ec
             - |
               echo "\$KUBECONFIG" > config.yml
               export KUBECONFIG=config.yml
@@ -301,6 +347,7 @@ jobs:
               IMG=\$(kubectl get image ${APP_NAME}-image -n ${APP_NAME} -o jsonpath="{.status.latestImage}")
               sed -i "s|CURRENT_APP_IMAGE|\$IMG|" ${APP_NAME}-deployment.yml
               kubectl apply -f ${APP_NAME}-deployment.yml
+              echo "https://${APP_NAME}.${DOMAIN}"
           platform: linux
         params:
           KUBECONFIG: ((kubeconfig))
@@ -350,6 +397,10 @@ function add_app() {
 
 function delete_app() {
 
+  if [ ! -e $1 ]; then
+      echo "$1 doesn't seem to exist."
+      exit 1
+  fi
   source $1
 
   fly -t ${K8S_CLUSTER_NAME} dp -p build-${APP_NAME}
@@ -358,8 +409,8 @@ function delete_app() {
 }
 
 function list_apps() {
-  for i in $(kubectl get deployments -A -l source=freshcloud | awk {'print $1}'|grep -v NAMESPACE); do 
-      kubectl get ingress -n $i 2> /dev/null|egrep -v 'NAME|acme-http' | awk {'printf ("%15s\t\t%s\n", $1, $3)'}; 
+  for i in $(kubectl get deployments -A -l source=freshcloud | awk {'print $1}'|grep -v NAMESPACE); do
+      kubectl get ingress -n $i 2> /dev/null|egrep -v 'NAME|acme-http' | awk {'printf ("%15s\t\t%s\n", $1, $3)'};
   done
 }
 
@@ -378,7 +429,7 @@ EOF
 
 TERM=dumb
 
-# Options 
+# Options
 if [ "$1" == 'endpoints' ]; then
     list_endpoints
 elif [ "$1" == 'add' ]; then
@@ -403,6 +454,6 @@ else
   echo "  $0 delete               delete an application"
   echo "  $0 endpoints            list endpoints"
   echo "  $0 apps                 list applications"
-  echo 
+  echo
   exit 1
 fi

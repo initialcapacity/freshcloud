@@ -4,36 +4,40 @@
     <meta charset="UTF-8">
     <meta name=viewport content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#6db33f">
-    <meta name="google-site-verification" content="H3WqYhJB11X-HJmTnglgQXSVz0U596ggKbsekXN_Rl4"/>
+    <meta name="description"
+          content="Fresh Cloud by Initial Capacity describes how to build a modern application platform using kubernetes. This website and codebase will make you a better platform engineer.">
 
     <meta property="og:title" content="Fresh Cloud"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:description" content="A modern application platform."/>
+    <meta property="og:description"
+          content="Fresh Cloud by Initial Capacity describes how to build a modern application platform using kubernetes. This website and codebase will make you a better platform engineer."/>
     <meta property="og:url" content="https://www.freshcloud.com"/>
     <meta property="og:image" content="https://www.freshcloud.com/images/freshcloud.png">
 
     <meta name="twitter:card" content="summary_large_image"/>
     <meta name="twitter:domain" content="www.freshcloud.com"/>
     <meta name="twitter:title" content="Fresh Cloud"/>
-    <meta name="twitter:description" content="A modern application platform."/>
+    <meta name="twitter:description"
+          content="Fresh Cloud by Initial Capacity describes how to build a modern application platform using kubernetes. This website and codebase will make you a better platform engineer."/>
     <meta name="twitter:url" content="https://www.freshcloud.com"/>
     <meta name="twitter:image" content="https://www.freshcloud.com/images/freshcloud.png">
 
     <title>Fresh Cloud</title>
     <link rel="stylesheet" href="style/reset.css">
     <link rel="stylesheet" href="style/site.css">
-    <link rel="icon" type="image/png" href="images/favicon.png" sizes="64x64">
-    <script type="text/javascript">
-        var _paq = window._paq = window._paq || [];
-        _paq.push(['trackPageView']);
-        _paq.push(['enableLinkTracking']);
-        (function() {
-            var u="https://freshcloud.matomo.cloud/";
-            _paq.push(['setTrackerUrl', u+'matomo.php']);
-            _paq.push(['setSiteId', '1']);
-            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-            g.type='text/javascript'; g.async=true; g.src='//cdn.matomo.cloud/freshcloud.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
-        })();
+    <link rel="icon" type="image/png" href="images/favicon-alt.svg" sizes="64x64">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VN2D22QSS7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-VN2D22QSS7');
     </script>
 </head>
 
@@ -41,7 +45,7 @@
 
 <header>
     <div class="container">
-        <h1>Fresh Cloud</h1>
+        <h1 class="bowlby">FreshCloud[]</h1>
     </div>
 </header>
 
@@ -105,8 +109,8 @@
             a few additional components to complete the infrastructure.
 
         <p>
-            The <a href="https://github.com/continuumcollective/freshcloud">GitHub repository</a> contains a <a
-            href="https://github.com/continuumcollective/freshcloud/tree/main/bin">bin</a> directory with scripts that
+            The <a href="https://github.com/initialcapacity/freshcloud">GitHub repository</a> contains a <a
+                href="https://github.com/initialcapacity/freshcloud/tree/main/bin">bin</a> directory with scripts that
             deploy and configure all the infrastructure components.
             We’ll also be using Google’s Cloud Platform (GCP).
             If you haven’t used GCP in the past <a href="https://cloud.google.com/free">sign up for a free account</a>.
@@ -119,8 +123,10 @@
             <li>Ingress controller: <strong><a href="https://projectcontour.io">Contour</a></strong></li>
             <li>Certificate management: <strong><a href="https://cert-manager.io">Cert-Manager</a></strong></li>
             <li>Image registry and scanning: <strong><a href="https://goharbor.io">Harbor</a></strong></li>
-            <li>Image building and buildpack support: <strong><a href="https://github.com/pivotal/kpack">KPack</a></strong></li>
-            <li>Continuous integration and delivery pipeline: <strong><a href="https://concourse-ci.org">Concourse</a></strong></li>
+            <li>Image building and buildpack support: <strong><a
+                    href="https://github.com/pivotal/kpack">KPack</a></strong></li>
+            <li>Continuous integration and delivery pipeline: <strong><a
+                    href="https://concourse-ci.org">Concourse</a></strong></li>
         </ul>
 
         <p>
@@ -131,7 +137,8 @@
 
 <section class="callout yellow">
     <div class="container">
-        <blockquote>Building software will always be hard. There is inherently no silver bullet. - Fred Brooks</blockquote>
+        <blockquote>Building software will always be hard. There is inherently no silver bullet. - Fred Brooks
+        </blockquote>
     </div>
 </section>
 
@@ -176,7 +183,7 @@
             platform.
 
         <pre>
-<code class="shell">git clone git@github.com:continuumcollective/freshcloud.git</code>
+<code class="shell">git clone git@github.com:initialcapacity/freshcloud.git</code>
         </pre>
 
         <h2>Platform configuration</h2>
@@ -322,7 +329,8 @@ clusterissuer.cert-manager.io/letsencrypt-prod created
 
         <ul>
             <li>concourse-images (public) - images used by the pipeline.</li>
-            <li>kpack (public) - image(s) used to build the application image and the application image, once created.</li>
+            <li>kpack (public) - image(s) used to build the application image and the application image, once created.
+            </li>
         </ul>
 
         <p>
@@ -351,8 +359,8 @@ password: {PASSWORD}
         <h2>Continuous integration and delivery</h2>
 
         <p>
-            We’ll be using a popular tool named <a href="https://concourse-ci.org">Concourse</a> for continuous delivery.
-            Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
+            We’ll be using a popular tool named <a href="https://concourse-ci.org">Concourse</a> for continuous
+            delivery. Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
 
         <pre>
 <code class="shell">bash 04-install-concourse.sh</code>
@@ -443,7 +451,7 @@ clusterstore.kpack.io/default created
         </pre>
 
         <p>
-            Let’s review the steps the freshclt CLI performs to deploy our application.
+            Let’s review the steps the freshctl CLI performs to deploy our application.
 
         <ul>
             <li>Create the application namespace
@@ -493,19 +501,10 @@ clusterstore.kpack.io/default created
     </div>
 </section>
 
-<!--
-<section>
-    <div class="container">
-        <h2>Interested in more content like this content?</h2>
-        <p>Take a look at our weekend workshop <a href="https://www.cloudnativeweekend.org" target="_blank">Cloud Native
-            Weekend</a>.</p>
-    </div>
-</section>
--->
-
 <section class="callout">
     <div class="container">
-        <img src="images/cc-logo-white.svg" alt="Continuum Collective">
+        <h3 class="bowlby">An article by</h3>
+        <img src="images/logo-white-short.svg" alt="Initial Capacity">
     </div>
 </section>
 
@@ -513,7 +512,7 @@ clusterstore.kpack.io/default created
     <div class="container">
         <p>
             &copy;<script>document.write(new Date().getFullYear());</script>
-            Continuum Collective, Inc. All rights reserved.
+            Initial Capacity, Inc. All rights reserved.
         </p>
     </div>
 </footer>

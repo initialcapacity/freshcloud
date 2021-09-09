@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400;0,700;1,400&family=Bowlby+One&display=swap');
+
 :root {
     --blue: #3e53a6;
     --orange: #E86556;
@@ -58,6 +60,10 @@ a {
 
 strong {
     font-weight: 700;
+}
+
+.bowlby {
+    font-family: 'Bowlby One';
 }
 
 em {
@@ -228,6 +234,10 @@ pre code {
 
     header {
         padding-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 3rem;
     }
 
     section {
