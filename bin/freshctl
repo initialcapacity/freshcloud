@@ -17,8 +17,8 @@ function create_secret_kpack() {
 
 function create_service_account_kpack() {
 
-  echo "Creating a service account for kpack-${DEPLOY_KEY}-registry-credentials"
-  cat <<EOF | kubectl apply -f -
+  echo "Creating a service account for kpack-${APP_NAME}-registry-credentials"
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-service-account.yml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -32,12 +32,14 @@ fi`
 imagePullSecrets:
 - name: ${APP_NAME}-registry-credentials
 EOF
+
+  kubectl apply -f build/${APP_NAME}/${APP_NAME}-service-account.yml
 }
 
 function create_builder_kpack() {
 
   echo "Creating the kpack builder"
-  cat <<EOF | kubectl apply -f -
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-kpack-builder.yml
 apiVersion: kpack.io/v1alpha1
 kind: Builder
 metadata:
@@ -58,12 +60,14 @@ spec:
   - group:
     - id: heroku/nodejs
 EOF
+
+  kubectl apply -f build/${APP_NAME}/${APP_NAME}-kpack-builder.yml
 }
 
 function create_app_image_spec() {
 
   echo "Creating the app image spec"
-  cat <<EOF | kubectl apply -f -
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-image-spec.yml
 apiVersion: kpack.io/v1alpha1
 kind: Image
 metadata:
@@ -80,12 +84,14 @@ spec:
       url: ${APP_REPO}
       revision: ${APP_BRANCH}
 EOF
+
+  kubectl apply -f build/${APP_NAME}/${APP_NAME}-image-spec.yml
 }
 
 function install_role_binding() {
 
   echo "Creating role and role binding"
-  cat <<EOF | kubectl apply -f -
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-role-binding.yml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
@@ -110,11 +116,12 @@ roleRef:
   name: ${APP_NAME}-image-role
   apiGroup: ""
 EOF
+
+  kubectl apply -f build/${APP_NAME}/${APP_NAME}-role-binding.yml
 }
 
 function write_pipeline_params() {
 
-  mkdir -p build
   echo "Writing pipeline params yaml"
 
   # Vars we need to add to our kubeconfig
@@ -125,7 +132,7 @@ function write_pipeline_params() {
   NAMESPACE=$(kubectl get secret/${NAME} -n ${APP_NAME} -o jsonpath='{.data.namespace}' | base64 --decode)
 
   # Create a role to be used by concourse to deploy application builds.
-  cat <<EOF > build/${APP_NAME}-params.yml
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-params.yml
 service-account-key: random-string
 domain: ${DOMAIN}
 kubeconfig: |
@@ -221,7 +228,7 @@ EOF
 
 if [ ! -z ${DEPLOY_KEY} ]; then
 KEY=$(cat ${DEPLOY_KEY} |awk '{print "  " $0}')
-  cat <<EOF >> build/${APP_NAME}-params.yml
+  cat <<EOF >> build/${APP_NAME}/${APP_NAME}-params.yml
 git_repo_deploy_key: |
 ${KEY}
 EOF
@@ -231,7 +238,7 @@ fi
 function write_pipeline() {
 
   echo "Writing pipeline yaml"
-  cat <<EOF > build/${APP_NAME}-pipeline.yml
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-pipeline.yml
 resource_types:
 - name: kpack-image
   type: registry-image
@@ -252,12 +259,12 @@ resources:
       branch: ${APP_BRANCH}
 EOF
 if [ ! -z ${DEPLOY_KEY} ]; then
-cat <<EOF >> build/${APP_NAME}-pipeline.yml
+cat <<EOF >> build/${APP_NAME}/${APP_NAME}-pipeline.yml
       private_key: ((git_repo_deploy_key))
 EOF
 fi
 
-cat <<EOF >> build/${APP_NAME}-pipeline.yml
+cat <<EOF >> build/${APP_NAME}/${APP_NAME}-pipeline.yml
   - name: ${APP_NAME}-build-service
     type: kpack-image
     source:
@@ -359,7 +366,8 @@ EOF
 function fly_pipeline() {
 
     fly login -c https://ci.${DOMAIN} -u admin -p ${PASSWD} -t ${K8S_CLUSTER_NAME}
-    echo y | fly -t ${K8S_CLUSTER_NAME} set-pipeline -p build-${APP_NAME} -c build/${APP_NAME}-pipeline.yml -l build/${APP_NAME}-params.yml
+    echo y | fly -t ${K8S_CLUSTER_NAME} set-pipeline -p build-${APP_NAME} \
+      -c build/${APP_NAME}/${APP_NAME}-pipeline.yml -l build/${APP_NAME}/${APP_NAME}-params.yml
     fly -t ${K8S_CLUSTER_NAME} unpause-pipeline -p build-${APP_NAME}
 }
 
@@ -367,6 +375,8 @@ function add_app() {
 
   source $1
   echo "Adding ${APP_NAME}"
+
+  mkdir -p build/${APP_NAME}/
 
   echo "Creating kubernetes namespace for ${APP_NAME}"
   kubectl create ns ${APP_NAME}
@@ -384,10 +394,15 @@ function add_app() {
   install_role_binding
   write_pipeline_params
   write_pipeline
-  yq e '.app_manifest' build/${APP_NAME}-params.yml > build/${APP_NAME}-manifest.yml
+  yq e '.app_manifest' build/${APP_NAME}/${APP_NAME}-params.yml > build/${APP_NAME}/manifest.yml
 
   echo "Deploying the pipeline to Concourse"
   fly_pipeline &> /dev/null
+  if [ $? != 0 ]; then
+    echo ""
+    echo "Failed to add ${APP_NAME}. Manual cleanup needed."
+    exit 1
+  fi
 
   echo ""
   echo "${APP_NAME} added succesfully!"
@@ -405,7 +420,8 @@ function delete_app() {
 
   fly -t ${K8S_CLUSTER_NAME} dp -p build-${APP_NAME}
   kubectl delete ns ${APP_NAME}
-  rm -f build/${APP_NAME}-*.yml
+  echo "Deleting deployment staging directory: build/${APP_NAME}/"
+  rm -rf build/${APP_NAME}/
 }
 
 function list_apps() {
