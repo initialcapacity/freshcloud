@@ -5,6 +5,15 @@
 source ../.env_development.sh
 source ../components/kubernetes-support/kubectl-support.sh
 
+function check_docker_service() {
+
+  docker info &> /dev/null
+  if [ $? != 0 ]; then
+    echo "Please start the docker service so we can build containers."
+    exit 127
+  fi
+}
+
 function kube_install_kpack() {
 
    kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
@@ -55,9 +64,10 @@ spec:
 EOF
 }
 
-build_docker_container
-kube_install_kpack
-wait_for_ready kpack
-create_cluster_stack_kpack
-create_cluster_store_kpack
+check_docker_service
+#build_docker_container
+#kube_install_kpack
+#wait_for_ready kpack
+#create_cluster_stack_kpack
+#create_cluster_store_kpack
 
