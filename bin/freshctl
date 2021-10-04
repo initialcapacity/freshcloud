@@ -445,6 +445,27 @@ EOF
 
 TERM=dumb
 
+function usage() {
+
+cat << EOF
+
+$ freshctl
+
+Freshctl CLI
+
+Usage:
+  freshctl [command] [arguments]
+
+Available commands:
+
+  add                  add an application
+  delete               delete an application
+  endpoints            list endpoints
+  apps                 list applications
+
+EOF
+}
+
 # Options 
 if [ "$1" == 'endpoints' ]; then
     list_endpoints
@@ -463,13 +484,5 @@ elif [ "$1" == 'delete' ]; then
 elif [ "$1" == 'apps' ]; then
   list_apps
 else
-  echo "freshctl manages fresh cloud applications."
-  echo ""
-  echo "Basic Commands:"
-  echo "  $0 add                  add an application"
-  echo "  $0 delete               delete an application"
-  echo "  $0 endpoints            list endpoints"
-  echo "  $0 apps                 list applications"
-  echo 
-  exit 1
+  usage
 fi
