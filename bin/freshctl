@@ -449,19 +449,17 @@ function usage() {
 
 cat << EOF
 
-$ freshctl
-
 Freshctl CLI
 
 Usage:
-  freshctl [command] [arguments]
+  freshctl [command] 
 
 Available commands:
 
-  add                  add an application
-  delete               delete an application
-  endpoints            list endpoints
-  apps                 list applications
+  add                  Add an application
+  delete               Delete an application
+  endpoints            List cluster endpoints
+  apps                 List applications
 
 EOF
 }
