@@ -65,9 +65,9 @@ EOF
 }
 
 check_docker_service
-#build_docker_container
-#kube_install_kpack
-#wait_for_ready kpack
-#create_cluster_stack_kpack
-#create_cluster_store_kpack
+build_docker_container
+kube_install_kpack
+wait_for_ready kpack
+create_cluster_stack_kpack
+create_cluster_store_kpack
 

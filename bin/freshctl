@@ -26,7 +26,7 @@ metadata:
   namespace: ${APP_NAME}
 secrets:
 - name: ${APP_NAME}-registry-credentials
-`if [ ! -z ${DEPLOY_KEY} ]; then
+`if [[ ! -z ${DEPLOY_KEY_PATH} ]]; then
    echo "- name: ${APP_NAME}-deploy-key"
 fi`
 imagePullSecrets:
@@ -226,8 +226,8 @@ app_manifest: |
       secretName: ${APP_NAME}-cert
 EOF
 
-if [ ! -z ${DEPLOY_KEY} ]; then
-KEY=$(cat ${DEPLOY_KEY} |awk '{print "  " $0}')
+if [[ ! -z ${DEPLOY_KEY_PATH} ]]; then
+KEY=$(cat $DEPLOY_KEY_PATH |awk '{print "  " $0}')
   cat <<EOF >> build/${APP_NAME}/${APP_NAME}-params.yml
 git_repo_deploy_key: |
 ${KEY}
@@ -258,7 +258,7 @@ resources:
       uri: ${APP_REPO}
       branch: ${APP_BRANCH}
 EOF
-if [ ! -z ${DEPLOY_KEY} ]; then
+if [[ ! -z ${DEPLOY_KEY_PATH} ]]; then
 cat <<EOF >> build/${APP_NAME}/${APP_NAME}-pipeline.yml
       private_key: ((git_repo_deploy_key))
 EOF
@@ -383,9 +383,9 @@ function add_app() {
 
   create_secret_kpack
 
-  if [ ! -z ${DEPLOY_KEY} ]; then
+  if [[ ! -z ${DEPLOY_KEY_PATH} ]]; then
     echo "Creating kpack secret for ${APP_NAME}-deploy-key"
-    kp secret create ${APP_NAME}-deploy-key --git-url git@github.com --git-ssh-key ${DEPLOY_KEY} -n ${APP_NAME}
+    kp secret create ${APP_NAME}-deploy-key --git-url git@github.com --git-ssh-key ${DEPLOY_KEY_PATH} -n ${APP_NAME}
   fi
 
   create_service_account_kpack
