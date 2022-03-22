@@ -8,7 +8,7 @@ function helm_install_contour() {
   kubectl create namespace projectcontour
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo update
-  helm install ingress bitnami/contour -n projectcontour --version 3.3.1
+  helm install ingress bitnami/contour -n projectcontour
   if [ $? != 0 ]; then
    echo "Failed to install Contour. Bummer"
    exit 1
