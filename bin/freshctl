@@ -11,7 +11,7 @@ function create_secret_kpack() {
   kubectl create secret docker-registry ${APP_NAME}-registry-credentials \
       --docker-username=admin \
       --docker-password=$PASSWD \
-      --docker-server=https://registry.$DOMAIN \
+      --docker-server=registry.${DOMAIN} \
       --namespace ${APP_NAME}
 }
 
@@ -40,7 +40,7 @@ function create_builder_kpack() {
 
   echo "Creating the kpack builder"
   cat <<EOF > build/${APP_NAME}/${APP_NAME}-kpack-builder.yml
-apiVersion: kpack.io/v1alpha2
+apiVersion: kpack.io/v1alpha1
 kind: Builder
 metadata:
   name: ${APP_NAME}-builder
@@ -68,7 +68,7 @@ function create_app_image_spec() {
 
   echo "Creating the app image spec"
   cat <<EOF > build/${APP_NAME}/${APP_NAME}-image-spec.yml
-apiVersion: kpack.io/v1alpha2
+apiVersion: kpack.io/v1alpha1
 kind: Image
 metadata:
   name: ${APP_NAME}-image
@@ -93,7 +93,7 @@ function install_role_binding() {
   echo "Creating role and role binding"
   cat <<EOF > build/${APP_NAME}/${APP_NAME}-role-binding.yml
 kind: Role
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   namespace: ${APP_NAME}
   name: ${APP_NAME}-image-role
@@ -103,7 +103,7 @@ rules:
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 kind: RoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: ${APP_NAME}-image-role-binding
   namespace: ${APP_NAME}
