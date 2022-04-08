@@ -16,7 +16,8 @@ function check_docker_service() {
 
 function kube_install_kpack() {
 
-   kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
+   #kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
+   kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.5.2/release-0.5.2.yaml
 }
 
 function build_docker_container() {
@@ -37,16 +38,16 @@ function build_docker_container() {
 function create_cluster_stack_kpack() {
 
   cat <<EOF | kubectl apply -f -
-apiVersion: kpack.io/v1alpha1
+apiVersion: kpack.io/v1alpha2
 kind: ClusterStack
 metadata:
   name: base
 spec:
-  id: "heroku-20"
+  id: "io.buildpacks.stacks.bionic"
   buildImage:
-    image: "heroku/pack:20-build"
+    image: "paketobuildpacks/build:base-cnb"
   runImage:
-    image: "heroku/pack:20"
+    image: "paketobuildpacks/run:base-cnb"
 EOF
 }
 
@@ -54,13 +55,15 @@ EOF
 function create_cluster_store_kpack() {
 
   cat <<EOF | kubectl apply -f -
-apiVersion: kpack.io/v1alpha1
+apiVersion: kpack.io/v1alpha2
 kind: ClusterStore
 metadata:
   name: default
 spec:
   sources:
-  - image: heroku/buildpacks:20
+  - image: gcr.io/paketo-buildpacks/java
+  - image: gcr.io/paketo-buildpacks/nodejs
+  - image: gcr.io/paketo-buildpacks/go
 EOF
 }
 

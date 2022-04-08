@@ -23,6 +23,14 @@ function gcloud_enable_services() {
 
 function gcp_create_k8s_cluster() {
 
+  gcloud container clusters create \
+      --project "${GCP_PROJECT_NAME}" \
+      ${K8S_CLUSTER_NAME} --zone ${ZONE} --num-nodes 5
+
+}
+
+function old_create() {
+
   gcloud beta container --project "${GCP_PROJECT_NAME}" \
       clusters create "${K8S_CLUSTER_NAME}" \
       --zone "${ZONE}" \

@@ -40,7 +40,7 @@ function create_builder_kpack() {
 
   echo "Creating the kpack builder"
   cat <<EOF > build/${APP_NAME}/${APP_NAME}-kpack-builder.yml
-apiVersion: kpack.io/v1alpha1
+apiVersion: kpack.io/v1alpha2
 kind: Builder
 metadata:
   name: ${APP_NAME}-builder
@@ -56,9 +56,9 @@ spec:
     kind: ClusterStore
   order:
   - group:
-    - id: heroku/java
+    - id: paketo-buildpacks/go
   - group:
-    - id: heroku/nodejs
+    - id: paketo-buildpacks/java
 EOF
 
   kubectl apply -f build/${APP_NAME}/${APP_NAME}-kpack-builder.yml
@@ -68,7 +68,7 @@ function create_app_image_spec() {
 
   echo "Creating the app image spec"
   cat <<EOF > build/${APP_NAME}/${APP_NAME}-image-spec.yml
-apiVersion: kpack.io/v1alpha1
+apiVersion: kpack.io/v1alpha2
 kind: Image
 metadata:
   name: ${APP_NAME}-image
