@@ -16,7 +16,6 @@ function check_docker_service() {
 
 function kube_install_kpack() {
 
-   #kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.2.2/release-0.2.2.yaml
    kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.5.2/release-0.5.2.yaml
 }
 

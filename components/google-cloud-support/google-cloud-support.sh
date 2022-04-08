@@ -42,7 +42,7 @@ function old_create() {
       --metadata disable-legacy-endpoints=true \
       --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
       --num-nodes "5" \
-      --enable-stackdriver-kubernetes --enable-ip-alias \
+      --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias \
       --network "projects/${GCP_PROJECT_NAME}/global/networks/default" \
       --subnetwork "projects/${GCP_PROJECT_NAME}/regions/us-central1/subnetworks/default" \
       --default-max-pods-per-node "110" \
