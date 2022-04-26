@@ -11,16 +11,16 @@ func EnableServicesCmd() []string {
 		"cloudresourcemanager", "compute", "container", "datastore", "dns", "sqladmin", "storage-component",
 	}
 	for _, s := range services {
-		commands = append(commands, fmt.Sprintf("gcloud services enable %s.googleapis.com", s))
+		commands = append(commands, fmt.Sprintf("gcloud services enable %s.googleapis.com --quiet\n", s))
 	}
 	return commands
 }
 
 func ConfigureCmd(projectId, zone, clusterName string) string {
-	return fmt.Sprintf("gcloud container clusters get-credentials '%s' --zone '%v' --project '%v'\n", clusterName, zone, projectId)
+	return fmt.Sprintf("gcloud container clusters get-credentials '%s' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone)
 }
 
-func CreateClusterCmd(resourcesDirectory, projectId, zone, clusterName string) string {
+func CreateClustersCmd(resourcesDirectory, projectId, zone, clusterName string) string {
 	name := "google_cloud_cluster"
 	data := struct {
 		ProjectID   string
@@ -32,4 +32,8 @@ func CreateClusterCmd(resourcesDirectory, projectId, zone, clusterName string) s
 		ClusterName: clusterName,
 	}
 	return templatesupport.Parse(resourcesDirectory, name, data)
+}
+
+func DeleteClustersCmd(projectId, zone, clusterName string) string {
+	return fmt.Sprintf("gcloud container clusters delete '%v' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone)
 }

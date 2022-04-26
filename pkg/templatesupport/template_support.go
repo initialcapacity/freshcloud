@@ -8,9 +8,12 @@ import (
 
 func Parse(resourcesDirectory, name string, data any) string {
 	var parsed bytes.Buffer
-	tmpl := filepath.Join(resourcesDirectory, "./"+name+".gotmpl")
-	err := template.Must(template.New(filepath.Base(tmpl)).Funcs(
-		template.FuncMap{}).ParseFiles(tmpl)).Execute(&parsed, data)
+	path := filepath.Join(resourcesDirectory, "./"+name+".gotmpl")
+	tmpl, err := template.New(filepath.Base(path)).Funcs(template.FuncMap{}).ParseFiles(path)
+	if err != nil {
+		panic(err)
+	}
+	err = tmpl.Execute(&parsed, data)
 	if err != nil {
 		panic(err)
 	}

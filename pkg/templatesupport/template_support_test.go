@@ -17,6 +17,19 @@ func TestParse(t *testing.T) {
 	assert.Equal(t, "hi world", parsed)
 }
 
+func TestParse_badTemplate(t *testing.T) {
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../resources")
+	defer func() {
+		if recover() == nil {
+			t.Fail()
+		}
+	}()
+	_ = templatesupport.Parse(resourcesDirectory, "test", struct {
+		Bad string
+	}{Bad: "world"})
+}
+
 func TestParse_missingResources(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../x_resources")

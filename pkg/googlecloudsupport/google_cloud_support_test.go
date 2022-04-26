@@ -10,18 +10,23 @@ import (
 
 func TestEnableServices(t *testing.T) {
 	services := googlecloudsupport.EnableServicesCmd()
-	assert.Contains(t, services, "gcloud services enable container.googleapis.com")
+	assert.Contains(t, services, "gcloud services enable container.googleapis.com --quiet\n")
 }
 
 func TestCreateClusterCmd(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../freshctl/resources")
-	clusterCmd := googlecloudsupport.CreateClusterCmd(resourcesDirectory, "aProject", "aZone", "aClusterName")
+	clusterCmd := googlecloudsupport.CreateClustersCmd(resourcesDirectory, "aProject", "aZone --quiet", "aClusterName")
 	assert.Contains(t, clusterCmd, "gcloud beta container --project \"aProject\"")
 	assert.Contains(t, clusterCmd, "clusters create \"aClusterName\"")
 }
 
 func TestConfigureCmd(t *testing.T) {
 	cmd := googlecloudsupport.ConfigureCmd("aProject", "aZone", "aClusterName")
-	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --zone 'aZone' --project 'aProject'\n", cmd)
+	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd)
+}
+
+func TestDeleteClustersCmdCmd(t *testing.T) {
+	cmd := googlecloudsupport.DeleteClustersCmd("aProject", "aZone", "aClusterName")
+	assert.Equal(t, "gcloud container clusters delete 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd)
 }
