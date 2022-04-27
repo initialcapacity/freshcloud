@@ -6,9 +6,6 @@ import (
 )
 
 func init() {
-	servicesCmd.AddCommand(awsServicesCmd)
-	awsServicesCmd.AddCommand(aservicesCmd)
-
 	clustersCmd.AddCommand(awsClustersCmd)
 	awsClustersCmd.AddCommand(aservicesCmd)
 	awsClustersCmd.AddCommand(aclustersCreateCmd)
@@ -16,19 +13,14 @@ func init() {
 	awsClustersCmd.AddCommand(aconfigureCmd)
 }
 
-var awsServicesCmd = &cobra.Command{
-	Use:   "aws",
-	Short: "Manage aws infrastructure.",
-}
-
 var awsClustersCmd = &cobra.Command{
 	Use:   "aws",
-	Short: "Manage aws infrastructure.",
+	Short: "Manage aws clusters",
 }
 
 var aservicesCmd = &cobra.Command{
-	Use:   "services",
-	Short: "Enable amazon web services",
+	Use:   "enable-services",
+	Short: "Enable amazon web API services",
 	Run: func(cmd *cobra.Command, args []string) {
 		_, _ = fmt.Fprintf(cmd.OutOrStderr(), "todo")
 	},

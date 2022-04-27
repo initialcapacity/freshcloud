@@ -38,7 +38,7 @@ var rootCmd = &cobra.Command{
 
 				err := command.Run()
 				if err != nil {
-					_, _ = fmt.Printf("Unable to run cmd %v\n.", err)
+					_, _ = fmt.Printf("Unable to run cmd %v\n", err)
 				}
 				_, _ = fmt.Fprintf(cmd.OutOrStderr(), commandOut.String())
 			}
@@ -51,5 +51,6 @@ var resourcesDirectory string
 func Fresh() *cobra.Command {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory = filepath.Join(file, "../../resources")
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	return rootCmd
 }

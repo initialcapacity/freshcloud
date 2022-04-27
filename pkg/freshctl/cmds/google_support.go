@@ -7,28 +7,21 @@ import (
 )
 
 func init() {
-	servicesCmd.AddCommand(googleServicesCmd)
-	googleServicesCmd.AddCommand(gservicesCmd)
-
 	clustersCmd.AddCommand(googleClusterCmd)
+	googleClusterCmd.AddCommand(gservicesCmd)
 	googleClusterCmd.AddCommand(gclustersCreateCmd)
 	googleClusterCmd.AddCommand(gclustersDeleteCmd)
 	googleClusterCmd.AddCommand(gconfigureCmd)
 }
 
-var googleServicesCmd = &cobra.Command{
-	Use:   "gcp",
-	Short: "Manage gcp services.",
-}
-
 var googleClusterCmd = &cobra.Command{
 	Use:   "gcp",
-	Short: "Manage gcp infrastructure.",
+	Short: "Manage google cloud clusters",
 }
 
 var gservicesCmd = &cobra.Command{
-	Use:   "services",
-	Short: "Enable google cloud services",
+	Use:   "enable-services",
+	Short: "Enable google cloud API services",
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, s := range googlecloudsupport.EnableServicesCmd() {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))

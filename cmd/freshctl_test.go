@@ -35,15 +35,21 @@ func TestCommands(t *testing.T) {
 	assert.Equal(t, "freshcloud[version]\nfreshctl version 0.1\n\n", string(version))
 
 	clusterCommands := map[string][]string{
-		"gservices":  {"services", "gcp", "enable"},
+		"gservices":  {"clusters", "gcp", "enable-services"},
 		"gcreate":    {"clusters", "gcp", "create"},
 		"gconfigure": {"clusters", "gcp", "configure"},
 		"gdelete":    {"clusters", "gcp", "delete"},
 
-		"aservices":  {"services", "aws", "enable"},
+		"aservices":  {"clusters", "aws", "enable-services"},
 		"acreate":    {"clusters", "aws", "create"},
 		"aconfigure": {"clusters", "aws", "configure"},
 		"adelete":    {"clusters", "aws", "delete"},
+
+		"contour":     {"services", "contour"},
+		"certmanager": {"services", "certmanager"},
+		"harbor":      {"services", "harbor"},
+		"concourse":   {"services", "concourse"},
+		"kpack":       {"services", "kpack"},
 	}
 	for _, v := range clusterCommands {
 		fresh.SetArgs(v)
