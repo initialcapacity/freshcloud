@@ -34,14 +34,21 @@ func TestCommands(t *testing.T) {
 	version, _ := io.ReadAll(&buf)
 	assert.Equal(t, "freshcloud[version]\nfreshctl version 0.1\n\n", string(version))
 
-	fresh.SetArgs([]string{"services"})
-	assert.NoError(t, fresh.Execute())
+	clusterCommands := map[string][]string{
+		"gservices":  {"services", "gcp", "enable"},
+		"gcreate":    {"clusters", "gcp", "create"},
+		"gconfigure": {"clusters", "gcp", "configure"},
+		"gdelete":    {"clusters", "gcp", "delete"},
 
-	fresh.SetArgs([]string{"clusters"})
-	assert.NoError(t, fresh.Execute())
-
-	fresh.SetArgs([]string{"configure"})
-	assert.NoError(t, fresh.Execute())
+		"aservices":  {"services", "aws", "enable"},
+		"acreate":    {"clusters", "aws", "create"},
+		"aconfigure": {"clusters", "aws", "configure"},
+		"adelete":    {"clusters", "aws", "delete"},
+	}
+	for _, v := range clusterCommands {
+		fresh.SetArgs(v)
+		assert.NoError(t, fresh.Execute())
+	}
 }
 
 func TestCommands_withFlags(t *testing.T) {
