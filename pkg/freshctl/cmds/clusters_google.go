@@ -1,18 +1,17 @@
 package cmds
 
 import (
-	"fmt"
 	"github.com/initialcapacity/freshcloud/pkg/freshctl/googlecloudsupport"
 	"github.com/spf13/cobra"
 )
 
 func init() {
 	clustersCmd.AddCommand(googleClusterCmd)
-	googleClusterCmd.AddCommand(gservicesCmd)
-	googleClusterCmd.AddCommand(gclustersCreateCmd)
-	googleClusterCmd.AddCommand(gclustersListCmd)
-	googleClusterCmd.AddCommand(gclustersDeleteCmd)
-	googleClusterCmd.AddCommand(gconfigureCmd)
+	googleClusterCmd.AddCommand(googleServicesCmd)
+	googleClusterCmd.AddCommand(googleClustersCreateCmd)
+	googleClusterCmd.AddCommand(googleClustersListCmd)
+	googleClusterCmd.AddCommand(googleClustersDeleteCmd)
+	googleClusterCmd.AddCommand(googleConfigureCmd)
 }
 
 var googleClusterCmd = &cobra.Command{
@@ -20,17 +19,15 @@ var googleClusterCmd = &cobra.Command{
 	Short: "Manage google cloud clusters",
 }
 
-var gservicesCmd = &cobra.Command{
+var googleServicesCmd = &cobra.Command{
 	Use:   "enable-services",
 	Short: "Enable google cloud API services",
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, s := range googlecloudsupport.EnableServicesCmd() {
-			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
-		}
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.EnableServicesCmd(resourcesDirectory))
 	},
 }
 
-var gclustersCreateCmd = &cobra.Command{
+var googleClustersCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a google cloud cluster",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -38,24 +35,22 @@ var gclustersCreateCmd = &cobra.Command{
 		projectID := must("GCP_PROJECT_ID")
 		zone := must("GCP_ZONE")
 		clusterName := must("GCP_CLUSTER_NAME")
-
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, projectID, zone, clusterName))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, projectID, zone, clusterName))
 	},
 }
 
-var gclustersListCmd = &cobra.Command{
+var googleClustersListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List google cloud clusters",
 	Run: func(cmd *cobra.Command, args []string) {
 
 		projectID := must("GCP_PROJECT_ID")
 		zone := must("GCP_ZONE")
-
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(projectID, zone))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(projectID, zone))
 	},
 }
 
-var gclustersDeleteCmd = &cobra.Command{
+var googleClustersDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete a google cloud cluster",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -63,12 +58,11 @@ var gclustersDeleteCmd = &cobra.Command{
 		projectID := must("GCP_PROJECT_ID")
 		zone := must("GCP_ZONE")
 		clusterName := must("GCP_CLUSTER_NAME")
-
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(projectID, zone, clusterName))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(projectID, zone, clusterName))
 	},
 }
 
-var gconfigureCmd = &cobra.Command{
+var googleConfigureCmd = &cobra.Command{
 	Use:   "configure",
 	Short: "Configure kubectl for google cloud",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -76,7 +70,6 @@ var gconfigureCmd = &cobra.Command{
 		projectID := must("GCP_PROJECT_ID")
 		zone := must("GCP_ZONE")
 		clusterName := must("GCP_CLUSTER_NAME")
-
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(projectID, zone, clusterName))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(projectID, zone, clusterName))
 	},
 }

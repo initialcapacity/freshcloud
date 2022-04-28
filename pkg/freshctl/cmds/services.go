@@ -2,6 +2,7 @@ package cmds
 
 import (
 	"fmt"
+	"github.com/initialcapacity/freshcloud/pkg/freshctl/services"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +24,10 @@ var contourCmd = &cobra.Command{
 	Use:   "contour",
 	Short: "Install contour",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), "todo")
+		domain := must("DOMAIN")
+		for _, s := range services.InstallContourCmd(resourcesDirectory, domain) {
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
+		}
 	},
 }
 

@@ -1,0 +1,18 @@
+kubectl create namespace projectcontour
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm install ingress bitnami/contour -n projectcontour
+if [ $? != 0 ]; then
+    echo "Failed to install Contour. Bummer"
+    exit 1
+fi
+echo "Waiting to get the load-balancer IP."
+while true; do
+if [ -z "$LB" ]; then
+    LB=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
+    sleep 3;
+    else
+    echo "Create a DNS A for *.{{.Domain}} to $LB"
+    break
+fi
+done

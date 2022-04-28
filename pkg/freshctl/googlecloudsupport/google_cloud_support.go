@@ -5,23 +5,21 @@ import (
 	"github.com/initialcapacity/freshcloud/pkg/templatesupport"
 )
 
-func EnableServicesCmd() []string {
-	var commands []string
-	services := []string{
-		"cloudresourcemanager", "compute", "container", "datastore", "dns", "sqladmin", "storage-component",
+func EnableServicesCmd(resourcesDirectory string) []string {
+	templateName := "google_cloud_services"
+	return []string{
+		templatesupport.Parse(resourcesDirectory, templateName, nil),
 	}
-	for _, s := range services {
-		commands = append(commands, fmt.Sprintf("gcloud services enable %s.googleapis.com --quiet\n", s))
-	}
-	return commands
 }
 
-func ConfigureCmd(projectId, zone, clusterName string) string {
-	return fmt.Sprintf("gcloud container clusters get-credentials '%s' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone)
+func ConfigureCmd(projectId, zone, clusterName string) []string {
+	return []string{
+		fmt.Sprintf("gcloud container clusters get-credentials '%s' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone),
+	}
 }
 
-func CreateClustersCmd(resourcesDirectory, projectId, zone, clusterName string) string {
-	name := "google_cloud_cluster"
+func CreateClustersCmd(resourcesDirectory, projectId, zone, clusterName string) []string {
+	templateName := "google_cloud_cluster"
 	data := struct {
 		ProjectID   string
 		Zone        string
@@ -31,13 +29,19 @@ func CreateClustersCmd(resourcesDirectory, projectId, zone, clusterName string) 
 		Zone:        zone,
 		ClusterName: clusterName,
 	}
-	return templatesupport.Parse(resourcesDirectory, name, data)
+	return []string{
+		templatesupport.Parse(resourcesDirectory, templateName, data),
+	}
 }
 
-func ListClustersCmd(projectId, zone string) string {
-	return fmt.Sprintf("gcloud container clusters list --project '%v' --zone '%v' --quiet", projectId, zone)
+func ListClustersCmd(projectId, zone string) []string {
+	return []string{
+		fmt.Sprintf("gcloud container clusters list --project '%v' --zone '%v' --quiet", projectId, zone),
+	}
 }
 
-func DeleteClustersCmd(projectId, zone, clusterName string) string {
-	return fmt.Sprintf("gcloud container clusters delete '%v' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone)
+func DeleteClustersCmd(projectId, zone, clusterName string) []string {
+	return []string{
+		fmt.Sprintf("gcloud container clusters delete '%v' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone),
+	}
 }

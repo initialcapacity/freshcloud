@@ -18,6 +18,7 @@ func setup() {
 	_ = os.Setenv("GCP_PROJECT_ID", "aProject")
 	_ = os.Setenv("GCP_ZONE", "aZone")
 	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
+	_ = os.Setenv("DOMAIN", "aDomain")
 }
 
 func TestCommands(t *testing.T) {
@@ -43,6 +44,7 @@ func TestCommands(t *testing.T) {
 
 		"aservices":  {"clusters", "aws", "enable-services"},
 		"acreate":    {"clusters", "aws", "create"},
+		"alist":      {"clusters", "aws", "list"},
 		"aconfigure": {"clusters", "aws", "configure"},
 		"adelete":    {"clusters", "aws", "delete"},
 
