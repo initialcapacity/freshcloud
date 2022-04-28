@@ -2,7 +2,7 @@ package cmds
 
 import (
 	"fmt"
-	"github.com/initialcapacity/freshcloud/pkg/googlecloudsupport"
+	"github.com/initialcapacity/freshcloud/pkg/freshctl/googlecloudsupport"
 	"github.com/spf13/cobra"
 )
 
@@ -10,6 +10,7 @@ func init() {
 	clustersCmd.AddCommand(googleClusterCmd)
 	googleClusterCmd.AddCommand(gservicesCmd)
 	googleClusterCmd.AddCommand(gclustersCreateCmd)
+	googleClusterCmd.AddCommand(gclustersListCmd)
 	googleClusterCmd.AddCommand(gclustersDeleteCmd)
 	googleClusterCmd.AddCommand(gconfigureCmd)
 }
@@ -39,6 +40,18 @@ var gclustersCreateCmd = &cobra.Command{
 		clusterName := must("GCP_CLUSTER_NAME")
 
 		_, _ = fmt.Fprintf(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, projectID, zone, clusterName))
+	},
+}
+
+var gclustersListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "List google cloud clusters",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		projectID := must("GCP_PROJECT_ID")
+		zone := must("GCP_ZONE")
+
+		_, _ = fmt.Fprintf(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(projectID, zone))
 	},
 }
 

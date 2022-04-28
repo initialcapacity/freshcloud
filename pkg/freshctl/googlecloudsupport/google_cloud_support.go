@@ -34,6 +34,10 @@ func CreateClustersCmd(resourcesDirectory, projectId, zone, clusterName string) 
 	return templatesupport.Parse(resourcesDirectory, name, data)
 }
 
+func ListClustersCmd(projectId, zone string) string {
+	return fmt.Sprintf("gcloud container clusters list --project '%v' --zone '%v' --quiet", projectId, zone)
+}
+
 func DeleteClustersCmd(projectId, zone, clusterName string) string {
 	return fmt.Sprintf("gcloud container clusters delete '%v' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone)
 }

@@ -37,6 +37,7 @@ func TestCommands(t *testing.T) {
 	clusterCommands := map[string][]string{
 		"gservices":  {"clusters", "gcp", "enable-services"},
 		"gcreate":    {"clusters", "gcp", "create"},
+		"lcreate":    {"clusters", "gcp", "list"},
 		"gconfigure": {"clusters", "gcp", "configure"},
 		"gdelete":    {"clusters", "gcp", "delete"},
 
@@ -51,9 +52,14 @@ func TestCommands(t *testing.T) {
 		"concourse":   {"services", "concourse"},
 		"kpack":       {"services", "kpack"},
 	}
-	for _, v := range clusterCommands {
-		fresh.SetArgs(v)
-		assert.NoError(t, fresh.Execute())
+	for _, value := range clusterCommands {
+		fresh.SetArgs(value)
+		_ = fresh.Execute()
+		d, _ := io.ReadAll(&buf)
+		assert.Contains(t, string(d),
+			fmt.Sprintf("freshcloud[%v]", value[len(value)-1]),
+			fmt.Sprintf("failed on %v", value),
+		)
 	}
 }
 
@@ -69,6 +75,5 @@ func TestCommands_withFlags(t *testing.T) {
 	fresh.SetArgs([]string{"version"})
 	assert.NoError(t, fresh.Execute())
 	d, _ := io.ReadAll(&buf)
-	fmt.Println(string(d))
 	assert.NotContains(t, string(d), "executing command.")
 }
