@@ -8,11 +8,12 @@ import (
 	"testing"
 )
 
-func TestName(t *testing.T) {
+func TestInstallContour(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
 	clusterCmd := services.InstallContourCmd(resourcesDirectory, "aDomain")
-	expected := `kubectl create namespace projectcontour
+	expected := `set -x
+kubectl create namespace projectcontour
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 helm install ingress bitnami/contour -n projectcontour
@@ -29,7 +30,26 @@ if [ -z "$LB" ]; then
     echo "Create a DNS A for *.aDomain to $LB"
     break
 fi
-done
-`
+done`
 	assert.Equal(t, expected, clusterCmd[0])
+}
+
+func TestInstallCertManager(t *testing.T) {
+	cmd := services.InstallCertManagerCmd()
+	assert.Equal(t, "echo todo", cmd[0])
+}
+
+func TestInstallHarbor(t *testing.T) {
+	cmd := services.InstallHarborCmd()
+	assert.Equal(t, "echo todo", cmd[0])
+}
+
+func TestInstallConcourse(t *testing.T) {
+	cmd := services.InstallConcourseCmd()
+	assert.Equal(t, "echo todo", cmd[0])
+}
+
+func TestInstallKpack(t *testing.T) {
+	cmd := services.InstallKpackCmd()
+	assert.Equal(t, "echo todo", cmd[0])
 }

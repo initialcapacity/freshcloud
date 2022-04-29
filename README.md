@@ -15,6 +15,7 @@ Create a `.env_development.sh` file similar to the below.
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
 export GCP_CLUSTER_NAME=aClusterName
+export DOMAIN=aDomain
 ```
 
 Source the file.
@@ -23,8 +24,28 @@ Source the file.
 source .env_development
 ```
 
+Configure the Google Cloud CLI for your project.
+
+```bash
+gcloud config set project ${GCP_PROJECT_ID}
+```
+
+Check the project.
+
+```bash
+gcloud projects describe ${GCP_PROJECT_ID}
+```
+
+Update components as needed.
+
+```bash
+gcloud components update
+```
+
 Run via go run (for now).
 
 ```base
-go run cmd/freshctl.go
+go run cmd/freshctl.go clusters gcp enable-services
+go run cmd/freshctl.go clusters gcp create
+go run cmd/freshctl.go clusters gcp list
 ```
