@@ -6,14 +6,9 @@ if [ $? != 0 ]; then
     echo "Failed to install Contour. Bummer"
     exit 1
 fi
-echo "Waiting to get the load-balancer IP."
-while true; do
-if [ -z "$LB" ]; then
-        LB=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
-        sleep 3;
-    else
-        echo "Create a DNS A for *.{{.Domain}} to $LB"
-        echo "Remove contour by running - kubectl delete ns projectcontour"
-    break
-fi
-done
+sleep 5
+kubectl wait --for=condition=Ready pods --timeout=900s --all -n projectcontour
+sleep 5
+LB=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
+echo "Create a DNS A for *.{{.Domain}} to $LB"
+echo "Remove contour by running - kubectl delete ns projectcontour"

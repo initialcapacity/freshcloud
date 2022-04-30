@@ -26,8 +26,20 @@ func InstallCertManagerCmd(resourcesDirectory, emailAddress string) []string {
 	}
 }
 
-func InstallHarborCmd() []string {
-	return []string{"echo todo"}
+func InstallHarborCmd(resourcesDirectory, domain, emailAddress, password string) []string {
+	name := "install_harbor"
+	data := struct {
+		Domain       string
+		EmailAddress string
+		Password     string
+	}{
+		Domain:       domain,
+		EmailAddress: emailAddress,
+		Password:     password,
+	}
+	return []string{
+		templatesupport.Parse(resourcesDirectory, name, data),
+	}
 }
 
 func InstallConcourseCmd() []string {

@@ -46,7 +46,12 @@ var harborCmd = &cobra.Command{
 	Use:   "harbor",
 	Short: "Install harbor",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), "todo")
+		domain := must("DOMAIN")
+		emailAddress := must("EMAIL_ADDRESS")
+		password := must("PASSWORD")
+		for _, s := range services.InstallHarborCmd(resourcesDirectory, domain, emailAddress, password) {
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
+		}
 	},
 }
 

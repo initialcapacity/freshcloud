@@ -20,6 +20,7 @@ func setup() {
 	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
 	_ = os.Setenv("DOMAIN", "aDomain")
 	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")
+	_ = os.Setenv("PASSWORD", "aPassword")
 }
 
 func TestCommands(t *testing.T) {
