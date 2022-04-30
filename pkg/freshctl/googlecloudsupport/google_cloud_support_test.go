@@ -19,8 +19,7 @@ func TestCreateClusterCmd(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
 	clusterCmd := googlecloudsupport.CreateClustersCmd(resourcesDirectory, "aProject", "aZone", "aClusterName")
-	expected := `set -x
-gcloud beta container --project "aProject" \
+	expected := `gcloud beta container --project "aProject" \
     clusters create "aClusterName" \
         --zone "aZone" \
         --no-enable-basic-auth \

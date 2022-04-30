@@ -32,10 +32,13 @@ var contourCmd = &cobra.Command{
 }
 
 var certManagerCmd = &cobra.Command{
-	Use:   "certmanager",
+	Use:   "cert-manager",
 	Short: "Install cert-manager",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), "todo")
+		emailAddress := must("EMAIL_ADDRESS")
+		for _, s := range services.InstallCertManagerCmd(resourcesDirectory, emailAddress) {
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
+		}
 	},
 }
 

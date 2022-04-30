@@ -16,6 +16,7 @@ export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
 export GCP_CLUSTER_NAME=aClusterName
 export DOMAIN=aDomain
+export EMAIL_ADDERESS=anEmail
 ```
 
 Source the file.
@@ -48,4 +49,6 @@ Run via go run (for now).
 go run cmd/freshctl.go clusters gcp enable-services
 go run cmd/freshctl.go clusters gcp create
 go run cmd/freshctl.go clusters gcp list
+go run cmd/freshctl.go services contour
+go run cmd/freshctl.go services cert-manager
 ```

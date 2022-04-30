@@ -14,8 +14,16 @@ func InstallContourCmd(resourcesDirectory, domain string) []string {
 	}
 }
 
-func InstallCertManagerCmd() []string {
-	return []string{"echo todo"}
+func InstallCertManagerCmd(resourcesDirectory, emailAddress string) []string {
+	name := "install_cert_manager"
+	data := struct {
+		EmailAddress string
+	}{
+		EmailAddress: emailAddress,
+	}
+	return []string{
+		templatesupport.Parse(resourcesDirectory, name, data),
+	}
 }
 
 func InstallHarborCmd() []string {

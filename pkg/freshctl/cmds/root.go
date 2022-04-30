@@ -29,23 +29,21 @@ var rootCmd = &cobra.Command{
 		args = append(args, "-c")
 		args = append(args, string(arg))
 		cmd.SetOut(outOrStderr)
-		freshCmd := fmt.Sprintf("freshcloud[%v]", cmd.Name())
+		freshCmd := fmt.Sprintf("Running freshcloud[%v]", cmd.Name())
 		_, _ = fmt.Fprintf(cmd.OutOrStderr(), freshCmd+"\n")
-		_, _ = color.New(color.FgGreen).Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%v\n\n", args[1]))
+		_, _ = color.New(color.FgGreen).Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%v\n", args[1]))
 		if cmd.Name() != "version" {
 			if execute {
-				var commandOut bytes.Buffer
 				command := exec.Command("/bin/bash", args...)
-				command.Stdout = &commandOut
-				command.Stderr = &commandOut
-
+				command.Stdout = os.Stdout
+				command.Stderr = os.Stderr
+				command.Stdin = os.Stdin
 				err := command.Run()
 				if err != nil {
 					_, _ = color.New(color.FgRed).Printf("Unable to run %v command %v\n", freshCmd, err)
 				} else {
-					_, _ = color.New(color.FgGreen).Printf("Successful running %v command\n", freshCmd)
+					_, _ = color.New(color.FgGreen).Printf("Success! running %v command\n", freshCmd)
 				}
-				_, _ = fmt.Fprintf(cmd.OutOrStderr(), commandOut.String())
 			}
 		}
 	},

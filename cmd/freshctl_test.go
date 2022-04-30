@@ -19,6 +19,7 @@ func setup() {
 	_ = os.Setenv("GCP_ZONE", "aZone")
 	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
 	_ = os.Setenv("DOMAIN", "aDomain")
+	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")
 }
 
 func TestCommands(t *testing.T) {
@@ -33,7 +34,7 @@ func TestCommands(t *testing.T) {
 	_ = fresh.Execute()
 
 	version, _ := io.ReadAll(&buf)
-	assert.Equal(t, "freshcloud[version]\nfreshctl version 0.1\n\n", string(version))
+	assert.Equal(t, "Running freshcloud[version]\nfreshctl version 0.1\n", string(version))
 
 	clusterCommands := map[string][]string{
 		"gservices":  {"clusters", "gcp", "enable-services"},
@@ -49,7 +50,7 @@ func TestCommands(t *testing.T) {
 		"adelete":    {"clusters", "aws", "delete"},
 
 		"contour":     {"services", "contour"},
-		"certmanager": {"services", "certmanager"},
+		"certmanager": {"services", "cert-manager"},
 		"harbor":      {"services", "harbor"},
 		"concourse":   {"services", "concourse"},
 		"kpack":       {"services", "kpack"},
@@ -59,7 +60,7 @@ func TestCommands(t *testing.T) {
 		_ = fresh.Execute()
 		d, _ := io.ReadAll(&buf)
 		assert.Contains(t, string(d),
-			fmt.Sprintf("freshcloud[%v]", value[len(value)-1]),
+			fmt.Sprintf("Running freshcloud[%v]", value[len(value)-1]),
 			fmt.Sprintf("failed on %v", value),
 		)
 	}
