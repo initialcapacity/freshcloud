@@ -191,6 +191,47 @@ echo "Remove concourse by running - kubectl delete ns concourse"`
 }
 
 func TestInstallKpack(t *testing.T) {
-	cmd := services.InstallKpackCmd()
-	assert.Equal(t, "echo todo", cmd[0])
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../../resources")
+	cmd := services.InstallKpackCmd(resourcesDirectory, "aDomain", "aPassword")
+	expected := `kubectl create namespace kpack
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+kubectl apply -f https://github.com/pivotal/kpack/releases/download/v0.5.1/release-0.5.1.yaml
+if [ $? != 0 ]; then
+    echo "Failed to install Kpack. Bummer"
+    exit 1
+fi
+sleep 5
+kubectl wait --for=condition=Ready pods --timeout=900s --all -n kpack
+sleep 5
+REGISTRY="registry.aDomain"
+cat <<EOF | kubectl apply -f -
+apiVersion: kpack.io/v1alpha1
+kind: ClusterStack
+metadata:
+  name: base
+spec:
+  id: "heroku-20"
+  buildImage:
+    image: "heroku/pack:20-build"
+  runImage:
+    image: "heroku/pack:20"
+EOF
+cat <<EOF | kubectl apply -f -
+apiVersion: kpack.io/v1alpha1
+kind: ClusterStore
+metadata:
+  name: default
+spec:
+  sources:
+  - image: heroku/buildpacks:20
+EOF
+kubectl create secret docker-registry ${REGISTRY} \
+    --docker-username=admin \
+    --docker-password=aPassword \
+    --docker-server=https://${REGISTRY}/ \
+    --namespace default
+echo "Remove kpack by running - kubectl delete ns kpack"`
+	assert.Equal(t, expected, cmd[0])
 }

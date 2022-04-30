@@ -71,6 +71,10 @@ var kpackCmd = &cobra.Command{
 	Use:   "kpack",
 	Short: "Install kpack",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), "todo")
+		domain := must("DOMAIN")
+		password := must("PASSWORD")
+		for _, s := range services.InstallKpackCmd(resourcesDirectory, domain, password) {
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
+		}
 	},
 }

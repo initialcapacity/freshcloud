@@ -56,6 +56,16 @@ func InstallConcourseCmd(resourcesDirectory, domain, password string) []string {
 	}
 }
 
-func InstallKpackCmd() []string {
-	return []string{"echo todo"}
+func InstallKpackCmd(resourcesDirectory, domain, password string) []string {
+	name := "install_kpack"
+	data := struct {
+		Domain   string
+		Password string
+	}{
+		Domain:   domain,
+		Password: password,
+	}
+	return []string{
+		templatesupport.Parse(resourcesDirectory, name, data),
+	}
 }
