@@ -1,0 +1,40 @@
+cat <<EOF > concourse-values.yaml
+concourse:
+  worker:
+    replicaCount: 4
+  web:
+    externalUrl: https://ci.{{.Domain}}
+    auth:
+      mainTeam:
+        localUser: "admin"
+secrets:
+  localUsers: "admin:{{.Password}}"
+web:
+  env:
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      kubernetes.io/ingress.class: contour
+      ingress.kubernetes.io/force-ssl-redirect: "true"
+      projectcontour.io/websocket-routes: "/"
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      - ci.{{.Domain}}
+    tls:
+      - hosts:
+          - ci.{{.Domain}}
+        secretName: concourse-cert
+EOF
+kubectl create namespace concourse
+helm repo add concourse https://concourse-charts.storage.googleapis.com/
+helm install concourse concourse/concourse -f concourse-values.yaml -n concourse
+if [ $? != 0 ]; then
+    echo "Failed to install Concourse. Bummer"
+    exit 1
+fi
+sleep 5
+kubectl wait --for=condition=Ready pods --timeout=900s --all -n concourse
+sleep 5
+rm -f concourse-values.yaml
+echo "Remove concourse by running - kubectl delete ns concourse"

@@ -42,8 +42,18 @@ func InstallHarborCmd(resourcesDirectory, domain, emailAddress, password string)
 	}
 }
 
-func InstallConcourseCmd() []string {
-	return []string{"echo todo"}
+func InstallConcourseCmd(resourcesDirectory, domain, password string) []string {
+	name := "install_concourse"
+	data := struct {
+		Domain   string
+		Password string
+	}{
+		Domain:   domain,
+		Password: password,
+	}
+	return []string{
+		templatesupport.Parse(resourcesDirectory, name, data),
+	}
 }
 
 func InstallKpackCmd() []string {

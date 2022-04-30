@@ -59,7 +59,11 @@ var concourseCmd = &cobra.Command{
 	Use:   "concourse",
 	Short: "Install concourse",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, _ = fmt.Fprintf(cmd.OutOrStderr(), "todo")
+		domain := must("DOMAIN")
+		password := must("PASSWORD")
+		for _, s := range services.InstallConcourseCmd(resourcesDirectory, domain, password) {
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
+		}
 	},
 }
 

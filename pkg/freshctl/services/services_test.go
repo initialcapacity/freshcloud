@@ -144,8 +144,50 @@ EOF`
 }
 
 func TestInstallConcourse(t *testing.T) {
-	cmd := services.InstallConcourseCmd()
-	assert.Equal(t, "echo todo", cmd[0])
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../../resources")
+	cmd := services.InstallConcourseCmd(resourcesDirectory, "aDomain", "aPassword")
+	expected := `cat <<EOF > concourse-values.yaml
+concourse:
+  worker:
+    replicaCount: 4
+  web:
+    externalUrl: https://ci.aDomain
+    auth:
+      mainTeam:
+        localUser: "admin"
+secrets:
+  localUsers: "admin:aPassword"
+web:
+  env:
+  ingress:
+    enabled: true
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      kubernetes.io/ingress.class: contour
+      ingress.kubernetes.io/force-ssl-redirect: "true"
+      projectcontour.io/websocket-routes: "/"
+      kubernetes.io/tls-acme: "true"
+    hosts:
+      - ci.aDomain
+    tls:
+      - hosts:
+          - ci.aDomain
+        secretName: concourse-cert
+EOF
+kubectl create namespace concourse
+helm repo add concourse https://concourse-charts.storage.googleapis.com/
+helm install concourse concourse/concourse -f concourse-values.yaml -n concourse
+if [ $? != 0 ]; then
+    echo "Failed to install Concourse. Bummer"
+    exit 1
+fi
+sleep 5
+kubectl wait --for=condition=Ready pods --timeout=900s --all -n concourse
+sleep 5
+rm -f concourse-values.yaml
+echo "Remove concourse by running - kubectl delete ns concourse"`
+	assert.Equal(t, expected, cmd[0])
 }
 
 func TestInstallKpack(t *testing.T) {
