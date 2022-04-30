@@ -30,11 +30,9 @@ kubectl create namespace concourse
 helm repo add concourse https://concourse-charts.storage.googleapis.com/
 helm install concourse concourse/concourse -f concourse-values.yaml -n concourse
 if [ $? != 0 ]; then
-    echo "Failed to install Concourse. Bummer"
-    exit 1
+  echo "Failed to install Concourse. Bummer"
+  exit 1
 fi
-sleep 5
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n concourse
-sleep 5
 rm -f concourse-values.yaml
 echo "Remove concourse by running - kubectl delete ns concourse"

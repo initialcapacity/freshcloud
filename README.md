@@ -51,4 +51,7 @@ go run cmd/freshctl.go clusters gcp create
 go run cmd/freshctl.go clusters gcp list
 go run cmd/freshctl.go services contour
 go run cmd/freshctl.go services cert-manager
+go run cmd/freshctl.go services harbor
+go run cmd/freshctl.go services concourse
+go run cmd/freshctl.go services kpack
 ```

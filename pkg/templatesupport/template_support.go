@@ -8,7 +8,7 @@ import (
 
 func Parse(resourcesDirectory, name string, data any) string {
 	var parsed bytes.Buffer
-	path := filepath.Join(resourcesDirectory, "./"+name+".gotmpl")
+	path := filepath.Join(resourcesDirectory, "./"+name+".sh")
 	tmpl, err := template.New(filepath.Base(path)).Funcs(template.FuncMap{}).ParseFiles(path)
 	if err != nil {
 		panic(err)

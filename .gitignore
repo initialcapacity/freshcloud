@@ -8,3 +8,5 @@ ignored
 *.iws
 .DS_Store
 .env*
+.concourse-values.yml
+.harbor.yml
