@@ -7,7 +7,9 @@
 
 README.md notes can be found here [freshcloud.com](https://www.freshcloud.com).
 
-# freshctl go-binary (wip)
+# freshctl go-binary
+
+Pardon the dust, the fresh cloud cli in golang is work in progress.
 
 Create a `.env_development.sh` file similar to the below.
 
@@ -15,8 +17,10 @@ Create a `.env_development.sh` file similar to the below.
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
 export GCP_CLUSTER_NAME=aClusterName
+
 export DOMAIN=aDomain
 export EMAIL_ADDERESS=anEmail
+export PASSWORD=aPassword
 ```
 
 Source the file.
@@ -25,7 +29,9 @@ Source the file.
 source .env_development
 ```
 
-Configure the Google Cloud CLI for your project.
+## Google Cloud clusters
+
+For Google Cloud, configure the Google Cloud CLI for your project.
 
 ```bash
 gcloud config set project ${GCP_PROJECT_ID}
@@ -43,7 +49,9 @@ Update components as needed.
 gcloud components update
 ```
 
-Run via go run (for now).
+## Management cluster
+
+Run via go run (for now) to create a fresh cloud management cluster.
 
 ```base
 go run cmd/freshctl.go clusters gcp enable-services
@@ -55,3 +63,5 @@ go run cmd/freshctl.go services harbor
 go run cmd/freshctl.go services concourse
 go run cmd/freshctl.go services kpack
 ```
+
+That's a wrap for now.
