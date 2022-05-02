@@ -1,4 +1,5 @@
-cat <<EOF > concourse-values.yaml
+mkdir -p .freshcloud
+cat <<EOF > .freshcloud/concourse-values.yaml
 concourse:
   worker:
     replicaCount: 4
@@ -28,11 +29,10 @@ web:
 EOF
 kubectl create namespace concourse
 helm repo add concourse https://concourse-charts.storage.googleapis.com/
-helm install concourse concourse/concourse -f concourse-values.yaml -n concourse
+helm install concourse concourse/concourse -f .freshcloud/concourse-values.yaml -n concourse
 if [ $? != 0 ]; then
   echo "Failed to install Concourse. Bummer"
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n concourse
-rm -f concourse-values.yaml
 echo "Remove concourse by running - kubectl delete ns concourse"

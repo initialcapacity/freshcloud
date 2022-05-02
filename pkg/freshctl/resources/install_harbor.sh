@@ -1,4 +1,5 @@
-cat <<EOF > harbor-values.yaml
+mkdir -p .freshcloud
+cat <<EOF > .freshcloud/harbor-values.yaml
 harborAdminPassword: {{.Password}}
 service:
   type: ClusterIP
@@ -24,13 +25,12 @@ EOF
 kubectl create namespace harbor
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 11.2.4
+helm install harbor bitnami/harbor -f .freshcloud/harbor-values.yaml -n harbor --version 11.2.4
 if [ $? != 0 ]; then
   echo "Failed to install Harbor. Bummer"
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n harbor
-rm -f harbor-values.yaml
 for REPO in {concourse-images,kpack}; do
   echo "Creating: ${REPO} in Harbor."
   curl --user "admin:{{.Password}}" -X POST \

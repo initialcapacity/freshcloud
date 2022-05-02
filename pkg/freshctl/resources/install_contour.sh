@@ -7,7 +7,7 @@ if [ $? != 0 ]; then
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n projectcontour
-sleep 5
-LB=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
-echo "Create a DNS A for *.{{.Domain}} to $LB"
+sleep 10 # waiting for an ip address
+load_balancer=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
+echo "Create a DNS A for *.{{.Domain}} to $load_balancer"
 echo "Remove contour by running - kubectl delete ns projectcontour"

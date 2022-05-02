@@ -21,9 +21,9 @@ if [ $? != 0 ]; then
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n projectcontour
-sleep 5
-LB=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
-echo "Create a DNS A for *.aDomain to $LB"
+sleep 10 # waiting for an ip address
+load_balancer=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
+echo "Create a DNS A for *.aDomain to $load_balancer"
 echo "Remove contour by running - kubectl delete ns projectcontour"`
 	assert.Equal(t, expected, clusterCmd[0])
 }
@@ -81,7 +81,8 @@ func TestInstallHarbor(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
 	cmd := services.InstallHarborCmd(resourcesDirectory, "aDomain", "aEmail", "aPassword")
-	expected := `cat <<EOF > harbor-values.yaml
+	expected := `mkdir -p .freshcloud
+cat <<EOF > .freshcloud/harbor-values.yaml
 harborAdminPassword: aPassword
 service:
   type: ClusterIP
@@ -107,13 +108,12 @@ EOF
 kubectl create namespace harbor
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
-helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 11.2.4
+helm install harbor bitnami/harbor -f .freshcloud/harbor-values.yaml -n harbor --version 11.2.4
 if [ $? != 0 ]; then
   echo "Failed to install Harbor. Bummer"
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n harbor
-rm -f harbor-values.yaml
 for REPO in {concourse-images,kpack}; do
   echo "Creating: ${REPO} in Harbor."
   curl --user "admin:aPassword" -X POST \
@@ -142,7 +142,8 @@ func TestInstallConcourse(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
 	cmd := services.InstallConcourseCmd(resourcesDirectory, "aDomain", "aPassword")
-	expected := `cat <<EOF > concourse-values.yaml
+	expected := `mkdir -p .freshcloud
+cat <<EOF > .freshcloud/concourse-values.yaml
 concourse:
   worker:
     replicaCount: 4
@@ -172,13 +173,12 @@ web:
 EOF
 kubectl create namespace concourse
 helm repo add concourse https://concourse-charts.storage.googleapis.com/
-helm install concourse concourse/concourse -f concourse-values.yaml -n concourse
+helm install concourse concourse/concourse -f .freshcloud/concourse-values.yaml -n concourse
 if [ $? != 0 ]; then
   echo "Failed to install Concourse. Bummer"
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n concourse
-rm -f concourse-values.yaml
 echo "Remove concourse by running - kubectl delete ns concourse"`
 	assert.Equal(t, expected, cmd[0])
 }
