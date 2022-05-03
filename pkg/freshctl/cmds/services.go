@@ -24,7 +24,7 @@ var contourCmd = &cobra.Command{
 	Use:   "contour",
 	Short: "Install contour",
 	Run: func(cmd *cobra.Command, args []string) {
-		domain := must("DOMAIN")
+		domain := requiredEnv("DOMAIN")
 		for _, s := range services.InstallContourCmd(resourcesDirectory, domain) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
@@ -35,7 +35,7 @@ var certManagerCmd = &cobra.Command{
 	Use:   "cert-manager",
 	Short: "Install cert-manager",
 	Run: func(cmd *cobra.Command, args []string) {
-		emailAddress := must("EMAIL_ADDRESS")
+		emailAddress := requiredEnv("EMAIL_ADDRESS")
 		for _, s := range services.InstallCertManagerCmd(resourcesDirectory, emailAddress) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
@@ -46,9 +46,9 @@ var harborCmd = &cobra.Command{
 	Use:   "harbor",
 	Short: "Install harbor",
 	Run: func(cmd *cobra.Command, args []string) {
-		domain := must("DOMAIN")
-		emailAddress := must("EMAIL_ADDRESS")
-		password := must("PASSWORD")
+		domain := requiredEnv("DOMAIN")
+		emailAddress := requiredEnv("EMAIL_ADDRESS")
+		password := requiredEnv("PASSWORD")
 		for _, s := range services.InstallHarborCmd(resourcesDirectory, domain, emailAddress, password) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
@@ -59,8 +59,8 @@ var concourseCmd = &cobra.Command{
 	Use:   "concourse",
 	Short: "Install concourse",
 	Run: func(cmd *cobra.Command, args []string) {
-		domain := must("DOMAIN")
-		password := must("PASSWORD")
+		domain := requiredEnv("DOMAIN")
+		password := requiredEnv("PASSWORD")
 		for _, s := range services.InstallConcourseCmd(resourcesDirectory, domain, password) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
@@ -71,8 +71,8 @@ var kpackCmd = &cobra.Command{
 	Use:   "kpack",
 	Short: "Install kpack",
 	Run: func(cmd *cobra.Command, args []string) {
-		domain := must("DOMAIN")
-		password := must("PASSWORD")
+		domain := requiredEnv("DOMAIN")
+		password := requiredEnv("PASSWORD")
 		for _, s := range services.InstallKpackCmd(resourcesDirectory, domain, password) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}

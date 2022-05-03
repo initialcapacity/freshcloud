@@ -60,13 +60,34 @@ func Fresh() *cobra.Command {
 	return rootCmd
 }
 
+func MakeEnvironmentMap(envs []string) map[string]string {
+	env := make(map[string]string)
+	for _, v := range envs {
+		for i := 0; i < len(v); i++ {
+			if v[i] == '=' {
+				env[v[0:i]] = v[i+1:]
+			}
+		}
+	}
+	return env
+}
+
+func requiredString(env map[string]string, required ...string) map[string]string {
+	for _, r := range required {
+		if env[r] == "" {
+			panic(fmt.Sprintf("missing required argument %v %v", r, env[r]))
+		}
+	}
+	return env
+}
+
 func writeCommands(w io.Writer, cmds []string) {
 	for _, c := range cmds {
 		_, _ = fmt.Fprintf(w, c+"\n")
 	}
 }
 
-func must(variable string) string {
+func requiredEnv(variable string) string {
 	if f := os.Getenv(variable); f == "" {
 		panic(fmt.Sprintf("please set the %v environemnt variable", variable))
 	} else {

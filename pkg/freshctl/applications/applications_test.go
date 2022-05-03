@@ -2,16 +2,24 @@ package applications_test
 
 import (
 	"github.com/initialcapacity/freshcloud/pkg/freshctl/applications"
+	"github.com/initialcapacity/freshcloud/pkg/freshctl/cmds"
 	"github.com/stretchr/testify/assert"
+	"os"
 	"path/filepath"
 	"runtime"
+	"syscall"
 	"testing"
 )
 
 func TestPushImageCmd(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	clusterCmd := applications.PushImageCmd(resourcesDirectory, "aRegistryDomain", "aPassword", "anApp", "anImage")
+	clusterCmd := applications.PushImageCmd(resourcesDirectory, map[string]string{
+		"REGISTRY_DOMAIN":   "aRegistryDomain",
+		"REGISTRY_PASSWORD": "aPassword",
+		"APP_NAME":          "anApp",
+		"APP_IMAGE_NAME":    "anImage",
+	})
 	expected := `curl --user "admin:aPassword" -X POST \
   https://registry.aRegistryDomain/api/v2.0/projects \
   -H "Content-type: application/json" --data \
@@ -30,9 +38,18 @@ docker push registry.aRegistryDomain/anApp/anImage:latest`
 func TestDeployAppCmd(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	clusterCmd := applications.DeployAppCmd(resourcesDirectory, "aRegistryDomain", "aPassword", "anApp", "anAppDomain", "anImage", "aPath")
+
+	_ = syscall.Setenv("REGISTRY_DOMAIN", "aRegistryDomain")
+	_ = syscall.Setenv("REGISTRY_PASSWORD", "aRegistryPassword")
+	_ = syscall.Setenv("APP_NAME", "anApp")
+	_ = syscall.Setenv("DOMAIN", "anAppDomain")
+	_ = syscall.Setenv("APP_IMAGE_NAME", "anImage")
+	_ = syscall.Setenv("APP_CONFIGURATION_PATH", "aPath")
+
+	clusterCmd := applications.DeployAppCmd(resourcesDirectory, cmds.MakeEnvironmentMap(os.Environ()))
+
 	expected := `mkdir -p .freshcloud
-sha=$(curl -s --user "admin:aPassword" -X GET \
+sha=$(curl -s --user "admin:aRegistryPassword" -X GET \
   "https://registry.aRegistryDomain/api/v2.0/projects/anApp/repositories/anImage/artifacts" \
   | jq -r '.[].digest'|head -1)
 export IMAGE="registry.aRegistryDomain/anApp/anImage@${sha}"
