@@ -18,9 +18,17 @@ func setup() {
 	_ = os.Setenv("GCP_PROJECT_ID", "aProject")
 	_ = os.Setenv("GCP_ZONE", "aZone")
 	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
+
 	_ = os.Setenv("DOMAIN", "aDomain")
 	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")
 	_ = os.Setenv("PASSWORD", "aPassword")
+
+	_ = os.Setenv("REGISTRY_DOMAIN", "aRegistryDomain")
+	_ = os.Setenv("REGISTRY_PASSWORD", "aRegistryPassword")
+
+	_ = os.Setenv("APP_NAME", "anAppName")
+	_ = os.Setenv("APP_IMAGE_NAME", "anImageName")
+	_ = os.Setenv("APP_CONFIGURATION_PATH", "anPath")
 }
 
 func TestCommands(t *testing.T) {
@@ -55,6 +63,9 @@ func TestCommands(t *testing.T) {
 		"harbor":      {"services", "harbor"},
 		"concourse":   {"services", "concourse"},
 		"kpack":       {"services", "kpack"},
+
+		"push":   {"applications", "push"},
+		"deploy": {"applications", "deploy"},
 	}
 	for _, value := range clusterCommands {
 		fresh.SetArgs(value)
