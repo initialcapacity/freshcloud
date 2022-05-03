@@ -31,11 +31,12 @@ var googleClustersCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a google cloud cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-
-		projectID := requiredEnv("GCP_PROJECT_ID")
-		zone := requiredEnv("GCP_ZONE")
-		clusterName := requiredEnv("GCP_CLUSTER_NAME")
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, projectID, zone, clusterName))
+		envMap := map[string]string{
+			"GCP_PROJECT_ID":   requiredEnv("GCP_PROJECT_ID"),
+			"GCP_ZONE":         requiredEnv("GCP_ZONE"),
+			"GCP_CLUSTER_NAME": requiredEnv("GCP_CLUSTER_NAME"),
+		}
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, envMap))
 	},
 }
 

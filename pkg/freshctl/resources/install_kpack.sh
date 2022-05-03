@@ -7,7 +7,7 @@ if [ $? != 0 ]; then
   exit 1
 fi
 kubectl wait --for=condition=Ready pods --timeout=900s --all -n kpack
-REGISTRY="registry.{{.Domain}}"
+REGISTRY="registry.{{index .DOMAIN}}"
 cat <<EOF | kubectl apply -f -
 apiVersion: kpack.io/v1alpha1
 kind: ClusterStack
@@ -31,7 +31,7 @@ spec:
 EOF
 kubectl create secret docker-registry ${REGISTRY} \
   --docker-username=admin \
-  --docker-password={{.Password}} \
+  --docker-password={{index . "PASSWORD"}} \
   --docker-server=https://${REGISTRY}/ \
   --namespace default
 echo "Remove kpack by running - kubectl delete ns kpack"

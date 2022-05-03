@@ -6,10 +6,7 @@ import (
 )
 
 func EnableServicesCmd(resourcesDirectory string) []string {
-	templateName := "google_cloud_services"
-	return []string{
-		templatesupport.Parse(resourcesDirectory, templateName, nil),
-	}
+	return []string{templatesupport.Parse(resourcesDirectory, "google_cloud_services", nil)}
 }
 
 func ConfigureCmd(projectId, zone, clusterName string) []string {
@@ -18,20 +15,8 @@ func ConfigureCmd(projectId, zone, clusterName string) []string {
 	}
 }
 
-func CreateClustersCmd(resourcesDirectory, projectId, zone, clusterName string) []string {
-	templateName := "google_cloud_cluster"
-	data := struct {
-		ProjectID   string
-		Zone        string
-		ClusterName string
-	}{
-		ProjectID:   projectId,
-		Zone:        zone,
-		ClusterName: clusterName,
-	}
-	return []string{
-		templatesupport.Parse(resourcesDirectory, templateName, data),
-	}
+func CreateClustersCmd(resourcesDirectory string, envMap map[string]string) []string {
+	return []string{templatesupport.Parse(resourcesDirectory, "google_cloud_cluster", envMap)}
 }
 
 func ListClustersCmd(projectId, zone string) []string {

@@ -11,7 +11,10 @@ import (
 func TestInstallContour(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	clusterCmd := services.InstallContourCmd(resourcesDirectory, "aDomain")
+	env := map[string]string{
+		"DOMAIN": "aDomain",
+	}
+	clusterCmd := services.InstallContourCmd(resourcesDirectory, env)
 	expected := `kubectl create namespace projectcontour
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
@@ -31,7 +34,10 @@ echo "Remove contour by running - kubectl delete ns projectcontour"`
 func TestInstallCertManager(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	clusterCmd := services.InstallCertManagerCmd(resourcesDirectory, "anEmail")
+	env := map[string]string{
+		"EMAIL_ADDRESS": "anEmail",
+	}
+	clusterCmd := services.InstallCertManagerCmd(resourcesDirectory, env)
 	expected := `kubectl create namespace cert-manager
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
@@ -80,7 +86,12 @@ echo "Remove cert-manager by running - kubectl delete ns cert-manager"`
 func TestInstallHarbor(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	cmd := services.InstallHarborCmd(resourcesDirectory, "aDomain", "aEmail", "aPassword")
+	env := map[string]string{
+		"DOMAIN":        "aDomain",
+		"EMAIL_ADDRESS": "anEmail",
+		"PASSWORD":      "aPassword",
+	}
+	cmd := services.InstallHarborCmd(resourcesDirectory, env)
 	expected := `mkdir -p .freshcloud
 cat <<EOF > .freshcloud/harbor-values.yaml
 harborAdminPassword: aPassword
@@ -141,7 +152,11 @@ EOF`
 func TestInstallConcourse(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	cmd := services.InstallConcourseCmd(resourcesDirectory, "aDomain", "aPassword")
+	env := map[string]string{
+		"DOMAIN":   "aDomain",
+		"PASSWORD": "aPassword",
+	}
+	cmd := services.InstallConcourseCmd(resourcesDirectory, env)
 	expected := `mkdir -p .freshcloud
 cat <<EOF > .freshcloud/concourse-values.yaml
 concourse:
@@ -186,7 +201,11 @@ echo "Remove concourse by running - kubectl delete ns concourse"`
 func TestInstallKpack(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	cmd := services.InstallKpackCmd(resourcesDirectory, "aDomain", "aPassword")
+	env := map[string]string{
+		"DOMAIN":   "aDomain",
+		"PASSWORD": "aPassword",
+	}
+	cmd := services.InstallKpackCmd(resourcesDirectory, env)
 	expected := `kubectl create namespace kpack
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update

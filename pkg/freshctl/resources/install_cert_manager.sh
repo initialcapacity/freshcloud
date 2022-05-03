@@ -14,7 +14,7 @@ metadata:
   name: letsencrypt-staging
 spec:
   acme:
-    email: {{.EmailAddress}}
+    email: {{index . "EMAIL_ADDRESS"}}
     privateKeySecretRef:
       name: letsencrypt-staging
     server: https://acme-staging-v02.api.letsencrypt.org/directory
@@ -30,7 +30,7 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    email: {{.EmailAddress}}
+    email: {{index . "EMAIL_ADDRESS"}}
     privateKeySecretRef:
       name: letsencrypt-prod
     server: https://acme-v02.api.letsencrypt.org/directory

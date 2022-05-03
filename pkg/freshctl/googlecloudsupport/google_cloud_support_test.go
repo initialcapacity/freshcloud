@@ -18,7 +18,12 @@ func TestEnableServices(t *testing.T) {
 func TestCreateClusterCmd(t *testing.T) {
 	_, file, _, _ := runtime.Caller(0)
 	resourcesDirectory := filepath.Join(file, "../../resources")
-	clusterCmd := googlecloudsupport.CreateClustersCmd(resourcesDirectory, "aProject", "aZone", "aClusterName")
+	env := map[string]string{
+		"GCP_PROJECT_ID":   "aProject",
+		"GCP_ZONE":         "aZone",
+		"GCP_CLUSTER_NAME": "aClusterName",
+	}
+	clusterCmd := googlecloudsupport.CreateClustersCmd(resourcesDirectory, env)
 	expected := `gcloud container clusters create aClusterName --zone aZone --num-nodes 4`
 	assert.Equal(t, clusterCmd[0], expected)
 }

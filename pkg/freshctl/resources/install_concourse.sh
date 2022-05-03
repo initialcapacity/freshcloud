@@ -4,12 +4,12 @@ concourse:
   worker:
     replicaCount: 4
   web:
-    externalUrl: https://ci.{{.Domain}}
+    externalUrl: https://ci.{{index . "DOMAIN"}}
     auth:
       mainTeam:
         localUser: "admin"
 secrets:
-  localUsers: "admin:{{.Password}}"
+  localUsers: "admin:{{index . "PASSWORD"}}"
 web:
   env:
   ingress:
@@ -21,10 +21,10 @@ web:
       projectcontour.io/websocket-routes: "/"
       kubernetes.io/tls-acme: "true"
     hosts:
-      - ci.{{.Domain}}
+      - ci.{{index . "DOMAIN"}}
     tls:
       - hosts:
-          - ci.{{.Domain}}
+          - ci.{{index . "DOMAIN"}}
         secretName: concourse-cert
 EOF
 kubectl create namespace concourse
