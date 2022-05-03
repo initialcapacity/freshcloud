@@ -5,33 +5,17 @@
 
 ## A modern application platform.
 
-README.md notes can be found here [freshcloud.com](https://www.freshcloud.com).
+The main FreshCloud article can be found here [freshcloud.com](https://www.freshcloud.com).
 
-# freshctl go-binary
+## About the golang binary
 
-Pardon the dust, the fresh cloud cli in golang is work in progress.
+Fresh Cloud now includes a golang binary for managing infrastructure and application clusters.
 
-Create a `.env_development.sh` file similar to the below.
+The current `freshclt` binary support Google's Cloud Platform.
 
-```bash
-export GCP_PROJECT_ID=aProjectId
-export GCP_ZONE=aZone
-export GCP_CLUSTER_NAME=aClusterName
+## Google Cloud
 
-export DOMAIN=aDomain
-export EMAIL_ADDERESS=anEmail
-export PASSWORD=aPassword
-```
-
-Source the file.
-
-```bash
-source .env_development
-```
-
-## Google Cloud clusters
-
-For Google Cloud, configure the Google Cloud CLI for your project.
+To get started, configure the Google Cloud CLI for your project.
 
 ```bash
 gcloud config set project ${GCP_PROJECT_ID}
@@ -51,7 +35,26 @@ gcloud components update
 
 ## Management cluster
 
-Run via go run (for now) to create a fresh cloud management cluster.
+Create a `.env_infra.sh` file similar to the below.
+
+```bash
+export GCP_PROJECT_ID=aProjectId
+export GCP_ZONE=aZone
+export GCP_CLUSTER_NAME=aClusterName
+
+export DOMAIN=aDomain
+export EMAIL_ADDERESS=anEmail
+export PASSWORD=aPassword
+```
+
+Next, source the file.
+
+```bash
+source .env_infra.sh
+```
+
+Then, run each command via go run (for now) to create a fresh cloud management cluster. Adding the `-e` flag will
+execute the command.
 
 ```base
 go run cmd/freshctl.go clusters gcp enable-services
@@ -62,6 +65,42 @@ go run cmd/freshctl.go services cert-manager
 go run cmd/freshctl.go services harbor
 go run cmd/freshctl.go services concourse
 go run cmd/freshctl.go services kpack
+```
+
+## Application cluster
+
+Similar to the above, create a `.env_app.sh` file for you application.
+
+```bash
+export GCP_PROJECT_ID=aProjectId
+export GCP_ZONE=aZone
+export GCP_CLUSTER_NAME=aClusterName
+
+export DOMAIN=aDomain
+export EMAIL_ADDERESS=anEmail
+export REGISTRY_DOMAIN=aRegistryDomain
+export REGISTRY_PASSWORD=aPassword
+
+export APP_NAME=appName
+export APP_IMAGE_NAME=appImageName
+export APP_CONFIGURATION_PATH=anApplicationConfigurationPath
+```
+
+Next, source the file.
+
+```bash
+source .env_infra.sh
+```
+
+Run each command to deploy your application. Adding the `-e` flag will execute the command.
+
+```bash
+go run cmd/freshctl.go clusters gcp create
+go run cmd/freshctl.go clusters gcp list
+go run cmd/freshctl.go services contour
+go run cmd/freshctl.go services cert-manager
+go run cmd/freshctl.go applications push
+go run cmd/freshctl.go applications deploy
 ```
 
 That's a wrap for now.
