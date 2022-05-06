@@ -25,10 +25,13 @@ func setup() {
 
 	_ = os.Setenv("REGISTRY_DOMAIN", "aRegistryDomain")
 	_ = os.Setenv("REGISTRY_PASSWORD", "aRegistryPassword")
+	_ = os.Setenv("REGISTRY_CLUSTER_NAME", "aClusterName")
 
 	_ = os.Setenv("APP_NAME", "anAppName")
 	_ = os.Setenv("APP_IMAGE_NAME", "anImageName")
-	_ = os.Setenv("APP_CONFIGURATION_PATH", "anPath")
+	_ = os.Setenv("APP_CONFIGURATION_PATH", "aPath")
+	_ = os.Setenv("APP_PIPELINE_PATH", "aPipelinePath")
+	_ = os.Setenv("APP_PIPELINE_CONFIGURATION_PATH", "aPipelineConfigPath")
 }
 
 func TestCommands(t *testing.T) {
@@ -66,6 +69,10 @@ func TestCommands(t *testing.T) {
 
 		"push":   {"applications", "push"},
 		"deploy": {"applications", "deploy"},
+
+		"ppush":   {"pipelines", "push-build-image"},
+		"pdeploy": {"pipelines", "deploy"},
+		"pdelete": {"pipelines", "delete"},
 	}
 	for _, value := range clusterCommands {
 		fresh.SetArgs(value)
