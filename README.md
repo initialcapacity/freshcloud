@@ -1,11 +1,12 @@
 [![Build results](https://github.com/initialcapacity/freshcloud/workflows/build/badge.svg)](https://github.com/initialcapacity/freshcloud/actions)
 [![codecov](https://codecov.io/gh/initialcapacity/freshcloud/branch/main/graph/badge.svg)](https://codecov.io/gh/initialcapacity/freshcloud)
+[![CodeQL](https://github.com/initialcapacity/freshcloud/workflows/build/codeql.yml/badge.svg)](https://github.com/initialcapacity/freshcloud/actions/workflows/codeql.yml)
 
 # Fresh Cloud
 
 ## A modern application platform.
 
-The main FreshCloud article can be found here [freshcloud.com](https://www.freshcloud.com).
+The main FreshCloud article with step-by-step instructions can be found here [freshcloud.com](https://www.freshcloud.com).
 
 ## About the golang binary
 
@@ -74,22 +75,26 @@ Similar to the above, create a `.env_app.sh` file for you application.
 ```bash
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
-export GCP_CLUSTER_NAME=aClusterName
+export GCP_CLUSTER_NAME=anAppClusterName
+
+export REGISTRY_DOMAIN=aRegistryDomain
+export REGISTRY_PASSWORD=aRegistryPassword
+export REGISTRY_CLUSTER_NAME=aRegistryClusterName
 
 export DOMAIN=aDomain
 export EMAIL_ADDERESS=anEmail
-export REGISTRY_DOMAIN=aRegistryDomain
-export REGISTRY_PASSWORD=aPassword
 
-export APP_NAME=appName
-export APP_IMAGE_NAME=appImageName
+export APP_NAME=anAppName
+export APP_IMAGE_NAME=anAppImageName
 export APP_CONFIGURATION_PATH=anApplicationConfigurationPath
+export APP_PIPELINE_CONFIGURATION_PATH=anAppPipelineConfigurationPath
+export APP_PIPELINE_PATH=anAppPipelinePath
 ```
 
 Next, source the file.
 
 ```bash
-source .env_infra.sh
+source .env_app.sh
 ```
 
 Run each command to deploy your application. Adding the `-e` flag will execute the command.
@@ -97,10 +102,15 @@ Run each command to deploy your application. Adding the `-e` flag will execute t
 ```bash
 go run cmd/freshctl.go clusters gcp create
 go run cmd/freshctl.go clusters gcp list
+
 go run cmd/freshctl.go services contour
 go run cmd/freshctl.go services cert-manager
+
 go run cmd/freshctl.go applications push
 go run cmd/freshctl.go applications deploy
+
+go run cmd/freshctl.go pipelines push-build-image
+go run cmd/freshctl.go pipelines deploy
 ```
 
 That's a wrap for now.
