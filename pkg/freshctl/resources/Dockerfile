@@ -1,5 +1,5 @@
 # Container to run in our pipeline with kubectl installed.
-FROM alpine:3.8
+FROM golang:alpine
 
 ARG KUBE_VERSION="v1.18.10"
 
