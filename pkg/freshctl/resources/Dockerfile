@@ -13,4 +13,6 @@ RUN apk add --update ca-certificates \
  && apk del --purge deps \
  && rm /var/cache/apk/*
 
-
+RUN apk add --no-cache python3 py3-pip curl bash
+RUN curl -sSL https://sdk.cloud.google.com | bash
+ENV PATH $PATH:/root/google-cloud-sdk/bin
