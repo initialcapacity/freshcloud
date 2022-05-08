@@ -38,7 +38,23 @@ func TestConfigureCmd(t *testing.T) {
 	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd[0])
 }
 
-func TestDeleteClustersCmdCmd(t *testing.T) {
+func TestDeleteClustersCmd(t *testing.T) {
 	cmd := googlecloudsupport.DeleteClustersCmd("aProject", "aZone", "aClusterName")
 	assert.Equal(t, "gcloud container clusters delete 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd[0])
+}
+
+func TestCreateServiceAccountCmd(t *testing.T) {
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../../resources")
+	env := map[string]string{
+		"GCP_PROJECT_ID": "aProject",
+	}
+	cmd := googlecloudsupport.CreateServiceAccountCmd(resourcesDirectory, env)
+	assert.Equal(t, `mkdir -p .freshcloud
+gcloud iam service-accounts create aProject-service-account --display-name=aProject-service-account
+gcloud iam service-accounts keys create .freshcloud/aProject-service-account.json \
+  --iam-account=aProject-service-account@aProject.iam.gserviceaccount.com
+gcloud projects add-iam-policy-binding aProject \
+  --member=serviceAccount:aProject-service-account@aProject.iam.gserviceaccount.com \
+  --role=roles/owner`, cmd[0])
 }

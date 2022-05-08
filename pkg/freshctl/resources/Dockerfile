@@ -2,6 +2,7 @@
 FROM golang:alpine
 
 ARG KUBE_VERSION="v1.18.10"
+ARG CLOUD_SDK_VERSION="384.0.1"
 
 RUN apk add --update ca-certificates \
  && apk add --update -t deps curl \
@@ -13,6 +14,9 @@ RUN apk add --update ca-certificates \
  && apk del --purge deps \
  && rm /var/cache/apk/*
 
-RUN apk add --no-cache python3 py3-pip curl bash
-RUN curl -sSL https://sdk.cloud.google.com | bash
-ENV PATH $PATH:/root/google-cloud-sdk/bin
+ENV PATH=/go/google-cloud-sdk/bin:$PATH
+
+RUN apk add --no-cache curl python3 py3-crcmod bash libc6-compat openssh-client git gnupg \
+ && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
+ && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
+ && rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz

@@ -12,6 +12,7 @@ func init() {
 	googleClusterCmd.AddCommand(googleClustersListCmd)
 	googleClusterCmd.AddCommand(googleClustersDeleteCmd)
 	googleClusterCmd.AddCommand(googleConfigureCmd)
+	googleClusterCmd.AddCommand(googleCreateServiceAccountCmd)
 }
 
 var googleClusterCmd = &cobra.Command{
@@ -72,5 +73,17 @@ var googleConfigureCmd = &cobra.Command{
 		zone := requiredEnv("GCP_ZONE")
 		clusterName := requiredEnv("GCP_CLUSTER_NAME")
 		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(projectID, zone, clusterName))
+	},
+}
+
+var googleCreateServiceAccountCmd = &cobra.Command{
+	Use:   "create-service-account",
+	Short: "Create a service account for google cloud",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		envMap := map[string]string{
+			"GCP_PROJECT_ID": requiredEnv("GCP_PROJECT_ID"),
+		}
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateServiceAccountCmd(resourcesDirectory, envMap))
 	},
 }

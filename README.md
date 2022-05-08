@@ -113,4 +113,12 @@ go run cmd/freshctl.go pipelines push-build-image
 go run cmd/freshctl.go pipelines deploy
 ```
 
+Cleaning up
+
+```bash
+docker rm -f $(docker ps -a -q)
+docker volume rm -f $(docker volume ls -q)
+docker system prune -a -f
+```
+
 That's a wrap for now.

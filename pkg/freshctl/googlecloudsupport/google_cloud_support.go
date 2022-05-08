@@ -30,3 +30,7 @@ func DeleteClustersCmd(projectId, zone, clusterName string) []string {
 		fmt.Sprintf("gcloud container clusters delete '%v' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone),
 	}
 }
+
+func CreateServiceAccountCmd(resourcesDirectory string, envMap map[string]string) []string {
+	return []string{templatesupport.Parse(resourcesDirectory, "google_cloud_service_account", envMap)}
+}

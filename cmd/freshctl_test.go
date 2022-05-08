@@ -18,6 +18,7 @@ func setup() {
 	_ = os.Setenv("GCP_PROJECT_ID", "aProject")
 	_ = os.Setenv("GCP_ZONE", "aZone")
 	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
+	_ = os.Setenv("GCP_SERVICE_ACCOUNT_JSON", "aJsonFile")
 
 	_ = os.Setenv("DOMAIN", "aDomain")
 	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")

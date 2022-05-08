@@ -39,9 +39,12 @@ var pipelineDeployCmd = &cobra.Command{
 		env := map[string]string{
 			"GCP_PROJECT_ID":                  requiredEnv("GCP_PROJECT_ID"),
 			"GCP_ZONE":                        requiredEnv("GCP_ZONE"),
+			"GCP_CLUSTER_NAME":                requiredEnv("GCP_CLUSTER_NAME"),
+			"GCP_SERVICE_ACCOUNT_JSON":        requiredEnv("GCP_SERVICE_ACCOUNT_JSON"),
 			"REGISTRY_DOMAIN":                 requiredEnv("REGISTRY_DOMAIN"),
 			"REGISTRY_PASSWORD":               requiredEnv("REGISTRY_PASSWORD"),
 			"REGISTRY_CLUSTER_NAME":           requiredEnv("REGISTRY_CLUSTER_NAME"),
+			"DOMAIN":                          requiredEnv("DOMAIN"),
 			"APP_NAME":                        requiredEnv("APP_NAME"),
 			"APP_PIPELINE_CONFIGURATION_PATH": requiredEnv("APP_PIPELINE_CONFIGURATION_PATH"),
 			"APP_PIPELINE_PATH":               requiredEnv("APP_PIPELINE_PATH"),
