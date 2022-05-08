@@ -6,15 +6,13 @@
 
 ## A modern application platform.
 
-The FreshCloud article with step-by-step instructions in Bash can be found here [freshcloud.com](https://www.freshcloud.com).
+The Fresh Cloud article with step-by-step instructions in *Bash* can be found here [freshcloud.com](https://www.freshcloud.com).
 
-## About the golang binary
+## Getting started with the new golang binary
 
-Fresh Cloud now includes a golang binary for managing infrastructure and applications on Kubernetes.
+Fresh Cloud now includes a golang binary for managing services and applications on Kubernetes.
 
 The current `freshclt` binary support Google's Cloud Platform.
-
-## Getting started
 
 Download the codebase from GitHub to your local machine and install the following prerequisites.
 
@@ -102,4 +100,4 @@ Confirm the management cluster services are deployed.
 * [Concourse](https://ci.{your-domain})
 
 That's a wrap for now.
-Continue to our [Applications](README_APPS.md) to learn how to deploy application pipelines to your new cluster.
+Continue to our [Applications](README_APPS.md) page to learn how to deploy application pipelines to your new cluster.
