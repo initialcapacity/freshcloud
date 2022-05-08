@@ -16,7 +16,7 @@ func TestPushPipelineImageCmd(t *testing.T) {
 		"REGISTRY_PASSWORD": "aPassword",
 	})
 	expected := `docker build --platform linux/amd64 --rm -t registry.aRegistryDomain/concourse-images/cluster-mgmt:latest \
-  https://raw.githubusercontent.com/initialcapacity/freshcloud/golang_spike/pkg/freshctl/resources/Dockerfile
+  https://raw.githubusercontent.com/initialcapacity/freshcloud/main/pkg/freshctl/resources/Dockerfile
 docker login -u admin -p aPassword https://registry.aRegistryDomain
 docker push registry.aRegistryDomain/concourse-images/cluster-mgmt:latest`
 	assert.Equal(t, expected, pushCmd[0])
