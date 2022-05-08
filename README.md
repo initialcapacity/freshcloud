@@ -12,7 +12,7 @@ The Fresh Cloud article with step-by-step instructions in *Bash* can be found he
 
 Fresh Cloud now includes a golang binary for managing services and applications on Kubernetes.
 
-The current `freshclt` binary support Google's Cloud Platform.
+The current `freshctl` binary support Google's Cloud Platform.
 
 Download the codebase from GitHub to your local machine and install the following prerequisites.
 
