@@ -27,7 +27,7 @@ jobs:
           echo "GOARCH=arm64" >> $GITHUB_ENV
       - name: build
         run: |
-          go build -o freshctl-arm64 -v
+          go build -o freshctl-arm64 cmd/freshctl.go
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
