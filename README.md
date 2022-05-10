@@ -15,7 +15,8 @@ The current `freshctl` binary supports Google's Cloud Platform.
 
 Download and install the
 [latest darwin-arm64 release](https://github.com/initialcapacity/freshcloud/releases/latest/download/freshctl-darwin-arm64)
-of the binary.
+of the binary. Additional golang operating systems and architectures can be found in the
+GitHub action [build artifacts](https://github.com/initialcapacity/freshcloud/actions/workflows/build.yml).
 
 ```bash
 curl -L https://github.com/initialcapacity/freshcloud/releases/download/v202205100303/freshctl-darwin-arm64 \
