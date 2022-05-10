@@ -28,6 +28,20 @@ jobs:
       - name: build
         run: |
           go build -o freshctl-arm64 cmd/freshctl.go
+      - name: Save artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: freshctl-arm64
+          path: freshctl-arm64
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: freshctl-arm64
 
       - name: Get current date
         id: date
