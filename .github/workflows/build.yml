@@ -28,10 +28,7 @@ jobs:
       - name: build
         run: |
           go build -o freshctl-arm64 cmd/freshctl.go
-      - name: Download artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: freshctl-arm64
+
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
