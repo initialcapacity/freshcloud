@@ -12,6 +12,9 @@ The Fresh Cloud article with step-by-step instructions in *Bash* can be found he
 
 Fresh Cloud now includes a golang binary for managing services and applications on Kubernetes.
 
+Download the [latest darwin-arm64 release](https://github.com/initialcapacity/freshcloud/releases/latest/download/freshctl-darwin-arm64)
+of the binary.
+
 The current `freshctl` binary support Google's Cloud Platform.
 
 Download the codebase from GitHub to your local machine and install the following prerequisites.
