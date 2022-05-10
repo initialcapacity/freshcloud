@@ -42,8 +42,8 @@ jobs:
       - name: Save artifact
         uses: actions/upload-artifact@v3
         with:
-          name: "$BINARY_NAME"
-          path: "$BINARY_NAME"
+          name: ${{env.BINARY_NAME}}
+          path: ${{env.BINARY_NAME}}
 
   release:
     runs-on: ubuntu-latest
