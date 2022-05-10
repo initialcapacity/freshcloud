@@ -51,8 +51,6 @@ jobs:
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v3
-        with:
-          name: freshctl-arm64
 
       - name: Display structure of downloaded files
         run: ls -R
