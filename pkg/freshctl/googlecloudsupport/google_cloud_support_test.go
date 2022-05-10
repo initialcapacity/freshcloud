@@ -29,17 +29,37 @@ func TestCreateClusterCmd(t *testing.T) {
 }
 
 func TestListClustersCmdCmd(t *testing.T) {
-	cmd := googlecloudsupport.ListClustersCmd("aProject", "aZone")
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../../resources")
+	env := map[string]string{
+		"GCP_PROJECT_ID": "aProject",
+		"GCP_ZONE":       "aZone",
+	}
+	cmd := googlecloudsupport.ListClustersCmd(resourcesDirectory, env)
 	assert.Equal(t, "gcloud container clusters list --project 'aProject' --zone 'aZone' --quiet", cmd[0])
 }
 
 func TestConfigureCmd(t *testing.T) {
-	cmd := googlecloudsupport.ConfigureCmd("aProject", "aZone", "aClusterName")
-	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd[0])
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../../resources")
+	env := map[string]string{
+		"GCP_PROJECT_ID":   "aProject",
+		"GCP_ZONE":         "aZone",
+		"GCP_CLUSTER_NAME": "aClusterName",
+	}
+	clusterCmd := googlecloudsupport.ConfigureCmd(resourcesDirectory, env)
+	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", clusterCmd[0])
 }
 
 func TestDeleteClustersCmd(t *testing.T) {
-	cmd := googlecloudsupport.DeleteClustersCmd("aProject", "aZone", "aClusterName")
+	_, file, _, _ := runtime.Caller(0)
+	resourcesDirectory := filepath.Join(file, "../../resources")
+	env := map[string]string{
+		"GCP_PROJECT_ID":   "aProject",
+		"GCP_ZONE":         "aZone",
+		"GCP_CLUSTER_NAME": "aClusterName",
+	}
+	cmd := googlecloudsupport.DeleteClustersCmd(resourcesDirectory, env)
 	assert.Equal(t, "gcloud container clusters delete 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd[0])
 }
 
