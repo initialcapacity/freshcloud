@@ -1,4 +1,4 @@
-name: build
+name: build and release
 on: push
 jobs:
   test:
@@ -13,3 +13,46 @@ jobs:
           go test -coverprofile coverage.out  ./.../
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash)
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.18'
+      - name: arch
+        run: |
+          echo "GOOS=darwin" >> $GITHUB_ENV
+          echo "GOARCH=arm64" >> $GITHUB_ENV
+      - name: build
+        run: |
+          go build -o freshctl-arm64 -v
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: freshctl-arm64
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y%m%d%H%M')"
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.date.outputs.date }}
+          release_name: Release v${{ steps.date.outputs.date }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./freshctl-arm64
+          asset_name: freshctl-arm64
+          asset_content_type: application/octet-stream
