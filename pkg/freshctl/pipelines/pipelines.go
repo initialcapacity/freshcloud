@@ -5,13 +5,13 @@ import (
 )
 
 func PushPipelineImageCmd(resourcesDirectory string, envMap map[string]string) []string {
-	return []string{templatesupport.Parse(resourcesDirectory, "push_build_image", envMap)}
+	return []string{templatesupport.Parse(resourcesDirectory, "pipelines_push_build_image", envMap)}
 }
 
 func DeployPipelineCmd(resourcesDirectory string, envMap map[string]string) []string {
-	return []string{templatesupport.Parse(resourcesDirectory, "deploy_pipeline", envMap)}
+	return []string{templatesupport.Parse(resourcesDirectory, "pipelines_deploy_pipeline", envMap)}
 }
 
 func DeletePipelineCmd(resourcesDirectory string, envMap map[string]string) []string {
-	return []string{templatesupport.Parse(resourcesDirectory, "delete_pipeline", envMap)}
+	return []string{templatesupport.Parse(resourcesDirectory, "pipelines_delete_pipeline", envMap)}
 }

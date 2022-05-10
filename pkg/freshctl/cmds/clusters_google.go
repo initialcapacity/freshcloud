@@ -3,6 +3,7 @@ package cmds
 import (
 	"github.com/initialcapacity/freshcloud/pkg/freshctl/googlecloudsupport"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func init() {
@@ -32,12 +33,12 @@ var googleClustersCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a google cloud cluster",
 	Run: func(cmd *cobra.Command, args []string) {
-		envMap := map[string]string{
-			"GCP_PROJECT_ID":   requiredEnv("GCP_PROJECT_ID"),
-			"GCP_ZONE":         requiredEnv("GCP_ZONE"),
-			"GCP_CLUSTER_NAME": requiredEnv("GCP_CLUSTER_NAME"),
-		}
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, envMap))
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"GCP_PROJECT_ID",
+			"GCP_ZONE",
+			"GCP_CLUSTER_NAME",
+		)
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, env))
 	},
 }
 
@@ -46,9 +47,11 @@ var googleClustersListCmd = &cobra.Command{
 	Short: "List google cloud clusters",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		projectID := requiredEnv("GCP_PROJECT_ID")
-		zone := requiredEnv("GCP_ZONE")
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(projectID, zone))
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"GCP_PROJECT_ID",
+			"GCP_ZONE",
+		)
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(resourcesDirectory, env))
 	},
 }
 
@@ -57,10 +60,12 @@ var googleClustersDeleteCmd = &cobra.Command{
 	Short: "Delete a google cloud cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		projectID := requiredEnv("GCP_PROJECT_ID")
-		zone := requiredEnv("GCP_ZONE")
-		clusterName := requiredEnv("GCP_CLUSTER_NAME")
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(projectID, zone, clusterName))
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"GCP_PROJECT_ID",
+			"GCP_ZONE",
+			"GCP_CLUSTER_NAME",
+		)
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(resourcesDirectory, env))
 	},
 }
 
@@ -69,10 +74,12 @@ var googleConfigureCmd = &cobra.Command{
 	Short: "Configure kubectl for google cloud",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		projectID := requiredEnv("GCP_PROJECT_ID")
-		zone := requiredEnv("GCP_ZONE")
-		clusterName := requiredEnv("GCP_CLUSTER_NAME")
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(projectID, zone, clusterName))
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"GCP_PROJECT_ID",
+			"GCP_ZONE",
+			"GCP_CLUSTER_NAME",
+		)
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(resourcesDirectory, env))
 	},
 }
 
@@ -81,9 +88,9 @@ var googleCreateServiceAccountCmd = &cobra.Command{
 	Short: "Create a service account for google cloud",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		envMap := map[string]string{
-			"GCP_PROJECT_ID": requiredEnv("GCP_PROJECT_ID"),
-		}
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateServiceAccountCmd(resourcesDirectory, envMap))
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"GCP_PROJECT_ID",
+		)
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateServiceAccountCmd(resourcesDirectory, env))
 	},
 }

@@ -1,36 +1,29 @@
 package googlecloudsupport
 
 import (
-	"fmt"
 	"github.com/initialcapacity/freshcloud/pkg/templatesupport"
 )
 
 func EnableServicesCmd(resourcesDirectory string) []string {
-	return []string{templatesupport.Parse(resourcesDirectory, "google_cloud_services", nil)}
+	return []string{templatesupport.Parse(resourcesDirectory, "google_clusters_enable_services", nil)}
 }
 
-func ConfigureCmd(projectId, zone, clusterName string) []string {
-	return []string{
-		fmt.Sprintf("gcloud container clusters get-credentials '%s' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone),
-	}
+func ConfigureCmd(resourcesDirectory string, envMap map[string]string) []string {
+	return []string{templatesupport.Parse(resourcesDirectory, "google_clusters_configure", envMap)}
 }
 
 func CreateClustersCmd(resourcesDirectory string, envMap map[string]string) []string {
-	return []string{templatesupport.Parse(resourcesDirectory, "google_cloud_cluster", envMap)}
+	return []string{templatesupport.Parse(resourcesDirectory, "google_clusters_create", envMap)}
 }
 
-func ListClustersCmd(projectId, zone string) []string {
-	return []string{
-		fmt.Sprintf("gcloud container clusters list --project '%v' --zone '%v' --quiet", projectId, zone),
-	}
+func ListClustersCmd(resourcesDirectory string, envMap map[string]string) []string {
+	return []string{templatesupport.Parse(resourcesDirectory, "google_clusters_list", envMap)}
 }
 
-func DeleteClustersCmd(projectId, zone, clusterName string) []string {
-	return []string{
-		fmt.Sprintf("gcloud container clusters delete '%v' --project '%v' --zone '%v' --quiet", clusterName, projectId, zone),
-	}
+func DeleteClustersCmd(resourcesDirectory string, envMap map[string]string) []string {
+	return []string{templatesupport.Parse(resourcesDirectory, "google_clusters_delete", envMap)}
 }
 
 func CreateServiceAccountCmd(resourcesDirectory string, envMap map[string]string) []string {
-	return []string{templatesupport.Parse(resourcesDirectory, "google_cloud_service_account", envMap)}
+	return []string{templatesupport.Parse(resourcesDirectory, "google_clusters_create_service_account", envMap)}
 }
