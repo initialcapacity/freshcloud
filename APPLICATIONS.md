@@ -1,15 +1,15 @@
 # Fresh Cloud
 
-## Application cluster
+## Application clusters
 
 Create a service account for you applications. _Note_, for the moment, the below requires application clusters
 to reside in the same google cloud project as the management cluster.
 
 ```base
-go run cmd/freshctl.go clusters gcp create-service-account
+freshctl clusters gcp create-service-account
 ```
 
-Similar to the above, create a `.env_app.sh` file for you application.
+Similar to your managment cluster, create a `.env_app.sh` file for you application.
 * `REGISTRY_*` variables should match the management cluster above.
 * `GCP_SERVICE_ACCOUNT_JSON` should be located in your lcoal `.freshcloud` directory.
 * `APP_CONFIGURATION_PATH` should contain kubernetes objects.
@@ -46,16 +46,16 @@ source .env_app.sh
 Run each command to deploy your application. Adding the `-e` flag will execute the command.
 
 ```bash
-go run cmd/freshctl.go clusters gcp create
-go run cmd/freshctl.go services contour
+freshctl clusters gcp create
+freshctl services contour
 ```
 
 Create a DNS entry for your load balancer similar to your management cluster.
 
 ```bash
-go run cmd/freshctl.go services cert-manager
-go run cmd/freshctl.go pipelines push-build-image
-go run cmd/freshctl.go pipelines deploy
+freshctl services cert-manager
+freshctl pipelines push-build-image
+freshctl pipelines deploy
 ```
 
 Cleaning up

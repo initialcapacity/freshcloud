@@ -8,38 +8,24 @@
 
 The Fresh Cloud article with step-by-step instructions in *Bash* can be found here [freshcloud.com](https://www.freshcloud.com).
 
-## Getting started with the new golang binary
+## Getting started
 
 Fresh Cloud now includes a golang binary for managing services and applications on Kubernetes.
+The current `freshctl` binary supports Google's Cloud Platform.
 
-Download the [latest darwin-arm64 release](https://github.com/initialcapacity/freshcloud/releases/latest/download/freshctl-darwin-arm64)
+Download and install the
+[latest darwin-arm64 release](https://github.com/initialcapacity/freshcloud/releases/latest/download/freshctl-darwin-arm64)
 of the binary.
 
-The current `freshctl` binary support Google's Cloud Platform.
+```bash
+curl -L https://github.com/initialcapacity/freshcloud/releases/download/v202205100303/freshctl-darwin-arm64 \
+  -o /usr/local/bin/freshctl
+chmod 755 /usr/local/bin/freshctl
+```
 
-Download the codebase from GitHub to your local machine and install the following prerequisites.
-
+Install the following prerequisites.
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * [Google Cloud](https://cloud.google.com/sdk)
-
-```bash
-cd /home/user/workspace/
-git clone git@github.com:initialcapacity/freshcloud.git
-cd freshcloud
-```
-
-Optionally, build and install the Fresh Cloud command line interface; `freshctl`.
-
-```bash
-go build cmd/freshctl.go
-go install cmd/freshctl.go
-```
-
-Check the `freshctl` installation path as needed.
-
-```bash
-go list -f '{{.Target}}' cmd/freshctl.go
-```
 
 ## Management cluster
 
@@ -53,6 +39,14 @@ Ensure the project was set correctly.
 
 ```bash
 gcloud projects describe ${GCP_PROJECT_ID}
+```
+
+Create a directory for you project.
+
+```bash
+cd /home/{user}/workspace/
+mkdir freshcloud-example
+cd freshcloud-example
 ```
 
 Create a `.env_infra.sh` file similar to the below.
@@ -72,15 +66,15 @@ Next, source environment the file.
 source .env_infra.sh
 ```
 
-Then, run each command via go run or the installed binary, `~/go/bin/freshctl`, to create a fresh cloud management cluster.
+Then, run each command to create a fresh cloud management cluster.
 
 _Note_ adding the `-e` flag will execute the command.
 
 ```base
-go run cmd/freshctl.go clusters gcp enable-services
-go run cmd/freshctl.go clusters gcp create
-go run cmd/freshctl.go clusters gcp list
-go run cmd/freshctl.go services contour
+freshctl clusters gcp enable-services
+freshctl clusters gcp create
+freshctl clusters gcp list
+freshctl services contour
 ```
 
 Create a DNS entry for your load balancer. As needed, re-run the below command to show your ip address.
@@ -92,10 +86,10 @@ kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ing
 Continue installing management cluster services.
 
 ```base
-go run cmd/freshctl.go services cert-manager
-go run cmd/freshctl.go services harbor
-go run cmd/freshctl.go services concourse
-go run cmd/freshctl.go services kpack
+freshctl services cert-manager
+freshctl services harbor
+freshctl services concourse
+freshctl services kpack
 ```
 
 Confirm the management cluster services are deployed.
@@ -103,4 +97,4 @@ Confirm the management cluster services are deployed.
 * [Concourse](https://ci.{your-domain})
 
 That's a wrap for now.
-Continue to our [Applications](README_APPS.md) page to learn how to deploy application pipelines to your new cluster.
+Continue to our [Applications](APPLICATIONS.md) page to learn how to deploy application pipelines to your new cluster.
