@@ -32,7 +32,7 @@ jobs:
           GOOSARCH=${{matrix.goosarch}}
           GOOS=${GOOSARCH%/*}
           GOARCH=${GOOSARCH#*/}
-          BINARY_NAME=freschctl-$GOOS-$GOARCH
+          BINARY_NAME=freshctl-$GOOS-$GOARCH
           echo "BINARY_NAME=$BINARY_NAME" >> $GITHUB_ENV
           echo "GOOS=$GOOS" >> $GITHUB_ENV
           echo "GOARCH=$GOARCH" >> $GITHUB_ENV
@@ -70,7 +70,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset (arm64)
+      - name: Upload Release arm64 Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -80,7 +80,7 @@ jobs:
           asset_name: freshctl-darwin-arm64
           asset_content_type: application/octet-stream
 
-      - name: Upload Release Asset (amd64)
+      - name: Upload Release amd64 Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
