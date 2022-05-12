@@ -3,7 +3,9 @@ package templatesupport
 import (
 	"bytes"
 	"fmt"
+	"github.com/initialcapacity/freshcloud/pkg/freshctl"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -18,7 +20,7 @@ type HTTPClient interface {
 var Client HTTPClient
 
 func Parse(resourcesLocation, name string, data interface{}) string {
-	var path string
+	var fileBytes []byte
 	if strings.HasPrefix(resourcesLocation, "https://raw.githubusercontent.com/") {
 		get, getErr := Client.Get(fmt.Sprintf("%s/%s.sh", resourcesLocation, name))
 		defer func(Body io.ReadCloser) {
@@ -28,25 +30,22 @@ func Parse(resourcesLocation, name string, data interface{}) string {
 		if getErr != nil || get.StatusCode != 200 {
 			panic("unable to get desired resource.")
 		}
-		path = filepath.Join(os.TempDir(), fmt.Sprintf("%s.sh", name))
-
-		all, _ := io.ReadAll(get.Body)
-		file, _ := os.Create(path)
-		defer func(file *os.File) {
-			_ = file.Close()
-		}(file)
-
-		_, _ = fmt.Fprintf(file, string(all))
+		fileBytes, _ = io.ReadAll(get.Body)
 	} else {
-		path = filepath.Join(resourcesLocation, "./"+name+".sh")
+		b, _ := fs.ReadFile(freshctl.Resources, "resources/"+name+".sh")
+		fileBytes = b
 	}
+
+	path := filepath.Join(os.TempDir(), fmt.Sprintf("%s.sh", name))
+	file, _ := os.Create(path)
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
+	_, _ = fmt.Fprintf(file, string(fileBytes))
 
 	var parsed bytes.Buffer
-	tmpl, err := template.New(filepath.Base(path)).Funcs(template.FuncMap{}).ParseFiles(path)
-	if err != nil {
-		panic(err)
-	}
-	err = tmpl.Execute(&parsed, data)
+	tmpl, _ := template.New(filepath.Base(path)).Funcs(template.FuncMap{}).ParseFiles(path)
+	err := tmpl.Execute(&parsed, data)
 	if err != nil {
 		panic(err)
 	}
