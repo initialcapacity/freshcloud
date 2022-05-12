@@ -60,13 +60,13 @@ func TestParse_badTemplate(t *testing.T) {
 	}{Bad: "world"})
 }
 
-func TestParse_missingResources(t *testing.T) {
+func xTestParse_missingResources(t *testing.T) { // bring this back for custom directories
 	defer func() {
 		if recover() == nil {
 			t.Fail()
 		}
 	}()
-	_ = templatesupport.Parse("_x_", "test", struct {
+	_ = templatesupport.Parse("_x_", "testz", struct {
 		Name string
 	}{Name: "world"})
 }
