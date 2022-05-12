@@ -19,7 +19,7 @@ of the binary. Additional golang operating systems and architectures can be foun
 GitHub action [build artifacts](https://github.com/initialcapacity/freshcloud/actions/workflows/build.yml).
 
 ```bash
-curl -L https://github.com/initialcapacity/freshcloud/releases/download/v202205100303/freshctl-darwin-arm64 \
+curl -L https://github.com/initialcapacity/freshcloud/releases/download/latest/freshctl-darwin-arm64 \
   -o /usr/local/bin/freshctl
 chmod 755 /usr/local/bin/freshctl
 ```
