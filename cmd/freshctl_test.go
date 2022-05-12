@@ -7,10 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 )
 
 func TestExec(t *testing.T) {
+	_, file, _, _ := runtime.Caller(0)
+	_ = os.Setenv("FRESH_RESOURCES", filepath.Join(file, "../../resources"))
 	main()
 }
 

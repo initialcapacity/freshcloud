@@ -25,7 +25,7 @@ var googleServicesCmd = &cobra.Command{
 	Use:   "enable-services",
 	Short: "Enable google cloud API services",
 	Run: func(cmd *cobra.Command, args []string) {
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.EnableServicesCmd(resourcesDirectory))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.EnableServicesCmd(resourcesLocation))
 	},
 }
 
@@ -38,7 +38,7 @@ var googleClustersCreateCmd = &cobra.Command{
 			"GCP_ZONE",
 			"GCP_CLUSTER_NAME",
 		)
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesDirectory, env))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesLocation, env))
 	},
 }
 
@@ -51,7 +51,7 @@ var googleClustersListCmd = &cobra.Command{
 			"GCP_PROJECT_ID",
 			"GCP_ZONE",
 		)
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(resourcesDirectory, env))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ListClustersCmd(resourcesLocation, env))
 	},
 }
 
@@ -65,7 +65,7 @@ var googleClustersDeleteCmd = &cobra.Command{
 			"GCP_ZONE",
 			"GCP_CLUSTER_NAME",
 		)
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(resourcesDirectory, env))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(resourcesLocation, env))
 	},
 }
 
@@ -79,7 +79,7 @@ var googleConfigureCmd = &cobra.Command{
 			"GCP_ZONE",
 			"GCP_CLUSTER_NAME",
 		)
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(resourcesDirectory, env))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(resourcesLocation, env))
 	},
 }
 
@@ -91,6 +91,6 @@ var googleCreateServiceAccountCmd = &cobra.Command{
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
 			"GCP_PROJECT_ID",
 		)
-		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateServiceAccountCmd(resourcesDirectory, env))
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateServiceAccountCmd(resourcesLocation, env))
 	},
 }

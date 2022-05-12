@@ -28,7 +28,7 @@ var pushCmd = &cobra.Command{
 			"APP_NAME",
 			"APP_IMAGE_NAME",
 		)
-		for _, s := range applications.PushImageCmd(resourcesDirectory, env) {
+		for _, s := range applications.PushImageCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -46,7 +46,7 @@ var deployCmd = &cobra.Command{
 			"APP_IMAGE_NAME",
 			"APP_CONFIGURATION_PATH",
 		)
-		for _, s := range applications.DeployAppCmd(resourcesDirectory, env) {
+		for _, s := range applications.DeployAppCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},

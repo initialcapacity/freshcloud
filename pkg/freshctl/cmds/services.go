@@ -29,7 +29,7 @@ var contourCmd = &cobra.Command{
 			"DOMAIN",
 			"PASSWORD",
 		)
-		for _, s := range services.InstallContourCmd(resourcesDirectory, env) {
+		for _, s := range services.InstallContourCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -42,7 +42,7 @@ var certManagerCmd = &cobra.Command{
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
 			"EMAIL_ADDRESS",
 		)
-		for _, s := range services.InstallCertManagerCmd(resourcesDirectory, env) {
+		for _, s := range services.InstallCertManagerCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -57,7 +57,7 @@ var harborCmd = &cobra.Command{
 			"EMAIL_ADDRESS",
 			"PASSWORD",
 		)
-		for _, s := range services.InstallHarborCmd(resourcesDirectory, env) {
+		for _, s := range services.InstallHarborCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -71,7 +71,7 @@ var concourseCmd = &cobra.Command{
 			"DOMAIN",
 			"PASSWORD",
 		)
-		for _, s := range services.InstallConcourseCmd(resourcesDirectory, env) {
+		for _, s := range services.InstallConcourseCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -85,7 +85,7 @@ var kpackCmd = &cobra.Command{
 			"DOMAIN",
 			"PASSWORD",
 		)
-		for _, s := range services.InstallKpackCmd(resourcesDirectory, env) {
+		for _, s := range services.InstallKpackCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},

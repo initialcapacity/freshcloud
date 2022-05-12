@@ -6,13 +6,14 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 )
 
-var resourcesDirectory string
+var resourcesLocation string
 var outOrStderr io.Writer
 var outOrStderrOverride bytes.Buffer
 var execute bool
@@ -55,7 +56,11 @@ func init() {
 
 func Fresh() *cobra.Command {
 	_, file, _, _ := runtime.Caller(0)
-	resourcesDirectory = filepath.Join(file, "../../resources")
+	resourcesLocation = filepath.Join(file, "../../resources")
+	if found := os.Getenv("FRESH_RESOURCES"); found != "" {
+		resourcesLocation = found
+	}
+	log.Printf("Found resources location %s", resourcesLocation)
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	return rootCmd
 }
@@ -84,13 +89,5 @@ func requiredString(env map[string]string, required ...string) map[string]string
 func writeCommands(w io.Writer, cmds []string) {
 	for _, c := range cmds {
 		_, _ = fmt.Fprintf(w, c+"\n")
-	}
-}
-
-func requiredEnv(variable string) string {
-	if f := os.Getenv(variable); f == "" {
-		panic(fmt.Sprintf("please set the %v environemnt variable", variable))
-	} else {
-		return f
 	}
 }
