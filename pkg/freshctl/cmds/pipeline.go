@@ -27,7 +27,7 @@ var pipelinePushImageCmd = &cobra.Command{
 			"REGISTRY_DOMAIN",
 			"REGISTRY_PASSWORD",
 		)
-		for _, s := range pipelines.PushPipelineImageCmd(resourcesDirectory, env) {
+		for _, s := range pipelines.PushPipelineImageCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -50,7 +50,7 @@ var pipelineDeployCmd = &cobra.Command{
 			"APP_PIPELINE_CONFIGURATION_PATH",
 			"APP_PIPELINE_PATH",
 		)
-		for _, s := range pipelines.DeployPipelineCmd(resourcesDirectory, env) {
+		for _, s := range pipelines.DeployPipelineCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},
@@ -66,7 +66,7 @@ var pipelineDeleteCmd = &cobra.Command{
 			"REGISTRY_CLUSTER_NAME",
 			"APP_NAME",
 		)
-		for _, s := range pipelines.DeletePipelineCmd(resourcesDirectory, env) {
+		for _, s := range pipelines.DeletePipelineCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},

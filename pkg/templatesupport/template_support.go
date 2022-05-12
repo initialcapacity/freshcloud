@@ -6,9 +6,9 @@ import (
 	"text/template"
 )
 
-func Parse(resourcesDirectory, name string, data any) string {
+func Parse(resourcesLocation, name string, data any) string {
 	var parsed bytes.Buffer
-	path := filepath.Join(resourcesDirectory, "./"+name+".sh")
+	path := filepath.Join(resourcesLocation, "./"+name+".sh")
 	tmpl, err := template.New(filepath.Base(path)).Funcs(template.FuncMap{}).ParseFiles(path)
 	if err != nil {
 		panic(err)

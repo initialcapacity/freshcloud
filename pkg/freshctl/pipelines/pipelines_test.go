@@ -9,9 +9,7 @@ import (
 )
 
 func TestPushPipelineImageCmd(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	resourcesDirectory := filepath.Join(file, "../../resources")
-	pushCmd := pipelines.PushPipelineImageCmd(resourcesDirectory, map[string]string{
+	pushCmd := pipelines.PushPipelineImageCmd(resourcesLocation(), map[string]string{
 		"REGISTRY_DOMAIN":   "aRegistryDomain",
 		"REGISTRY_PASSWORD": "aPassword",
 	})
@@ -23,9 +21,7 @@ docker push registry.aRegistryDomain/concourse-images/cluster-mgmt:latest`
 }
 
 func TestDeployPipelineCmd(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	resourcesDirectory := filepath.Join(file, "../../resources")
-	deployCmd := pipelines.DeployPipelineCmd(resourcesDirectory, map[string]string{
+	deployCmd := pipelines.DeployPipelineCmd(resourcesLocation(), map[string]string{
 		"GCP_PROJECT_ID":                  "aProject",
 		"GCP_ZONE":                        "aZone",
 		"REGISTRY_DOMAIN":                 "aDomain",
@@ -40,9 +36,7 @@ func TestDeployPipelineCmd(t *testing.T) {
 }
 
 func TestDeletePipelineCmd(t *testing.T) {
-	_, file, _, _ := runtime.Caller(0)
-	resourcesDirectory := filepath.Join(file, "../../resources")
-	deleteCmd := pipelines.DeletePipelineCmd(resourcesDirectory, map[string]string{
+	deleteCmd := pipelines.DeletePipelineCmd(resourcesLocation(), map[string]string{
 		"REGISTRY_DOMAIN":       "aDomain",
 		"REGISTRY_PASSWORD":     "aPassword",
 		"REGISTRY_CLUSTER_NAME": "aCluster",
@@ -52,4 +46,10 @@ func TestDeletePipelineCmd(t *testing.T) {
 echo y | fly -t aCluster dp -p build-anApp
 kubectl delete ns anApp`
 	assert.Equal(t, expected, deleteCmd[0])
+}
+
+func resourcesLocation() string {
+	_, file, _, _ := runtime.Caller(0)
+	resourcesLocation := filepath.Join(file, "../../resources")
+	return resourcesLocation
 }
