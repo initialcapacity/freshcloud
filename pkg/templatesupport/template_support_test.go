@@ -21,7 +21,7 @@ func TestParse(t *testing.T) {
 
 func TestParseViaUrl(t *testing.T) {
 	templatesupport.Client = &http.Client{}
-	location := "https://raw.githubusercontent.com/initialcapacity/freshcloud/main/pkg/templatesupport/resources"
+	location := "https://raw.githubusercontent.com/initialcapacity/freshcloud/main/pkg/freshctl/resources"
 	parsed := templatesupport.Parse(location, "test", struct {
 		Name string
 	}{Name: "world"})
