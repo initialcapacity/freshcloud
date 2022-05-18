@@ -41,7 +41,7 @@ var rootCmd = &cobra.Command{
 				if err != nil {
 					_, _ = color.New(color.FgRed).Printf("Unable to run %v command %v\n", freshCmd, err)
 				} else {
-					_, _ = color.New(color.FgGreen).Printf("Success! running %v command\n", freshCmd)
+					_, _ = color.New(color.FgGreen).Printf("Success! %v command\n", freshCmd)
 				}
 			}
 		}
