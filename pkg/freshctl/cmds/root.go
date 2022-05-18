@@ -9,8 +9,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
-	"runtime"
 )
 
 var resourcesLocation string
@@ -55,12 +53,13 @@ func init() {
 }
 
 func Fresh() *cobra.Command {
-	_, file, _, _ := runtime.Caller(0)
-	resourcesLocation = filepath.Join(file, "../../resources")
 	if found := os.Getenv("FRESH_RESOURCES"); found != "" {
 		resourcesLocation = found
+		log.Printf("Found resources location %s", resourcesLocation)
+	} else {
+		log.Println("Unable to find resources location, using embedded resources.")
 	}
-	log.Printf("Found resources location %s", resourcesLocation)
+
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	return rootCmd
 }
