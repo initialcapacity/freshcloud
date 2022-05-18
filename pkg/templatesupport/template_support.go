@@ -31,9 +31,17 @@ func Parse(resourcesLocation, name string, data interface{}) string {
 			panic("unable to get desired resource.")
 		}
 		fileBytes, _ = io.ReadAll(get.Body)
+	} else if strings.HasPrefix(resourcesLocation, "/") {
+		f := filepath.Join(resourcesLocation, name+".sh")
+		b, _ := os.ReadFile(f)
+		fileBytes = b
 	} else {
 		b, _ := fs.ReadFile(freshctl.Resources, "resources/"+name+".sh")
 		fileBytes = b
+	}
+
+	if len(fileBytes) == 0 {
+		panic("unable to find resources.")
 	}
 
 	path := filepath.Join(os.TempDir(), fmt.Sprintf("%s.sh", name))

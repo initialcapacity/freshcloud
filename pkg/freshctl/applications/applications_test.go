@@ -12,7 +12,7 @@ import (
 )
 
 func TestPushImageCmd(t *testing.T) {
-	clusterCmd := applications.PushImageCmd(resourcesLocation(), map[string]string{
+	pushImageCmd := applications.PushImageCmd(resourcesLocation(), map[string]string{
 		"REGISTRY_DOMAIN":   "aRegistryDomain",
 		"REGISTRY_PASSWORD": "aPassword",
 		"APP_NAME":          "anApp",
@@ -30,7 +30,7 @@ func TestPushImageCmd(t *testing.T) {
 docker login -u admin -p aPassword https://registry.aRegistryDomain
 docker tag anImage registry.aRegistryDomain/anApp/anImage:latest
 docker push registry.aRegistryDomain/anApp/anImage:latest`
-	assert.Equal(t, expected, clusterCmd[0])
+	assert.Equal(t, expected, pushImageCmd[0])
 }
 
 func TestDeployAppCmd(t *testing.T) {
@@ -41,7 +41,7 @@ func TestDeployAppCmd(t *testing.T) {
 	_ = syscall.Setenv("APP_IMAGE_NAME", "anImage")
 	_ = syscall.Setenv("APP_CONFIGURATION_PATH", "aPath")
 
-	clusterCmd := applications.DeployAppCmd(resourcesLocation(), cmds.MakeEnvironmentMap(os.Environ()))
+	deployAppCmd := applications.DeployAppCmd(resourcesLocation(), cmds.MakeEnvironmentMap(os.Environ()))
 
 	expected := `mkdir -p .freshcloud
 sha=$(curl -s --user "admin:aRegistryPassword" -X GET \
@@ -54,7 +54,7 @@ envsubst < aPath > .freshcloud/anApp.yaml
 kubectl apply -f .freshcloud/anApp.yaml
 echo "Deploy anApp to https://anApp.anAppDomain"
 echo "Remove the app by running - kubectl delete ns anApp"`
-	assert.Equal(t, expected, clusterCmd[0])
+	assert.Equal(t, expected, deployAppCmd[0])
 }
 
 func resourcesLocation() string {

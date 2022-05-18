@@ -12,7 +12,7 @@ func TestInstallContour(t *testing.T) {
 	env := map[string]string{
 		"DOMAIN": "aDomain",
 	}
-	clusterCmd := services.InstallContourCmd(resourcesLocation(), env)
+	contourCmd := services.InstallContourCmd(resourcesLocation(), env)
 	expected := `kubectl create namespace projectcontour
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
@@ -26,14 +26,14 @@ sleep 10 # waiting for an ip address
 load_balancer=$(kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ingress | awk '{print $3}')
 echo "Create a DNS A for *.aDomain to $load_balancer"
 echo "Remove contour by running - kubectl delete ns projectcontour"`
-	assert.Equal(t, expected, clusterCmd[0])
+	assert.Equal(t, expected, contourCmd[0])
 }
 
 func TestInstallCertManager(t *testing.T) {
 	env := map[string]string{
 		"EMAIL_ADDRESS": "anEmail",
 	}
-	clusterCmd := services.InstallCertManagerCmd(resourcesLocation(), env)
+	certManagerCmd := services.InstallCertManagerCmd(resourcesLocation(), env)
 	expected := `kubectl create namespace cert-manager
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
@@ -76,7 +76,7 @@ spec:
             class: contour
 EOF
 echo "Remove cert-manager by running - kubectl delete ns cert-manager"`
-	assert.Equal(t, expected, clusterCmd[0])
+	assert.Equal(t, expected, certManagerCmd[0])
 }
 
 func TestInstallHarbor(t *testing.T) {

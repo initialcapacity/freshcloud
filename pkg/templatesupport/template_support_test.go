@@ -6,14 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"testing"
 )
 
 func TestParse(t *testing.T) {
-	parsed := templatesupport.Parse(resourcesLocation(), "test", struct {
+	parsed := templatesupport.Parse("", "test", struct {
 		Name string
 	}{Name: "world"})
 	assert.Equal(t, "hi world", parsed)
@@ -49,29 +49,38 @@ func TestParseViaUrl_GetFails(t *testing.T) {
 	}{Name: "world"})
 }
 
+func TestParseViaLocation(t *testing.T) {
+	tempDir := os.TempDir()
+	_ = ioutil.WriteFile(filepath.Join(tempDir, "test.sh"), []byte("hi {{.Name}}"), 0644)
+
+	resp := templatesupport.Parse(tempDir, "test", struct {
+		Name string
+	}{Name: "world"})
+	assert.Equal(t, "hi world", string(resp))
+}
+
+func TestParseViaLocation_missingResources(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Fail()
+		}
+	}()
+
+	tempDir := os.TempDir()
+	_ = ioutil.WriteFile(filepath.Join(tempDir, "test.sh"), []byte("hi {{.Name}}"), 0644)
+
+	_ = templatesupport.Parse(tempDir, "tes", struct {
+		Name string
+	}{Name: "world"})
+}
+
 func TestParse_badTemplate(t *testing.T) {
 	defer func() {
 		if recover() == nil {
 			t.Fail()
 		}
 	}()
-	_ = templatesupport.Parse(resourcesLocation(), "test", struct {
+	_ = templatesupport.Parse("", "test", struct {
 		Bad string
 	}{Bad: "world"})
-}
-
-func xTestParse_missingResources(t *testing.T) { // bring this back for custom directories
-	defer func() {
-		if recover() == nil {
-			t.Fail()
-		}
-	}()
-	_ = templatesupport.Parse("_x_", "testz", struct {
-		Name string
-	}{Name: "world"})
-}
-
-func resourcesLocation() string {
-	_, file, _, _ := runtime.Caller(0)
-	return filepath.Join(file, "../resources")
 }

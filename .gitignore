@@ -9,4 +9,4 @@ ignored
 .DS_Store
 .env*
 .freshcloud
-freshctl
+local_resources
