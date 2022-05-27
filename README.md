@@ -98,8 +98,8 @@ freshctl services kpack
 
 Confirm the management cluster services are deployed.
 
-* [Harbor](https://registry.{your-domain})
-* [Concourse](https://ci.{your-domain})
+* Harbor https://registry.{your-domain}
+* Concourse https://ci.{your-domain}
 
 That's a wrap for now.
 Continue to our [Applications](APPLICATIONS.md) page to learn how to deploy application pipelines to your new cluster.
