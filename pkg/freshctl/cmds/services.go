@@ -9,16 +9,28 @@ import (
 
 func init() {
 	rootCmd.AddCommand(servicesCmd)
-	servicesCmd.AddCommand(contourCmd)
-	servicesCmd.AddCommand(certManagerCmd)
-	servicesCmd.AddCommand(harborCmd)
-	servicesCmd.AddCommand(concourseCmd)
-	servicesCmd.AddCommand(kpackCmd)
+	servicesCmd.AddCommand(servicesAddCmd)
+	servicesAddCmd.AddCommand(contourCmd)
+	servicesAddCmd.AddCommand(certManagerCmd)
+	servicesAddCmd.AddCommand(harborCmd)
+	servicesAddCmd.AddCommand(concourseCmd)
+	servicesAddCmd.AddCommand(kpackCmd)
+	servicesCmd.AddCommand(servicesRemoveCmd)
 }
 
 var servicesCmd = &cobra.Command{
 	Use:   "services",
 	Short: "Manage cluster services",
+}
+
+var servicesAddCmd = &cobra.Command{
+	Use:   "add",
+	Short: "Add services",
+}
+
+var servicesRemoveCmd = &cobra.Command{
+	Use:   "remove",
+	Short: "Remove services",
 }
 
 var contourCmd = &cobra.Command{

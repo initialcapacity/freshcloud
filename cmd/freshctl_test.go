@@ -62,11 +62,11 @@ func TestCommands(t *testing.T) {
 		"aconfigure": {"clusters", "aws", "configure"},
 		"adelete":    {"clusters", "aws", "delete"},
 
-		"contour":     {"services", "contour"},
-		"certmanager": {"services", "cert-manager"},
-		"harbor":      {"services", "harbor"},
-		"concourse":   {"services", "concourse"},
-		"kpack":       {"services", "kpack"},
+		"contour":     {"services", "add", "contour"},
+		"certmanager": {"services", "add", "cert-manager"},
+		"harbor":      {"services", "add", "harbor"},
+		"concourse":   {"services", "add", "concourse"},
+		"kpack":       {"services", "add", "kpack"},
 
 		"push":   {"applications", "push"},
 		"deploy": {"applications", "deploy"},

@@ -1,14 +1,17 @@
 ### Install azure-cli on OSX
+
 ```console
   $ brew install azure-cli
 ```
 
 ### Configure azure-cli access
+
 ```console
   $ az login
 ```
 
 ### Create and then edit .env_development.sh and enter the below values
+
 ```console
   $ touch .env_development.sh
   $ vim .env_development.sh
@@ -24,6 +27,7 @@
 ```
 
 ### Delete existing Azure Resource Group
+
 ```console
   $ bash azure-cloud-support.sh delete
 ```

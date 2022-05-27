@@ -6,7 +6,8 @@
 
 ## A modern application platform.
 
-The Fresh Cloud article with step-by-step instructions in *Bash* can be found here [freshcloud.com](https://www.freshcloud.com).
+The Fresh Cloud article with step-by-step instructions in *Bash* can be found
+here [freshcloud.com](https://www.freshcloud.com).
 
 ## Getting started
 
@@ -25,6 +26,7 @@ chmod 755 /usr/local/bin/freshctl
 ```
 
 Install the following prerequisites.
+
 * [Docker Desktop](https://www.docker.com/products/docker-desktop)
 * [Google Cloud](https://cloud.google.com/sdk)
 
@@ -56,8 +58,9 @@ Create a `.env_infra.sh` file similar to the below.
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
 export GCP_CLUSTER_NAME=aClusterName
+
 export DOMAIN=aDomain
-export EMAIL_ADDERESS=anEmail
+export EMAIL_ADDRESS=anEmail
 export PASSWORD=aPassword
 ```
 
@@ -94,6 +97,7 @@ freshctl services kpack
 ```
 
 Confirm the management cluster services are deployed.
+
 * [Harbor](https://registry.{your-domain})
 * [Concourse](https://ci.{your-domain})
 

@@ -1,4 +1,5 @@
-### Install aws and eksctl 
+### Install aws and eksctl
+
 ```console
   $ brew install aws
   $ brew tap weaveworks/tap
@@ -7,11 +8,13 @@
 ```
 
 ### Configure awscli access
+
 ```console
   $ aws configure
 ```
 
 ### Create and then edit .env_development.sh and enter the below values
+
 ```console
   $ touch .env_development.sh
   $ vim .env_development.sh
@@ -27,6 +30,7 @@
 ```
 
 ### Delete existing cluster
+
 ```console
   $ bash aws-cloud-support.sh delete
 ```

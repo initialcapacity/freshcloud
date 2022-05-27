@@ -10,12 +10,14 @@ freshctl clusters gcp create-service-account
 ```
 
 Similar to your managment cluster, create a `.env_app.sh` file for you application.
+
 * `REGISTRY_*` variables should match the management cluster above.
 * `GCP_SERVICE_ACCOUNT_JSON` should be located in your lcoal `.freshcloud` directory.
 * `APP_CONFIGURATION_PATH` should contain kubernetes objects.
 * `APP_PIPELINE_*_PATH` should contain concourse pipeline files.
 
-See our [Kotlin-ktor-starter](https://github.com/initialcapacity/kotlin-ktor-starter/tree/main/deployments) for an example.
+See our [Kotlin-ktor-starter](https://github.com/initialcapacity/kotlin-ktor-starter/tree/main/deployments) for an
+example.
 
 ```bash
 export GCP_PROJECT_ID=aProjectId
