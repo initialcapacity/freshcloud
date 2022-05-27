@@ -1,6 +1,6 @@
 # Fresh Cloud
 
-## Application clusters
+## Deploying applications
 
 Create a service account for you applications. _Note_, for the moment, the below requires application clusters
 to reside in the same google cloud project as the management cluster.
@@ -45,7 +45,7 @@ Next, source the file.
 source .env_app.sh
 ```
 
-Run each command to deploy your application. Adding the `-e` flag will execute the command.
+Run each command to deploy your application. Adding the `--execute` flag will execute the command below.
 
 ```bash
 freshctl clusters gcp create
@@ -60,7 +60,9 @@ freshctl pipelines push-build-image
 freshctl pipelines deploy
 ```
 
-Cleaning up
+That's a wrap for now.
+
+Use the below to clean up docker images and volumes.
 
 ```bash
 docker rm -f $(docker ps -a -q)

@@ -6,12 +6,12 @@
 
 ## A modern application platform.
 
-The Fresh Cloud article with step-by-step instructions in *Bash* can be found
+The original Fresh Cloud article with step-by-step instructions in *bash* can be found
 here [freshcloud.com](https://www.freshcloud.com).
 
 ## Getting started
 
-Fresh Cloud now includes a golang binary for managing services and applications on Kubernetes.
+Fresh Cloud includes a golang binary for managing services and applications on Kubernetes.
 The current `freshctl` binary supports Google's Cloud Platform.
 
 Download and install the
@@ -72,7 +72,7 @@ source .env_infra.sh
 
 Then, run each command to create a fresh cloud management cluster.
 
-_Note_ adding the `-e` flag will execute the command.
+_Note_ adding the `--execute` flag will execute the command below.
 
 ```base
 freshctl clusters gcp enable-services
@@ -100,6 +100,20 @@ Confirm the management cluster services are deployed.
 
 * Harbor https://registry.{your-domain}
 * Concourse https://ci.{your-domain}
+
+## Cluster customization
+
+The Fresh Cloud scripts are customizable. Use the below command to pull down resource scripts locally for modification.
+
+```bash
+freshctl resources copy
+```
+
+Then, export the `FRESH_RESOURCES` environment variable in the `.env_infra.sh` to use locally modified scripts.
+
+```bash
+export FRESH_RESOURCES=./local_resources
+```
 
 That's a wrap for now.
 Continue to our [Applications](APPLICATIONS.md) page to learn how to deploy application pipelines to your new cluster.
