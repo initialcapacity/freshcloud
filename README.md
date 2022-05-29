@@ -83,7 +83,7 @@ _Note_ adding the `--execute` flag will execute the command below.
 freshctl clusters gcp enable-services
 freshctl clusters gcp create
 freshctl clusters gcp list
-freshctl services contour
+freshctl services add contour
 ```
 
 Create a DNS entry for your load balancer. As needed, re-run the below command to show your ip address.
@@ -95,10 +95,10 @@ kubectl describe svc ingress-contour-envoy --namespace projectcontour | grep Ing
 Continue installing management cluster services.
 
 ```base
-freshctl services cert-manager
-freshctl services harbor
-freshctl services concourse
-freshctl services kpack
+freshctl services add cert-manager
+freshctl services add harbor
+freshctl services add concourse
+freshctl services add kpack
 ```
 
 Confirm the management cluster services are deployed.

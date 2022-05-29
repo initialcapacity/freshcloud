@@ -49,13 +49,13 @@ Run each command to deploy your application. Adding the `--execute` flag will ex
 
 ```bash
 freshctl clusters gcp create
-freshctl services contour
+freshctl services add contour
 ```
 
 Create a DNS entry for your load balancer similar to your management cluster.
 
 ```bash
-freshctl services cert-manager
+freshctl services add cert-manager
 freshctl pipelines push-build-image
 freshctl pipelines deploy
 ```
