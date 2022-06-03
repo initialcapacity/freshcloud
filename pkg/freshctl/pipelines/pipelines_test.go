@@ -22,8 +22,6 @@ docker push registry.aRegistryDomain/concourse-images/cluster-mgmt:latest`
 
 func TestDeployPipelineCmd(t *testing.T) {
 	deployCmd := pipelines.DeployPipelineCmd(resourcesLocation(), map[string]string{
-		"GCP_PROJECT_ID":                  "aProject",
-		"GCP_ZONE":                        "aZone",
 		"REGISTRY_DOMAIN":                 "aDomain",
 		"REGISTRY_PASSWORD":               "aPassword",
 		"REGISTRY_CLUSTER_NAME":           "aCluster",
@@ -31,7 +29,6 @@ func TestDeployPipelineCmd(t *testing.T) {
 		"APP_PIPELINE_CONFIGURATION_PATH": "aPath",
 		"APP_PIPELINE_PATH":               "anotherPath",
 	})
-	assert.Contains(t, deployCmd[0], `gcloud container clusters get-credentials 'aCluster'`)
 	assert.Contains(t, deployCmd[0], `CA=$(kubectl get secret/${NAME} -n anApp -o jsonpath='{.data.ca\.crt}')`)
 }
 

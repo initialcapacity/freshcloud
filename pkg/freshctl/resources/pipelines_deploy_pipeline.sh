@@ -1,8 +1,4 @@
 mkdir -p .freshcloud
-gcloud container clusters get-credentials '{{index . "REGISTRY_CLUSTER_NAME"}}' \
-  --project '{{index . "GCP_PROJECT_ID"}}' \
-  --zone '{{index . "GCP_ZONE"}}' \
-  --quiet
 kubectl create namespace {{index . "APP_NAME"}}
 kubectl create secret docker-registry {{index . "APP_NAME"}}-registry-credentials \
   --docker-username=admin \
@@ -19,13 +15,11 @@ NAME=$(kubectl get secrets -n {{index . "APP_NAME"}} |grep {{index . "APP_NAME"}
 CA=$(kubectl get secret/${NAME} -n {{index . "APP_NAME"}} -o jsonpath='{.data.ca\.crt}')
 TOKEN=$(kubectl get secret/${NAME} -n {{index . "APP_NAME"}} -o jsonpath='{.data.token}' | base64 --decode)
 SERVER=$(kubectl cluster-info|head -1|awk '{print $NF}'|sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g")
-SERVICE_ACCOUNT_JSON=$(cat ${GCP_SERVICE_ACCOUNT_JSON} | sed -e 's/^/    /')
+SERVICE_ACCOUNT_JSON=$(cat ${K8S_SERVICE_ACCOUNT_JSON} | sed -e 's/^/    /')
 
 cat <<EOF > .freshcloud/{{index . "APP_NAME"}}-pipeline-parameters.yaml
 service-account-key: random-string
 domain: {{index . "DOMAIN"}}
-gcp_project_id: {{index . "GCP_PROJECT_ID"}}
-gcp_zone: {{index . "GCP_ZONE"}}
 cluster_name: {{index . "K8S_CLUSTER_NAME"}}
 service_account_json: ${SERVICE_ACCOUNT_JSON}
 kubeconfig: |

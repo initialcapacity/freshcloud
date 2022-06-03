@@ -39,9 +39,7 @@ var pipelineDeployCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
 			"K8S_CLUSTER_NAME",
-			"GCP_PROJECT_ID",
-			"GCP_ZONE",
-			"GCP_SERVICE_ACCOUNT_JSON",
+			"K8S_SERVICE_ACCOUNT_JSON",
 			"REGISTRY_DOMAIN",
 			"REGISTRY_PASSWORD",
 			"REGISTRY_CLUSTER_NAME",

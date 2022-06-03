@@ -12,7 +12,7 @@ freshctl clusters gcp create-service-account
 Similar to your managment cluster, create a `.env_app.sh` file for you application.
 
 * `REGISTRY_*` variables should match the management cluster above.
-* `GCP_SERVICE_ACCOUNT_JSON` should be located in your lcoal `.freshcloud` directory.
+* `K8S_SERVICE_ACCOUNT_JSON` should be located in your lcoal `.freshcloud` directory.
 * `APP_CONFIGURATION_PATH` should contain kubernetes objects.
 * `APP_PIPELINE_*_PATH` should contain concourse pipeline files.
 
@@ -22,7 +22,7 @@ example.
 ```bash
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
-export GCP_SERVICE_ACCOUNT_JSON=.freshcloud/your-service-account.json
+export K8S_SERVICE_ACCOUNT_JSON=.freshcloud/your-service-account.json
 
 export K8S_CLUSTER_NAME=anAppClusterName
 
