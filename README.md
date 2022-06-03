@@ -35,7 +35,7 @@ Install the following prerequisites.
 ## Management cluster
 
 The management cluster runs the image registry and continuous integration and delivery pipeline. Fresh Cloud uses
-[Harbor](https://goharbor.io) for the image registry and [Concourse](https://concourse-ci.org) for the CI/CD pipeline.  
+[Harbor](https://goharbor.io) for the image registry and [Concourse](https://concourse-ci.org) for the CI/CD pipeline.
 
 Configure your google cloud project.
 

@@ -1,0 +1,1 @@
+az group create --name {{index . "AZURE_RESOURCE_GROUP"}} --location {{index . "AZURE_LOCATION"}}

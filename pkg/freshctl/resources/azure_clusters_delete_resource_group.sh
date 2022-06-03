@@ -1,0 +1,1 @@
+az group delete --name '{{index . "AZURE_RESOURCE_GROUP"}}' --yes --no-wait
