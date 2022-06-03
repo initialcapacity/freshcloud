@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 		if cmd.Name() != "version" {
 			if execute {
 				command := exec.Command("/bin/bash", args...)
+				command.Env = os.Environ()
 				command.Stdout = os.Stdout
 				command.Stderr = os.Stderr
 				command.Stdin = os.Stdin
