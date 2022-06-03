@@ -17,15 +17,14 @@ func TestExec(t *testing.T) {
 func setup() {
 	_ = os.Setenv("GCP_PROJECT_ID", "aProject")
 	_ = os.Setenv("GCP_ZONE", "aZone")
-	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
 	_ = os.Setenv("GCP_SERVICE_ACCOUNT_JSON", "aJsonFile")
 
 	_ = os.Setenv("AZURE_RESOURCE_GROUP", "aGroup")
 	_ = os.Setenv("AZURE_LOCATION", "aLocation")
-	_ = os.Setenv("AZURE_CLUSTER_NAME", "aCluster")
 
 	_ = os.Setenv("AWS_REGION", "aLocation")
-	_ = os.Setenv("AWS_CLUSTER_NAME", "aCluster")
+
+	_ = os.Setenv("K8S_CLUSTER_NAME", "aCluster")
 
 	_ = os.Setenv("DOMAIN", "aDomain")
 	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")

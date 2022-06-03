@@ -22,8 +22,9 @@ example.
 ```bash
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
-export GCP_CLUSTER_NAME=anAppClusterName
 export GCP_SERVICE_ACCOUNT_JSON=.freshcloud/your-service-account.json
+
+export K8S_CLUSTER_NAME=anAppClusterName
 
 export REGISTRY_DOMAIN=aRegistryDomain
 export REGISTRY_PASSWORD=aRegistryPassword

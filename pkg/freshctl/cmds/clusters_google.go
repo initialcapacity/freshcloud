@@ -34,9 +34,9 @@ var googleClustersCreateCmd = &cobra.Command{
 	Short: "Create a google cloud cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"GCP_PROJECT_ID",
 			"GCP_ZONE",
-			"GCP_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), googlecloudsupport.CreateClustersCmd(resourcesLocation, env))
 	},
@@ -61,9 +61,9 @@ var googleClustersDeleteCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"GCP_PROJECT_ID",
 			"GCP_ZONE",
-			"GCP_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), googlecloudsupport.DeleteClustersCmd(resourcesLocation, env))
 	},
@@ -75,9 +75,9 @@ var googleConfigureCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"GCP_PROJECT_ID",
 			"GCP_ZONE",
-			"GCP_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(resourcesLocation, env))
 	},

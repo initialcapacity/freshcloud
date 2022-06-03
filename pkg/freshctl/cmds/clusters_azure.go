@@ -24,8 +24,8 @@ var azureClustersCreateCmd = &cobra.Command{
 	Short: "Create an azure cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"AZURE_RESOURCE_GROUP",
-			"AZURE_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), azuresupport.CreateClustersCmd(resourcesLocation, env))
 	},
@@ -61,8 +61,8 @@ var azureConfigureCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"AZURE_RESOURCE_GROUP",
-			"AZURE_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), azuresupport.ConfigureCmd(resourcesLocation, env))
 	},

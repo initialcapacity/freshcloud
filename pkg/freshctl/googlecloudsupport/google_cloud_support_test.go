@@ -15,9 +15,9 @@ func TestEnableServices(t *testing.T) {
 
 func TestCreateClusterCmd(t *testing.T) {
 	env := map[string]string{
+		"K8S_CLUSTER_NAME": "aClusterName",
 		"GCP_PROJECT_ID":   "aProject",
 		"GCP_ZONE":         "aZone",
-		"GCP_CLUSTER_NAME": "aClusterName",
 	}
 	clusterCmd := googlecloudsupport.CreateClustersCmd(resourcesLocation(), env)
 	expected := `gcloud container clusters create aClusterName --zone aZone --num-nodes 4`
@@ -35,9 +35,9 @@ func TestListClustersCmdCmd(t *testing.T) {
 
 func TestConfigureCmd(t *testing.T) {
 	env := map[string]string{
+		"K8S_CLUSTER_NAME": "aClusterName",
 		"GCP_PROJECT_ID":   "aProject",
 		"GCP_ZONE":         "aZone",
-		"GCP_CLUSTER_NAME": "aClusterName",
 	}
 	clusterCmd := googlecloudsupport.ConfigureCmd(resourcesLocation(), env)
 	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", clusterCmd[0])
@@ -45,9 +45,9 @@ func TestConfigureCmd(t *testing.T) {
 
 func TestDeleteClustersCmd(t *testing.T) {
 	env := map[string]string{
+		"K8S_CLUSTER_NAME": "aClusterName",
 		"GCP_PROJECT_ID":   "aProject",
 		"GCP_ZONE":         "aZone",
-		"GCP_CLUSTER_NAME": "aClusterName",
 	}
 	cmd := googlecloudsupport.DeleteClustersCmd(resourcesLocation(), env)
 	assert.Equal(t, "gcloud container clusters delete 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", cmd[0])

@@ -25,8 +25,8 @@ cat <<EOF > .freshcloud/{{index . "APP_NAME"}}-pipeline-parameters.yaml
 service-account-key: random-string
 domain: {{index . "DOMAIN"}}
 gcp_project_id: {{index . "GCP_PROJECT_ID"}}
-gcp_cluster_name: {{index . "GCP_CLUSTER_NAME"}}
 gcp_zone: {{index . "GCP_ZONE"}}
+cluster_name: {{index . "K8S_CLUSTER_NAME"}}
 service_account_json: ${SERVICE_ACCOUNT_JSON}
 kubeconfig: |
   apiVersion: v1

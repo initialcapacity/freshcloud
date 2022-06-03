@@ -2,7 +2,7 @@ eksctl create cluster -f -
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
-  name: {{index . "AWS_CLUSTER_NAME" }}
+  name: {{index . "K8S_CLUSTER_NAME" }}
   region: {{index . "AWS_REGION" }}
 nodeGroups:
   - name: controllers

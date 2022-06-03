@@ -23,8 +23,8 @@ var awsClustersCreateCmd = &cobra.Command{
 	Short: "Create an aws cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"AWS_REGION",
-			"AWS_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), awssupport.CreateClustersCmd(resourcesLocation, env))
 	},
@@ -35,8 +35,8 @@ var awsClustersDeleteCmd = &cobra.Command{
 	Short: "Delete an aws cluster",
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"AWS_REGION",
-			"AWS_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), awssupport.DeleteClustersCmd(resourcesLocation, env))
 	},
@@ -47,8 +47,8 @@ var awsConfigureCmd = &cobra.Command{
 	Short: "Configure kubectl for aws",
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
 			"AWS_REGION",
-			"AWS_CLUSTER_NAME",
 		)
 		writeCommands(cmd.OutOrStderr(), awssupport.ConfigureCmd(resourcesLocation, env))
 	},

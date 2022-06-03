@@ -10,8 +10,8 @@ import (
 
 func TestConfigureCmd(t *testing.T) {
 	env := map[string]string{
+		"K8S_CLUSTER_NAME":     "aClusterName",
 		"AZURE_RESOURCE_GROUP": "aResourceGroup",
-		"AZURE_CLUSTER_NAME":   "aClusterName",
 	}
 	clusterCmd := azuresupport.ConfigureCmd(resourcesLocation(), env)
 	assert.Equal(t, "az aks get-credentials --name aClusterName --overwrite-existing --resource-group aResourceGroup", clusterCmd[0])
@@ -19,8 +19,8 @@ func TestConfigureCmd(t *testing.T) {
 
 func TestDeleteClustersCmd(t *testing.T) {
 	env := map[string]string{
+		"K8S_CLUSTER_NAME":     "aClusterName",
 		"AZURE_RESOURCE_GROUP": "aResourceGroup",
-		"AZURE_CLUSTER_NAME":   "aClusterName",
 	}
 	cmd := azuresupport.CreateClustersCmd(resourcesLocation(), env)
 	assert.Equal(t, "az aks create --resource-group aResourceGroup --name aClusterName \\\n  --node-count 1 --generate-ssh-keys", cmd[0])

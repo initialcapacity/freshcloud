@@ -62,7 +62,8 @@ Create a `.env_infra.sh` file similar to the below.
 ```bash
 export GCP_PROJECT_ID=aProjectId
 export GCP_ZONE=aZone
-export GCP_CLUSTER_NAME=aClusterName
+
+export K8SCLUSTER_NAME=aClusterName
 
 export DOMAIN=aDomain
 export EMAIL_ADDRESS=anEmail

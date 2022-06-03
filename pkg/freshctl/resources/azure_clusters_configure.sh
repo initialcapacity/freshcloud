@@ -1,1 +1,1 @@
-az aks get-credentials --name {{index . "AZURE_CLUSTER_NAME"}} --overwrite-existing --resource-group {{index . "AZURE_RESOURCE_GROUP"}}
+az aks get-credentials --name {{index . "K8S_CLUSTER_NAME"}} --overwrite-existing --resource-group {{index . "AZURE_RESOURCE_GROUP"}}

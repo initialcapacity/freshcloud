@@ -10,7 +10,7 @@ import (
 
 func TestConfigureCmd(t *testing.T) {
 	env := map[string]string{
-		"AWS_CLUSTER_NAME": "aClusterName",
+		"K8S_CLUSTER_NAME": "aClusterName",
 		"AWS_REGION":       "aRegion",
 	}
 	clusterCmd := awssupport.ConfigureCmd(resourcesLocation(), env)
@@ -19,7 +19,7 @@ func TestConfigureCmd(t *testing.T) {
 
 func TestCreateClustersCmd(t *testing.T) {
 	env := map[string]string{
-		"AWS_CLUSTER_NAME": "aClusterName",
+		"K8S_CLUSTER_NAME": "aClusterName",
 		"AWS_REGION":       "aRegion",
 	}
 	cmd := awssupport.CreateClustersCmd(resourcesLocation(), env)
@@ -47,7 +47,7 @@ managedNodeGroups:
 
 func TestDeleteClustersCmd(t *testing.T) {
 	env := map[string]string{
-		"AWS_CLUSTER_NAME": "aClusterName",
+		"K8S_CLUSTER_NAME": "aClusterName",
 		"AWS_REGION":       "aRegion",
 	}
 	cmd := awssupport.DeleteClustersCmd(resourcesLocation(), env)
