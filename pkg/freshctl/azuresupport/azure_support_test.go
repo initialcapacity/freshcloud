@@ -17,6 +17,15 @@ func TestConfigureCmd(t *testing.T) {
 	assert.Equal(t, "az aks get-credentials --name aClusterName --overwrite-existing --resource-group aResourceGroup", clusterCmd[0])
 }
 
+func TestConfigureRegistryCmd(t *testing.T) {
+	env := map[string]string{
+		"REGISTRY_CLUSTER_NAME": "aRegistryClusterName",
+		"AZURE_RESOURCE_GROUP":  "aResourceGroup",
+	}
+	clusterCmd := azuresupport.ConfigureRegistryCmd(resourcesLocation(), env)
+	assert.Equal(t, "az aks get-credentials --name aRegistryClusterName --overwrite-existing --resource-group aResourceGroup", clusterCmd[0])
+}
+
 func TestDeleteClustersCmd(t *testing.T) {
 	env := map[string]string{
 		"K8S_CLUSTER_NAME":     "aClusterName",

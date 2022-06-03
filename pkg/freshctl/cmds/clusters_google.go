@@ -13,6 +13,7 @@ func init() {
 	googleClusterCmd.AddCommand(googleClustersListCmd)
 	googleClusterCmd.AddCommand(googleClustersDeleteCmd)
 	googleClusterCmd.AddCommand(googleConfigureCmd)
+	googleClusterCmd.AddCommand(googleConfigureRegistryCmd)
 	googleClusterCmd.AddCommand(googleCreateServiceAccountCmd)
 }
 
@@ -80,6 +81,20 @@ var googleConfigureCmd = &cobra.Command{
 			"GCP_ZONE",
 		)
 		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureCmd(resourcesLocation, env))
+	},
+}
+
+var googleConfigureRegistryCmd = &cobra.Command{
+	Use:   "configure-registry",
+	Short: "Configure kubectl for google cloud",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"REGISTRY_CLUSTER_NAME",
+			"GCP_PROJECT_ID",
+			"GCP_ZONE",
+		)
+		writeCommands(cmd.OutOrStderr(), googlecloudsupport.ConfigureRegistryCmd(resourcesLocation, env))
 	},
 }
 

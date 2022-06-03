@@ -17,6 +17,15 @@ func TestConfigureCmd(t *testing.T) {
 	assert.Equal(t, "aws eks --region aRegion update-kubeconfig --name aClusterName", clusterCmd[0])
 }
 
+func TestConfigureRegistryCmd(t *testing.T) {
+	env := map[string]string{
+		"REGISTRY_CLUSTER_NAME": "aRegistryClusterName",
+		"AWS_REGION":            "aRegion",
+	}
+	clusterCmd := awssupport.ConfigureRegistryCmd(resourcesLocation(), env)
+	assert.Equal(t, "aws eks --region aRegion update-kubeconfig --name aRegistryClusterName", clusterCmd[0])
+}
+
 func TestCreateClustersCmd(t *testing.T) {
 	env := map[string]string{
 		"K8S_CLUSTER_NAME": "aClusterName",

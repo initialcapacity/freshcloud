@@ -1,0 +1,1 @@
+az aks get-credentials --name {{index . "REGISTRY_CLUSTER_NAME"}} --overwrite-existing --resource-group {{index . "AZURE_RESOURCE_GROUP"}}

@@ -43,6 +43,16 @@ func TestConfigureCmd(t *testing.T) {
 	assert.Equal(t, "gcloud container clusters get-credentials 'aClusterName' --project 'aProject' --zone 'aZone' --quiet", clusterCmd[0])
 }
 
+func TestConfigureRegistryCmd(t *testing.T) {
+	env := map[string]string{
+		"REGISTRY_CLUSTER_NAME": "aRegistryClusterName",
+		"GCP_PROJECT_ID":        "aProject",
+		"GCP_ZONE":              "aZone",
+	}
+	clusterCmd := googlecloudsupport.ConfigureRegistryCmd(resourcesLocation(), env)
+	assert.Equal(t, "gcloud container clusters get-credentials 'aRegistryClusterName' --project 'aProject' --zone 'aZone' --quiet", clusterCmd[0])
+}
+
 func TestDeleteClustersCmd(t *testing.T) {
 	env := map[string]string{
 		"K8S_CLUSTER_NAME": "aClusterName",

@@ -12,6 +12,7 @@ func init() {
 	azureClusterCmd.AddCommand(azureClustersCreateCmd)
 	azureClusterCmd.AddCommand(azureClustersDeleteResourceGroupCmd)
 	azureClusterCmd.AddCommand(azureConfigureCmd)
+	azureClusterCmd.AddCommand(azureConfigureRegistryCmd)
 }
 
 var azureClusterCmd = &cobra.Command{
@@ -65,5 +66,18 @@ var azureConfigureCmd = &cobra.Command{
 			"AZURE_RESOURCE_GROUP",
 		)
 		writeCommands(cmd.OutOrStderr(), azuresupport.ConfigureCmd(resourcesLocation, env))
+	},
+}
+
+var azureConfigureRegistryCmd = &cobra.Command{
+	Use:   "configure-registry",
+	Short: "Configure kubectl for google cloud",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"REGISTRY_CLUSTER_NAME",
+			"AZURE_RESOURCE_GROUP",
+		)
+		writeCommands(cmd.OutOrStderr(), azuresupport.ConfigureRegistryCmd(resourcesLocation, env))
 	},
 }

@@ -56,19 +56,23 @@ func TestCommands(t *testing.T) {
 	assert.Equal(t, "Running freshcloud[version]\nfreshctl version 0.1\n", string(version))
 
 	clusterCommands := map[string][]string{
-		"gservices":  {"clusters", "gcp", "enable-services"},
-		"gcreate":    {"clusters", "gcp", "create"},
-		"lcreate":    {"clusters", "gcp", "list"},
-		"gconfigure": {"clusters", "gcp", "configure"},
-		"gdelete":    {"clusters", "gcp", "delete"},
+		"gservices":   {"clusters", "gcp", "enable-services"},
+		"gcreate":     {"clusters", "gcp", "create"},
+		"lcreate":     {"clusters", "gcp", "list"},
+		"gconfigure":  {"clusters", "gcp", "configure"},
+		"gconfigurer": {"clusters", "gcp", "configure-registry"},
+		"gdelete":     {"clusters", "gcp", "delete"},
 
 		"azcreate":         {"clusters", "az", "create"},
 		"azcreateresource": {"clusters", "az", "create-resource-group"},
 		"azdeleteresource": {"clusters", "az", "delete-resource-group"},
+		"azconfigure":      {"clusters", "az", "configure"},
+		"azconfigurer":     {"clusters", "az", "configure-registry"},
 
-		"acreate":    {"clusters", "aws", "create"},
-		"aconfigure": {"clusters", "aws", "configure"},
-		"adelete":    {"clusters", "aws", "delete"},
+		"acreate":     {"clusters", "aws", "create"},
+		"aconfigure":  {"clusters", "aws", "configure"},
+		"aconfigurer": {"clusters", "aws", "configure-registry"},
+		"adelete":     {"clusters", "aws", "delete"},
 
 		"contour":     {"services", "add", "contour"},
 		"certmanager": {"services", "add", "cert-manager"},

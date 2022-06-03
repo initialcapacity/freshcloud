@@ -11,6 +11,7 @@ func init() {
 	awsClustersCmd.AddCommand(awsClustersCreateCmd)
 	awsClustersCmd.AddCommand(awsClustersDeleteCmd)
 	awsClustersCmd.AddCommand(awsConfigureCmd)
+	awsClustersCmd.AddCommand(awsConfigureRegistryCmd)
 }
 
 var awsClustersCmd = &cobra.Command{
@@ -51,5 +52,17 @@ var awsConfigureCmd = &cobra.Command{
 			"AWS_REGION",
 		)
 		writeCommands(cmd.OutOrStderr(), awssupport.ConfigureCmd(resourcesLocation, env))
+	},
+}
+
+var awsConfigureRegistryCmd = &cobra.Command{
+	Use:   "configure-registry",
+	Short: "Configure kubectl for aws",
+	Run: func(cmd *cobra.Command, args []string) {
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"REGISTRY_CLUSTER_NAME",
+			"AWS_REGION",
+		)
+		writeCommands(cmd.OutOrStderr(), awssupport.ConfigureRegistryCmd(resourcesLocation, env))
 	},
 }
