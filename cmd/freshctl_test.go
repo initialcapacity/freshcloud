@@ -20,6 +20,10 @@ func setup() {
 	_ = os.Setenv("GCP_CLUSTER_NAME", "aClusterName")
 	_ = os.Setenv("GCP_SERVICE_ACCOUNT_JSON", "aJsonFile")
 
+	_ = os.Setenv("AZURE_RESOURCE_GROUP", "aGroup")
+	_ = os.Setenv("AZURE_LOCATION", "aLocation")
+	_ = os.Setenv("AZURE_CLUSTER_NAME", "aCluster")
+
 	_ = os.Setenv("DOMAIN", "aDomain")
 	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")
 	_ = os.Setenv("PASSWORD", "aPassword")
@@ -55,6 +59,10 @@ func TestCommands(t *testing.T) {
 		"lcreate":    {"clusters", "gcp", "list"},
 		"gconfigure": {"clusters", "gcp", "configure"},
 		"gdelete":    {"clusters", "gcp", "delete"},
+
+		"azcreate":         {"clusters", "az", "create"},
+		"azcreateresource": {"clusters", "az", "create-resource-group"},
+		"azdeleteresource": {"clusters", "az", "delete-resource-group"},
 
 		"aservices":  {"clusters", "aws", "enable-services"},
 		"acreate":    {"clusters", "aws", "create"},
