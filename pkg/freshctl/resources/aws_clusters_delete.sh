@@ -1,0 +1,1 @@
+eksctl delete cluster --name {{index . "AWS_CLUSTER_NAME" }} --region {{index . "AWS_REGION" }}

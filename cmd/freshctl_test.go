@@ -24,6 +24,9 @@ func setup() {
 	_ = os.Setenv("AZURE_LOCATION", "aLocation")
 	_ = os.Setenv("AZURE_CLUSTER_NAME", "aCluster")
 
+	_ = os.Setenv("AWS_REGION", "aLocation")
+	_ = os.Setenv("AWS_CLUSTER_NAME", "aCluster")
+
 	_ = os.Setenv("DOMAIN", "aDomain")
 	_ = os.Setenv("EMAIL_ADDRESS", "anEmail")
 	_ = os.Setenv("PASSWORD", "aPassword")
@@ -64,9 +67,7 @@ func TestCommands(t *testing.T) {
 		"azcreateresource": {"clusters", "az", "create-resource-group"},
 		"azdeleteresource": {"clusters", "az", "delete-resource-group"},
 
-		"aservices":  {"clusters", "aws", "enable-services"},
 		"acreate":    {"clusters", "aws", "create"},
-		"alist":      {"clusters", "aws", "list"},
 		"aconfigure": {"clusters", "aws", "configure"},
 		"adelete":    {"clusters", "aws", "delete"},
 

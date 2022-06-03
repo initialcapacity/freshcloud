@@ -1,14 +1,14 @@
 package cmds
 
 import (
+	"github.com/initialcapacity/freshcloud/pkg/freshctl/awssupport"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func init() {
 	clustersCmd.AddCommand(awsClustersCmd)
-	awsClustersCmd.AddCommand(awsServicesCmd)
 	awsClustersCmd.AddCommand(awsClustersCreateCmd)
-	awsClustersCmd.AddCommand(awsClustersListCmd)
 	awsClustersCmd.AddCommand(awsClustersDeleteCmd)
 	awsClustersCmd.AddCommand(awsConfigureCmd)
 }
@@ -18,32 +18,38 @@ var awsClustersCmd = &cobra.Command{
 	Short: "Manage aws clusters",
 }
 
-var awsServicesCmd = &cobra.Command{
-	Use:   "enable-services",
-	Short: "Enable amazon web API services",
-	Run:   func(cmd *cobra.Command, args []string) { writeCommands(cmd.OutOrStderr(), []string{"todo"}) },
-}
-
 var awsClustersCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create an aws cluster",
-	Run:   func(cmd *cobra.Command, args []string) { writeCommands(cmd.OutOrStderr(), []string{"todo"}) },
-}
-
-var awsClustersListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List aws clusters",
-	Run:   func(cmd *cobra.Command, args []string) { writeCommands(cmd.OutOrStderr(), []string{"todo"}) },
+	Run: func(cmd *cobra.Command, args []string) {
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"AWS_REGION",
+			"AWS_CLUSTER_NAME",
+		)
+		writeCommands(cmd.OutOrStderr(), awssupport.CreateClustersCmd(resourcesLocation, env))
+	},
 }
 
 var awsClustersDeleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "Delete an aws cluster",
-	Run:   func(cmd *cobra.Command, args []string) { writeCommands(cmd.OutOrStderr(), []string{"todo"}) },
+	Run: func(cmd *cobra.Command, args []string) {
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"AWS_REGION",
+			"AWS_CLUSTER_NAME",
+		)
+		writeCommands(cmd.OutOrStderr(), awssupport.DeleteClustersCmd(resourcesLocation, env))
+	},
 }
 
 var awsConfigureCmd = &cobra.Command{
 	Use:   "configure",
 	Short: "Configure kubectl for aws",
-	Run:   func(cmd *cobra.Command, args []string) { writeCommands(cmd.OutOrStderr(), []string{"todo"}) },
+	Run: func(cmd *cobra.Command, args []string) {
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"AWS_REGION",
+			"AWS_CLUSTER_NAME",
+		)
+		writeCommands(cmd.OutOrStderr(), awssupport.ConfigureCmd(resourcesLocation, env))
+	},
 }
