@@ -1,5 +1,4 @@
 resources=( 'applications_deploy_app.sh'
-'applications_deploy_app.sh'
 'applications_push_image.sh'
 'aws_clusters_configure.sh'
 'aws_clusters_configure_registry.sh'
