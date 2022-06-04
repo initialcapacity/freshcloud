@@ -18,8 +18,9 @@ var resourcesCmd = &cobra.Command{
 }
 
 var copyResourcesCmd = &cobra.Command{
-	Use:   "copy",
-	Short: "Copy resources to a local directory",
+	Use:    "copy",
+	Short:  "Copy resources to a local directory",
+	Hidden: true,
 	Run: func(cmd *cobra.Command, args []string) {
 		env := requiredString(MakeEnvironmentMap(os.Environ()))
 		for _, s := range support.CopyResourcesCmd(resourcesLocation, env) {

@@ -16,7 +16,9 @@ RUN apk add --update ca-certificates \
 
 ENV PATH=/go/google-cloud-sdk/bin:$PATH
 
-RUN apk add --no-cache curl python3 py3-crcmod bash libc6-compat openssh-client git gnupg \
+RUN apk add --no-cache curl python3  py3-pip py3-crcmod bash libc6-compat openssh-client git gnupg \
  && curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
  && tar xzf google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz \
  && rm google-cloud-sdk-${CLOUD_SDK_VERSION}-linux-x86_64.tar.gz
+
+RUN pip3 --no-cache-dir install --no-input --upgrade awscli

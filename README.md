@@ -107,19 +107,6 @@ Confirm the management cluster services are deployed.
 * Harbor https://registry.{your-domain}
 * Concourse https://ci.{your-domain}
 
-## Customization
-
-The Fresh Cloud scripts are customizable. Use the below command to pull down resource scripts locally for modification.
-
-```bash
-freshctl resources copy
-```
-
-Then, export the `FRESH_RESOURCES` environment variable in the `.env_infra.sh` to use locally modified scripts.
-
-```bash
-export FRESH_RESOURCES=./local_resources
-```
-
 That's a wrap for now.
+
 Continue to our [Applications](APPLICATIONS.md) page to learn how to deploy application pipelines to your new cluster.
