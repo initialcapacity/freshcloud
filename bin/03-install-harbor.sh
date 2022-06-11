@@ -41,7 +41,7 @@ function helm_install_harbor() {
   helm repo add bitnami https://charts.bitnami.com/bitnami
   helm repo update
 
-  helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 9.4.4
+  helm install harbor bitnami/harbor -f harbor-values.yaml -n harbor --version 11.2.4
   rm -f harbor-values.yaml
 }
 

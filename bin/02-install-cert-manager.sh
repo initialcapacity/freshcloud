@@ -11,7 +11,7 @@ function helm_install_cert-manager() {
   helm repo add jetstack https://charts.jetstack.io
   helm repo update
   helm install cert-manager jetstack/cert-manager --namespace cert-manager \
-   --version v1.0.2 --set installCRDs=true
+   --version v1.8.0 --set installCRDs=true
 
   if [ $? != 0 ]; then
    echo "Failed to install Cert-Manager. Bummer"
@@ -22,7 +22,7 @@ function helm_install_cert-manager() {
 function install_ClusterIssuer() {
 
   cat <<EOF | kubectl apply -f -
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-staging
@@ -39,7 +39,7 @@ spec:
 EOF
 
   cat <<EOF | kubectl apply -f -
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
@@ -57,7 +57,7 @@ EOF
 
 }
 
-helm_install_cert-manager
-wait_for_ready cert-manager
-sleep 10; 
+#helm_install_cert-manager
+#wait_for_ready cert-manager
+#sleep 10; 
 install_ClusterIssuer
