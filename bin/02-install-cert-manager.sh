@@ -57,7 +57,7 @@ EOF
 
 }
 
-#helm_install_cert-manager
-#wait_for_ready cert-manager
-#sleep 10; 
+helm_install_cert-manager
+wait_for_ready cert-manager
+sleep 10; 
 install_ClusterIssuer
