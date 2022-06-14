@@ -59,6 +59,8 @@ spec:
     - id: paketo-buildpacks/go
   - group:
     - id: paketo-buildpacks/java
+  - group:
+    - id: paketo-buildpacks/ruby
 EOF
 
   kubectl apply -f build/${APP_NAME}/${APP_NAME}-kpack-builder.yml
@@ -208,6 +210,7 @@ app_manifest: |
       kubernetes.io/ingress.class: contour
       ingress.kubernetes.io/force-ssl-redirect: "true"
       projectcontour.io/websocket-routes: "/"
+      projectcontour.io/response-timeout: 10m
       kubernetes.io/tls-acme: "true"
   spec:
     rules:

@@ -19,6 +19,7 @@ web:
       kubernetes.io/ingress.class: contour
       ingress.kubernetes.io/force-ssl-redirect: "true"
       projectcontour.io/websocket-routes: "/"
+      projectcontour.io/response-timeout: 10m
       kubernetes.io/tls-acme: "true"
     hosts:
       - ci.{{index . "DOMAIN"}}
