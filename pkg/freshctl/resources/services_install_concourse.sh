@@ -30,7 +30,7 @@ web:
 EOF
 kubectl create namespace concourse
 helm repo add concourse https://concourse-charts.storage.googleapis.com/
-helm install concourse concourse/concourse -f .freshcloud/concourse-values.yaml -n concourse
+helm install concourse concourse/concourse -f .freshcloud/concourse-values.yaml -n concourse --version 16.1.21
 if [ $? != 0 ]; then
   echo "Failed to install Concourse. Bummer"
   exit 1

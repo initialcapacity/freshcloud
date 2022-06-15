@@ -42,7 +42,7 @@ function helm_install_concourse() {
 
   helm repo add concourse https://concourse-charts.storage.googleapis.com/
   kubectl create namespace concourse
-  helm install concourse concourse/concourse -f concourse-values.yaml -n concourse
+  helm install concourse concourse/concourse -f concourse-values.yaml -n concourse --version 16.1.21
   rm -f concourse-values.yaml
 }
 
