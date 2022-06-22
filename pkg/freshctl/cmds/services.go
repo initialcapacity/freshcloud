@@ -13,6 +13,7 @@ func init() {
 	servicesAddCmd.AddCommand(contourCmd)
 	servicesAddCmd.AddCommand(certManagerCmd)
 	servicesAddCmd.AddCommand(harborCmd)
+	servicesAddCmd.AddCommand(gitLabCmd)
 	servicesAddCmd.AddCommand(concourseCmd)
 	servicesAddCmd.AddCommand(kpackCmd)
 	servicesCmd.AddCommand(servicesRemoveCmd)
@@ -70,6 +71,19 @@ var harborCmd = &cobra.Command{
 			"PASSWORD",
 		)
 		for _, s := range services.InstallHarborCmd(resourcesLocation, env) {
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
+		}
+	},
+}
+
+var gitLabCmd = &cobra.Command{
+	Use:   "gitlab",
+	Short: "Install gitlab",
+	Run: func(cmd *cobra.Command, args []string) {
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"DOMAIN",
+		)
+		for _, s := range services.InstallGitLabCmd(resourcesLocation, env) {
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), fmt.Sprintf("%s", s))
 		}
 	},

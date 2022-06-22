@@ -1,8 +1,6 @@
 mkdir -p .freshcloud
-
 helm repo add gitlab https://charts.gitlab.io/
 helm repo update
-
 helm upgrade --install --create-namespace --namespace gitlab gitlab gitlab \
         --repo https://charts.gitlab.io/ \
         --set global.hosts.domain={{index . "DOMAIN"}} \

@@ -9,8 +9,8 @@ import (
 func init() {
 	clustersCmd.AddCommand(azureClusterCmd)
 	azureClusterCmd.AddCommand(azureClustersCreateResourceGroupCmd)
-	azureClusterCmd.AddCommand(azureClustersCreateCmd)
 	azureClusterCmd.AddCommand(azureClustersDeleteResourceGroupCmd)
+	azureClusterCmd.AddCommand(azureClustersCreateCmd)
 	azureClusterCmd.AddCommand(azureConfigureCmd)
 	azureClusterCmd.AddCommand(azureConfigureRegistryCmd)
 }
@@ -18,18 +18,6 @@ func init() {
 var azureClusterCmd = &cobra.Command{
 	Use:   "az",
 	Short: "Manage azure clusters",
-}
-
-var azureClustersCreateCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create an azure cluster",
-	Run: func(cmd *cobra.Command, args []string) {
-		env := requiredString(MakeEnvironmentMap(os.Environ()),
-			"K8S_CLUSTER_NAME",
-			"AZURE_RESOURCE_GROUP",
-		)
-		writeCommands(cmd.OutOrStderr(), azuresupport.CreateClustersCmd(resourcesLocation, env))
-	},
 }
 
 var azureClustersCreateResourceGroupCmd = &cobra.Command{
@@ -53,6 +41,18 @@ var azureClustersDeleteResourceGroupCmd = &cobra.Command{
 			"AZURE_RESOURCE_GROUP",
 		)
 		writeCommands(cmd.OutOrStderr(), azuresupport.DeleteResourceGroupCmd(resourcesLocation, env))
+	},
+}
+
+var azureClustersCreateCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Create an azure cluster",
+	Run: func(cmd *cobra.Command, args []string) {
+		env := requiredString(MakeEnvironmentMap(os.Environ()),
+			"K8S_CLUSTER_NAME",
+			"AZURE_RESOURCE_GROUP",
+		)
+		writeCommands(cmd.OutOrStderr(), azuresupport.CreateClustersCmd(resourcesLocation, env))
 	},
 }
 
