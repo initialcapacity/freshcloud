@@ -10,5 +10,5 @@ func init() {
 
 var clustersCmd = &cobra.Command{
 	Use:   "clusters",
-	Short: "Deploy and manage clusters",
+	Short: "Deploy and manage kubernetes clusters",
 }
