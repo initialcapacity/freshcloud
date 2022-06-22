@@ -1,0 +1,1 @@
+freshctl version {{index .Version}}
