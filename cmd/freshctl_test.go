@@ -77,6 +77,7 @@ func TestCommands(t *testing.T) {
 		"contour":     {"services", "add", "contour"},
 		"certmanager": {"services", "add", "cert-manager"},
 		"harbor":      {"services", "add", "harbor"},
+		"gitlab":      {"services", "add", "gitlab"},
 		"concourse":   {"services", "add", "concourse"},
 		"kpack":       {"services", "add", "kpack"},
 

@@ -61,6 +61,7 @@ metadata:
 spec:
   sources:
   - image: gcr.io/paketo-buildpacks/java
+  - image: gcr.io/paketo-buildpacks/ruby
   - image: gcr.io/paketo-buildpacks/nodejs
   - image: gcr.io/paketo-buildpacks/go
 EOF

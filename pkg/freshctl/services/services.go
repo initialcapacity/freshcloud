@@ -14,6 +14,10 @@ func InstallHarborCmd(resourcesLocation string, envMap map[string]string) []stri
 	return []string{templatesupport.Parse(resourcesLocation, "services_install_harbor", envMap)}
 }
 
+func InstallGitLabCmd(resourcesLocation string, envMap map[string]string) []string {
+	return []string{templatesupport.Parse(resourcesLocation, "services_install_gitlab", envMap)}
+}
+
 func InstallConcourseCmd(resourcesLocation string, envMap map[string]string) []string {
 	return []string{templatesupport.Parse(resourcesLocation, "services_install_concourse", envMap)}
 }
