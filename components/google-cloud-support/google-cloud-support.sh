@@ -25,7 +25,8 @@ function gcp_create_k8s_cluster() {
 
   gcloud container clusters create \
       --project "${GCP_PROJECT_NAME}" \
-      ${K8S_CLUSTER_NAME} --zone ${ZONE} --num-nodes 5
+      --machine-type "n1-standard-2" \
+      ${K8S_CLUSTER_NAME} --zone ${ZONE} --num-nodes 6
 
 }
 
