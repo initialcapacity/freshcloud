@@ -21,10 +21,17 @@ resources=( 'applications_deploy_app.sh'
 'pipelines_push_build_image.sh'
 'services_install_cert_manager.sh'
 'services_install_concourse.sh'
+'services_install_gitlab.sh'
 'services_install_contour.sh'
 'services_install_harbor.sh'
 'services_install_kpack.sh' )
 mkdir -p local_resources
 for resource in ${resources[@]}; do
-  curl -L https://raw.githubusercontent.com/initialcapacity/freshcloud/main/pkg/freshctl/resources/${resource} -o local_resources/${resource}
+  echo -n "Installing: local_resources/${resource}: "
+  curl -s -L https://raw.githubusercontent.com/initialcapacity/freshcloud/main/pkg/freshctl/resources/${resource} -o local_resources/${resource}
+  if [ $? != 0 ]; then
+    echo "Failed"
+  else
+    echo "Success"
+  fi
 done
