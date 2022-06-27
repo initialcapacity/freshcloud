@@ -49,6 +49,7 @@ for resource in ${resources[@]}; do
   else
     echo "Success"
   fi
-done`
+done
+`
 	assert.Equal(t, expected, copyCmd[0])
 }
