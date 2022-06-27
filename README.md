@@ -4,8 +4,6 @@
 
 # Fresh Cloud
 
-## A modern application platform.
-
 Fresh Cloud is a lightweight golang binary or command line interface (CLI) that simplifies the creation of a modern
 application platform on Kubernetes. The `freshctl` CLI is packed with a default, yet highly customizable set of scripts
 for managing services, application pipelines and production applications on Kubernetes.
