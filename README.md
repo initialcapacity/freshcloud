@@ -6,13 +6,11 @@
 
 ## A modern application platform.
 
-Fresh Cloud simplifies the creation of a modern application platform. The platform includes an image registry,
-continuous integration and delivery pipeline, and one or more application clusters all deployed on Kubernetes.  
-Fresh Cloud includes a lightweight golang binary or command line interface that is packed with a default,
-yet highly customizable set of scripts for managing services and applications on Kubernetes.
-The current `freshctl` binary supports Google's Cloud Platform.
+Fresh Cloud is a lightweight golang binary or command line interface (CLI) that simplifies the creation of a modern
+application platform on Kubernetes. The `freshctl` CLI is packed with a default, yet highly customizable set of scripts
+for managing services, application pipelines and production applications on Kubernetes.
 
-The original Fresh Cloud article with step-by-step instructions in *bash* can be found
+The original Fresh Cloud article with step-by-step instructions in Bash can be found
 here [freshcloud.com](https://www.freshcloud.com).
 
 ## Getting started
@@ -34,8 +32,9 @@ Install the following prerequisites.
 
 ## Management cluster
 
-The management cluster runs the image registry and continuous integration and delivery pipeline. Fresh Cloud uses
-[Harbor](https://goharbor.io) for the image registry and [Concourse](https://concourse-ci.org) for the CI/CD pipeline.
+The management cluster runs the image registry and continuous integration and delivery pipeline.
+By default, Fresh Cloud uses [Harbor](https://goharbor.io) for the image registry
+and [Concourse](https://concourse-ci.org) for the CI/CD pipeline.
 
 Configure your google cloud project.
 
