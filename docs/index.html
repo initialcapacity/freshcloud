@@ -160,7 +160,9 @@
             Install the <a href="https://cloud.google.com/sdk/docs/install">Google Cloud SDK</a>then use the steps below
             to log in to Google Cloud and set up a project.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <h3>Local software</h3>
 
@@ -174,7 +176,9 @@
             Finally, clone the repository to get the scripts we'll need to create our modern application
             platform.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <h2>Platform configuration</h2>
 
@@ -186,7 +190,9 @@
         <p>
             Create and then edit <em>.env_development.sh</em> and enter the below values.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <h2>Kubernetes cluster</h2>
 
@@ -199,14 +205,16 @@
         <p>
             Create a Kubernetes cluster by running the script below from the <em>bin</em> directory.
 
-        <pre>
-<code class="shell">bash 00-create-cluster.sh gcp</code>
-        </pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Upon success you will see the below output.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
 
         <h2>Ingress controller</h2>
@@ -232,15 +240,17 @@
         <p>
             From the <em>bin</em> directory, run the below install script for Contour.
 
-        <pre>
-<code class="shell">bash 01-install-contour.sh</code>
-        </pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Upon success, the script will output the hostname and public IP address of our load-balancer which we’ll use
             to access all our external services.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Next set a wild-card DNS record to point to your load-balancer's IP address by creating an A record entry
@@ -248,7 +258,9 @@
             We use DNS Made Easy for managing our DNS records.
             Use the following command to make sure your DNS is configured correctly before proceeding.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <h2>Certificate management</h2>
 
@@ -268,11 +280,15 @@
             Let's Encrypt will provide us with short lived SSL certs that will be consumed by the Ingress controller and
             stored as Kubernetes secrets.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>Upon success, you will see the below output.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             One of the benefits of using cert-manager is that cert-manager will automatically replace each SSL
@@ -299,12 +315,16 @@
         <p>
             Run our next script from the <em>bin</em> directory to create the registry.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Upon success, you will see the output below.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Navigate to the provided URL and log in to Harbor using the provided credentials.
@@ -315,7 +335,9 @@
             We’ll be using a popular tool named <a href="https://concourse-ci.org">Concourse</a> for continuous
             delivery. Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Navigate to the provided URL and log in to Concourse using <em>admin</em> as the username and the password
@@ -336,18 +358,24 @@
         <p>
             First install the <em>kpack-cli</em> binary on your local machine.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Next deploy the kpack build service.
             This step will take slightly longer than previous steps as we’ll be building the images locally with Docker.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Upon success, you will see the below output.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Harbor should now look similar to the image below.
@@ -368,7 +396,9 @@
         <p>
             Run <em>freshctl</em> from the <em>bin</em> directory to test the CLI.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             The freshctl CLI takes a file or an application configuration as an argument.
@@ -385,7 +415,9 @@
             Download the Concourse <em>fly</em> CLI tool from our Concourse installation, substituting your Concourse
             URL for the URL below.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Let’s review the steps the freshctl CLI performs to deploy our application.
@@ -410,17 +442,23 @@
         <p>
             OK, let’s deploy the kotlin-ktor-starter app with freshctl's <em>add</em> command.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             View the build logs by running the below command.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <p>
             Upon success, run the below command and see the application URL.
 
-        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
+        <pre><code>
+        Pardon the dust, we're working on updating our documentation
+    </code></pre>
 
         <h2>Summary</h2>
 
