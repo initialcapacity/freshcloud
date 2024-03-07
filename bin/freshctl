@@ -1,0 +1,535 @@
+#!/usr/bin/env bash
+#
+# freshctl
+# Fresh cloud bash command line client.
+
+source env.sh
+
+function create_secret_kpack() {
+
+  echo "Creating docker-registry secret for ${APP_NAME}-registry-credentials"
+  kubectl create secret docker-registry ${APP_NAME}-registry-credentials \
+      --docker-username=admin \
+      --docker-password=${CONCOURSE_PASSWD} \
+      --docker-server=registry.${SUB_DOMAIN} \
+      --namespace ${APP_NAME}
+}
+
+function create_service_account_kpack() {
+  if [[ -z "${APP_NAME}" ]]; then
+    echo "APP_NAME is not set. Exiting..."
+    return 1
+  fi
+
+  echo "Creating a service account and a long-lived API token for ${APP_NAME}"
+
+  # Create the service account with kubectl apply
+  kubectl apply -f - <<EOF
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ${APP_NAME}-service-account
+  namespace: ${APP_NAME}
+secrets:
+- name: ${APP_NAME}-registry-credentials
+imagePullSecrets:
+- name: ${APP_NAME}-registry-credentials
+EOF
+
+  if [ $? -ne 0 ]; then
+    echo "Failed to apply service account configuration."
+    return 1
+  else
+    echo "Service account '${APP_NAME}-service-account' created successfully."
+  fi
+
+  # Create a secret for the service account to use as a long-lived API token, ensuring it's in the same namespace
+  kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ${APP_NAME}-api-token
+  namespace: ${APP_NAME}
+  annotations:
+    kubernetes.io/service-account.name: ${APP_NAME}-service-account
+type: kubernetes.io/service-account-token
+EOF
+
+  if [ $? -ne 0 ]; then
+    echo "Failed to create API token."
+    return 1
+  else
+    echo "API token for '${APP_NAME}-service-account' created successfully in the '${APP_NAME}' namespace."
+  fi
+}
+
+function create_builder_kpack() {
+  if [ -z "$APP_NAME" ] || [ -z "$SUB_DOMAIN" ]; then
+    echo "Error: APP_NAME and SUB_DOMAIN must be set."
+    return 1
+  fi
+
+  echo "Creating the kpack builder"
+  mkdir -p "build/${APP_NAME}"
+  cat <<EOF > "build/${APP_NAME}/${APP_NAME}-kpack-builder.yml"
+apiVersion: kpack.io/v1alpha2
+kind: Builder
+metadata:
+  name: "${APP_NAME}-builder"
+  namespace: "${APP_NAME}"
+spec:
+  serviceAccountName: "${APP_NAME}-service-account"
+  tag: "registry.$SUB_DOMAIN/kpack/builder"
+  stack:
+    name: base
+    kind: ClusterStack
+  store:
+    name: default
+    kind: ClusterStore
+  order:
+  - group:
+    - id: paketo-buildpacks/java
+  - group:
+    - id: paketo-buildpacks/nodejs
+  - group:
+    - id: paketo-buildpacks/go
+EOF
+
+  # Optional: Create namespace if it doesn't exist
+  kubectl get ns "${APP_NAME}" || kubectl create ns "${APP_NAME}"
+
+  kubectl apply -f "build/${APP_NAME}/${APP_NAME}-kpack-builder.yml" || {
+    echo "Failed to apply kpack builder configuration."
+    return 1
+  }
+}
+
+function create_app_image_spec() {
+  # Check if required variables are set
+  if [ -z "$APP_NAME" ] || [ -z "$SUB_DOMAIN" ] || [ -z "$APP_REPO" ] || [ -z "$APP_BRANCH" ]; then
+    echo "Error: APP_NAME, SUB_DOMAIN, APP_REPO, and APP_BRANCH must be set."
+    return 1
+  fi
+
+  echo "Creating the app image spec"
+  mkdir -p "build/${APP_NAME}"
+
+  cat <<EOF > "build/${APP_NAME}/${APP_NAME}-image-spec.yml"
+apiVersion: kpack.io/v1alpha2
+kind: Image
+metadata:
+  name: ${APP_NAME}-image
+  namespace: ${APP_NAME}
+spec:
+  tag: registry.$SUB_DOMAIN/kpack/${APP_NAME}
+  serviceAccountName: ${APP_NAME}-service-account
+  builder:
+    name: ${APP_NAME}-builder
+    kind: Builder
+  source:
+    git:
+      url: ${APP_REPO}
+      revision: ${APP_BRANCH}
+EOF
+
+  # Apply the configuration, handle errors
+  kubectl apply -f "build/${APP_NAME}/${APP_NAME}-image-spec.yml" || {
+    echo "Failed to apply app image spec configuration."
+    return 1
+  }
+}
+
+function install_role_binding() {
+
+  local app_name="${APP_NAME}" 
+  local yaml_file="build/${app_name}/${app_name}-role-binding.yml"
+
+  echo "Creating role and role binding for ${app_name}"
+
+  mkdir -p "build/${app_name}" # Ensure the directory exists
+
+  cat <<EOF > "${yaml_file}"
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: ${app_name}
+  name: ${app_name}-image-role
+rules:
+- apiGroups: ["kpack.io", "", "networking.k8s.io", "apps"]
+  resources: ["images", "builds", "pods", "pods/log", "services", "ingresses", "deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: ${app_name}-image-role-binding
+  namespace: ${app_name}
+subjects:
+- kind: ServiceAccount
+  name: ${app_name}-service-account
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: ${app_name}-image-role
+  apiGroup: ""
+EOF
+
+  if kubectl apply -f "${yaml_file}"; then
+    echo "${app_name} role and role binding successfully created."
+  else
+    echo "Error applying ${yaml_file}. Check the YAML syntax and kubectl configuration."
+    return 1
+  fi
+}
+
+function write_pipeline_params() {
+  echo "Writing pipeline params yaml"
+
+  # Assuming APP_NAME is set and is the name of the service account
+  local namespace=${APP_NAME} # or set this to whatever namespace is appropriate
+  local kubeconfig_path="build/${namespace}/${APP_NAME}-kubeconfig.yml"
+
+  # Ensure the target directory exists
+  mkdir -p "build/${APP_NAME}"
+
+  # Generate kubeconfig content
+  local secret_name="${APP_NAME}-registry-credentials"
+  local server=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+  local ca=$(kubectl config view --raw --minify --flatten -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
+  local token=$(kubectl get secret ${APP_NAME}-api-token -o jsonpath='{.data.token}' -n ${APP_NAME} | base64 --decode)
+
+  # Embed the kubeconfig into the params YAML
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-params.yml
+service-account-key: random-string
+domain: ${SUB_DOMAIN}
+kubeconfig: |
+  apiVersion: v1
+  kind: Config
+  clusters:
+  - name: ${CLUSTER_NAME}
+    cluster:
+      certificate-authority-data: ${ca}
+      server: ${server}
+  contexts:
+  - name: default-context
+    context:
+      cluster: ${CLUSTER_NAME}
+      namespace: ${namespace}
+      user: ${APP_NAME}
+  current-context: default-context
+  users:
+  - name: ${APP_NAME}
+    user:
+      token: ${token}
+app_manifest: |
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: ${APP_NAME}
+      source: freshcloud
+    name: ${APP_NAME}
+    namespace: ${APP_NAME}
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: ${APP_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}
+      spec:
+        containers:
+        - image: CURRENT_APP_IMAGE
+          name: ${APP_NAME}
+          imagePullPolicy: Always
+  ---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+    namespace: ${APP_NAME}
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${APP_NAME}
+    sessionAffinity: None
+    type: ClusterIP
+  ---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: ${APP_NAME}
+    namespace: ${APP_NAME}
+    labels:
+      app: ${APP_NAME}
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      kubernetes.io/ingress.class: contour
+      ingress.kubernetes.io/force-ssl-redirect: "true"
+      projectcontour.io/websocket-routes: "/"
+      projectcontour.io/response-timeout: 10m
+      kubernetes.io/tls-acme: "true"
+  spec:
+    rules:
+    - host: ${APP_NAME}.${SUB_DOMAIN}
+      http:
+        paths:
+        - backend:
+            service:
+              name: ${APP_NAME}
+              port:
+                number: 80
+          pathType: ImplementationSpecific
+    tls:
+    - hosts:
+      - ${APP_NAME}.${SUB_DOMAIN}
+      secretName: ${APP_NAME}-cert
+EOF
+  echo "Pipeline params YAML written to build/${APP_NAME}/${APP_NAME}-params.yml"
+}
+
+
+function write_pipeline() {
+
+  echo "Writing pipeline yaml"
+  cat <<EOF > build/${APP_NAME}/${APP_NAME}-pipeline.yml
+resource_types:
+- name: kpack-image
+  type: registry-image
+  source:
+    repository: registry.${SUB_DOMAIN}/concourse-images/concourse-kpack-resource
+    tag: "1.0"
+
+resources:
+  - name: ${APP_NAME}-image
+    type: registry-image
+    source:
+      repository: registry.${SUB_DOMAIN}/kpack/${APP_NAME}
+
+  - name: ${APP_NAME}-source-code
+    type: git
+    source:
+      uri: ${APP_REPO}
+      branch: ${APP_BRANCH}
+
+  - name: ${APP_NAME}-build-service
+    type: kpack-image
+    source:
+      image: "${APP_NAME}-image"
+      namespace: ${APP_NAME}
+      gke:
+        json_key: ((service-account-key))
+        kubeconfig: ((kubeconfig))
+
+jobs:
+  - name: vulnerability-scan
+    plan:
+    - task: sleep
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: ubuntu
+            tag: bionic
+        run:
+          path: /bin/sleep
+          args: [15s]
+    - in_parallel:
+      - get: ${APP_NAME}-build-service
+        trigger: true
+        passed: [build-${APP_NAME}-image]
+      - get: ${APP_NAME}-image
+    - task: trivy-fs
+      config:
+        platform: linux
+        image_resource:
+          type: registry-image
+          source:
+            repository: aquasec/trivy
+        inputs:
+        - name: ${APP_NAME}-image
+        caches:
+        - path: trivy-cache
+        run:
+          path: sh
+          args:
+          - -cex
+          - |
+            trivy --cache-dir trivy-cache fs --severity HIGH,CRITICAL --vuln-type library,os --ignore-unfixed --exit-code 1 ${APP_NAME}-image/rootfs
+
+
+  - name: build-${APP_NAME}-image
+    plan:
+      - get: ${APP_NAME}-source-code
+        trigger: true
+        #     - task: run unit tests
+        # file: source-code/pipeline/unit-test.yml
+      - put: ${APP_NAME}-build-service
+        params:
+          commitish: ${APP_NAME}-source-code/.git/ref
+
+  - name: deploy-${APP_NAME}
+    plan:
+      - get: ${APP_NAME}-source-code
+      - get: ${APP_NAME}-build-service
+        passed:
+        - vulnerability-scan
+        trigger: true
+      - task: deploy-kubernetes
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: registry.${SUB_DOMAIN}/concourse-images/kubectl-docker
+              tag: latest
+          inputs:
+            - name: ${APP_NAME}-source-code
+          params:
+            KUBECONFIG:
+            MANIFEST:
+            SUB_DOMAIN:
+          run:
+            path: sh
+            args:
+            - -ec
+            - |
+              echo "\$KUBECONFIG" > config.yml
+              export KUBECONFIG=config.yml
+              echo "\$MANIFEST" > ${APP_NAME}-deployment.yml
+              IMG=\$(kubectl get image ${APP_NAME}-image -n ${APP_NAME} -o jsonpath="{.status.latestImage}")
+              sed -i "s|CURRENT_APP_IMAGE|\$IMG|" ${APP_NAME}-deployment.yml
+              kubectl apply -f ${APP_NAME}-deployment.yml
+              echo "https://${APP_NAME}.${SUB_DOMAIN}"
+          platform: linux
+        params:
+          KUBECONFIG: ((kubeconfig))
+          MANIFEST: ((app_manifest))
+          SUB_DOMAIN: ((domain))
+EOF
+}
+
+function fly_pipeline() {
+
+    fly login -c https://ci.${SUB_DOMAIN} -u admin -p ${CONCOURSE_PASSWD} -t ${CLUSTER_NAME}
+    echo y | fly -t ${CLUSTER_NAME} set-pipeline -p build-${APP_NAME} \
+      -c build/${APP_NAME}/${APP_NAME}-pipeline.yml -l build/${APP_NAME}/${APP_NAME}-params.yml
+    fly -t ${CLUSTER_NAME} unpause-pipeline -p build-${APP_NAME}
+}
+
+function add_app() {
+
+  source $1
+  echo "Adding ${APP_NAME}"
+
+  mkdir -p build/${APP_NAME}/
+
+  echo "Creating kubernetes namespace for ${APP_NAME}"
+  kubectl create ns ${APP_NAME}
+  create_secret_kpack
+
+  create_service_account_kpack
+  create_builder_kpack
+  create_app_image_spec
+  install_role_binding
+  write_pipeline_params
+  write_pipeline
+  yq e '.app_manifest' build/${APP_NAME}/${APP_NAME}-params.yml > build/${APP_NAME}/manifest.yml
+
+  echo "Deploying the pipeline to Concourse"
+  fly_pipeline 
+  if [ $? != 0 ]; then
+    echo ""
+    echo "Failed to add ${APP_NAME}. Manual cleanup needed."
+    exit 1
+  fi
+
+  echo ""
+  echo "${APP_NAME} added succesfully!"
+  echo "View the build progress with the below command."
+  echo "  kp build logs ${APP_NAME}-image -n ${APP_NAME}"
+}
+
+function delete_app() {
+
+  if [ ! -e $1 ]; then
+      echo "$1 doesn't seem to exist."
+      exit 1
+  fi
+  source $1
+
+  fly -t ${CLUSTER_NAME} dp -p build-${APP_NAME}
+  kubectl delete ns ${APP_NAME}
+  echo "Deleting deployment staging directory: build/${APP_NAME}/"
+  rm -rf build/${APP_NAME}/
+}
+
+function list_apps() {
+  for i in $(kubectl get deployments -A -l source=freshcloud | awk {'print $1}'|grep -v NAMESPACE); do 
+      kubectl get ingress -n $i 2> /dev/null|egrep -v 'NAME|acme-http' | awk {'printf ("%15s\t\t%s\n", $1, $3)'}; 
+  done
+}
+
+function list_endpoints() {
+
+  cat << EOF
+Harbor: https://registry.${SUB_DOMAIN}
+user: admin
+pass: ${HARBOR_PASSWD}
+
+Concourse: https://ci.${SUB_DOMAIN}
+user: admin
+pass: ${CONCOURSE_PASSWD}
+EOF
+}
+
+TERM=dumb
+
+function usage() {
+
+cat << EOF
+
+Freshctl CLI
+
+Usage:
+  freshctl [command] 
+
+Available commands:
+
+  add                  Add an application
+  delete               Delete an application
+  endpoints            List cluster endpoints
+  list		       List applications
+
+EOF
+}
+
+# Options 
+if [ "$1" == 'endpoints' ]; then
+    list_endpoints
+elif [ "$1" == 'add' ]; then
+  if [ -z $2 ]; then
+    echo "$0 add config.app"
+    exit 1
+  fi
+  add_app $2
+elif [ "$1" == 'delete' ]; then
+  if [ -z $2 ]; then
+    echo "$0 delete config.app"
+    exit 1
+  fi
+  delete_app $2
+elif [ "$1" == 'list' ]; then
+  list_apps
+else
+  usage
+fi
+
