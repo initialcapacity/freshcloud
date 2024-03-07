@@ -160,15 +160,7 @@
             Install the <a href="https://cloud.google.com/sdk/docs/install">Google Cloud SDK</a>then use the steps below
             to log in to Google Cloud and set up a project.
 
-        <pre>
-<code class="shell">gcloud auth login</code>
-<code class="shell">gcloud projects create {your_project_name}</code>
-<code class="shell">gcloud config set project {your_project_name}</code>
-<code class="shell">gcloud services enable cloudbilling.googleapis.com</code>
-<code class="shell">gcloud alpha billing accounts list</code>
-<code class="shell">gcloud alpha billing projects link {your_project_name} --billing-account 0X0X0X-0X0X0X-0X0X0X</code>
-<code class="shell">gcloud services enable container.googleapis.com</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <h3>Local software</h3>
 
@@ -182,9 +174,7 @@
             Finally, clone the repository to get the scripts we'll need to create our modern application
             platform.
 
-        <pre>
-<code class="shell">git clone git@github.com:initialcapacity/freshcloud.git</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <h2>Platform configuration</h2>
 
@@ -196,20 +186,7 @@
         <p>
             Create and then edit <em>.env_development.sh</em> and enter the below values.
 
-        <pre>
-<code class="shell">touch .env_development.sh</code>
-<code class="shell">vi .env_development.sh</code>
-        <code># Deployment defaults
-export DOMAIN='yourdomain.com'		    # Enter the DNS subdomain
-export EMAIL_ADDRESS='nobody@gmail.com'     # E-Mail for CERT registration confirmation
-export PASSWD='my-pass'                     # Password that will be used throughout the project
-
-# GCP cluster info
-export GCP_PROJECT_NAME='your-gcp-project'  # GCP project name
-export K8S_CLUSTER_NAME='cluster-name'      # Cluster name
-export REGION='us-central1'                 # GCP region
-export ZONE='us-central1-c'                 # Availability zone</code>
-    </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <h2>Kubernetes cluster</h2>
 
@@ -229,10 +206,7 @@ export ZONE='us-central1-c'                 # Availability zone</code>
         <p>
             Upon success you will see the below output.
 
-        <pre><code>
-NAME                    NUM_NODES  STATUS
-{your_cluster_name}     5          RUNNING
-    </code></pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
 
         <h2>Ingress controller</h2>
@@ -266,10 +240,7 @@ NAME                    NUM_NODES  STATUS
             Upon success, the script will output the hostname and public IP address of our load-balancer which we’ll use
             to access all our external services.
 
-        <pre><code>
-Waiting to get the load-balancer IP.
-Create a DNS for *.yourdomain.com to xxx.xxx.xxx.xxx
-    </code></pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Next set a wild-card DNS record to point to your load-balancer's IP address by creating an A record entry
@@ -277,9 +248,7 @@ Create a DNS for *.yourdomain.com to xxx.xxx.xxx.xxx
             We use DNS Made Easy for managing our DNS records.
             Use the following command to make sure your DNS is configured correctly before proceeding.
 
-        <pre>
-<code class="shell">nslookup xxx.yourdomain.com</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <h2>Certificate management</h2>
 
@@ -299,17 +268,11 @@ Create a DNS for *.yourdomain.com to xxx.xxx.xxx.xxx
             Let's Encrypt will provide us with short lived SSL certs that will be consumed by the Ingress controller and
             stored as Kubernetes secrets.
 
-        <pre>
-<code class="shell">bash 02-install-cert-manager.sh</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>Upon success, you will see the below output.
 
-        <pre><code>
-All pods are running.
-clusterissuer.cert-manager.io/letsencrypt-staging created
-clusterissuer.cert-manager.io/letsencrypt-prod created
-    </code></pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             One of the benefits of using cert-manager is that cert-manager will automatically replace each SSL
@@ -336,22 +299,12 @@ clusterissuer.cert-manager.io/letsencrypt-prod created
         <p>
             Run our next script from the <em>bin</em> directory to create the registry.
 
-        <pre>
-<code class="shell">bash 03-install-harbor.sh</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Upon success, you will see the output below.
 
-        <pre><code>
-All pods are running.
-Sleeping while Harbor auth is set up.
-Creating: concourse-images in Harbor.
-Creating: kpack in Harbor.
-url: https://registry.yourdomain.com
-username: admin
-password: {PASSWORD}
-    </code></pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Navigate to the provided URL and log in to Harbor using the provided credentials.
@@ -362,9 +315,7 @@ password: {PASSWORD}
             We’ll be using a popular tool named <a href="https://concourse-ci.org">Concourse</a> for continuous
             delivery. Run our next script from the <em>bin</em> directory to install Concourse in our cluster.
 
-        <pre>
-<code class="shell">bash 04-install-concourse.sh</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Navigate to the provided URL and log in to Concourse using <em>admin</em> as the username and the password
@@ -385,27 +336,18 @@ password: {PASSWORD}
         <p>
             First install the <em>kpack-cli</em> binary on your local machine.
 
-        <pre>
-<code class="shell">wget https://github.com/vmware-tanzu/kpack-cli/releases/download/v0.4.2/kp-darwin-0.4.2 -O /usr/local/bin/kp</code>
-<code class="shell">chmod 755 /usr/local/bin/kp</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Next deploy the kpack build service.
             This step will take slightly longer than previous steps as we’ll be building the images locally with Docker.
 
-        <pre>
-<code class="shell">bash 05-install-kpack.sh</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Upon success, you will see the below output.
 
-        <pre><code>
-All pods are running.
-clusterstack.kpack.io/base created
-clusterstore.kpack.io/default created
-    </code></pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Harbor should now look similar to the image below.
@@ -426,9 +368,7 @@ clusterstore.kpack.io/default created
         <p>
             Run <em>freshctl</em> from the <em>bin</em> directory to test the CLI.
 
-        <pre>
-<code class="shell">./freshctl endpoints</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             The freshctl CLI takes a file or an application configuration as an argument.
@@ -445,10 +385,7 @@ clusterstore.kpack.io/default created
             Download the Concourse <em>fly</em> CLI tool from our Concourse installation, substituting your Concourse
             URL for the URL below.
 
-        <pre>
-<code class="shell">wget ‘https://ci.yourdomain.com/api/v1/cli?arch=amd64&platform=darwin’ -O /usr/local/bin/fly</code>
-<code class="shell">chmod 755 /usr/local/bin/fly</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Let’s review the steps the freshctl CLI performs to deploy our application.
@@ -473,25 +410,17 @@ clusterstore.kpack.io/default created
         <p>
             OK, let’s deploy the kotlin-ktor-starter app with freshctl's <em>add</em> command.
 
-        <pre>
-<code class="shell">./freshctl add apps/kotlin-ktor-starter.app</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             View the build logs by running the below command.
 
-        <pre>
-<code class="shell">kp build logs kotlin-ktor-starter-image -n kotlin-ktor-starter</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <p>
             Upon success, run the below command and see the application URL.
 
-        <pre>
-<code class="shell">./freshctl apps</code>
-
-<code>kotlin-ktor-starter        kotlin-ktor-starter.yourdomain.com</code>
-        </pre>
+        <pre><code>Pardon the dust, we're working on updating our documentation</code></pre>
 
         <h2>Summary</h2>
 
