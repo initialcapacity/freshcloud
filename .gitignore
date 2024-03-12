@@ -1,0 +1,12 @@
+.gradle
+build
+out
+.idea
+ignored
+*.iml
+*.ipr
+*.iws
+.DS_Store
+.env*
+.freshcloud
+local_resources
